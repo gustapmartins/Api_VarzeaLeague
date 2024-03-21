@@ -1,0 +1,29 @@
+﻿using MongoDB.Bson.Serialization.Attributes;
+using VarzeaTeam.Domain.Model.Team;
+
+namespace VarzeaTeam.Domain.Model.Match;
+
+public class MatchModel
+{
+    [BsonId] // Atributo que indica que esta propriedade é o ID do documento no MongoDB
+    [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)] // Representação do tipo de dados ObjectId do MongoDBw
+    public string Id { get; set; }
+
+    [BsonElement("homeTeam")] // Atributo que mapeia essa propriedade para o campo 'homeTeam' no MongoDB
+    public TeamModel HomeTeam { get; set; }
+
+    [BsonElement("visitingTeam")] // Atributo que mapeia essa propriedade para o campo 'visitingTeam' no MongoDB
+    public TeamModel VisitingTeam { get; set; }
+
+    [BsonElement("local")] // Atributo que mapeia essa propriedade para o campo 'local' no MongoDB
+    public string Local { get; set; }
+
+    [BsonElement("date")] // Atributo que mapeia essa propriedade para o campo 'date' no MongoDB
+    public DateTime Date { get; set; }
+
+    [BsonElement("teamWin")] // Atributo que mapeia essa propriedade para o campo 'teamWin' no MongoDB
+    public TeamModel TeamWin { get; set; }
+
+    [BsonElement("play")] // Atributo que mapeia essa propriedade para o campo 'play' no MongoDB
+    public bool Play { get; set; }
+}
