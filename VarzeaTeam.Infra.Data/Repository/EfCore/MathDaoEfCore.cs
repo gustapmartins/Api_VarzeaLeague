@@ -16,7 +16,6 @@ public class MathDaoEfCore : BaseContext<MatchModel>, IMatchDao
         _MatchCollection = Collection;
     }
 
-
     public async Task CreateAsync(MatchModel addObject)
     {
         await _MatchCollection.InsertOneAsync(addObject);
