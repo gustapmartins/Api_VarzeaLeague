@@ -2,7 +2,12 @@
 
 namespace VarzeaTeam.Domain.Model.Team;
 
-public class TeamModel
+public interface IEntity
+{
+    string Id { get; set; }
+}
+
+public class TeamModel: IEntity
 {
     [BsonId] // Atributo que indica que esta propriedade é o ID do documento no MongoDB
     [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)] // Representação do tipo de dados ObjectId do MongoDB

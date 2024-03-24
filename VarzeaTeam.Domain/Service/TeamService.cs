@@ -32,11 +32,19 @@ public class TeamService : ITeamService
 
     public async Task<TeamModel> RemoveAsync(string Id)
     {
-        throw new NotImplementedException();
+        var findId = await _teamDao.GetIdAsync(Id);
+
+        await _teamDao.RemoveAsync(Id);
+
+        return findId;
     }
 
     public async Task<TeamModel> UpdateAsync(string Id, TeamModel updateObject)
     {
-        throw new NotImplementedException();
+        var findId = await _teamDao.GetIdAsync(Id);
+
+        await _teamDao.UpdateAsync(Id, updateObject);
+
+        return findId;
     }
 }

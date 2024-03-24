@@ -52,7 +52,7 @@ public class TeamController : ControllerBase
     ///     <returns>IActionResult</returns>
     /// <response code="201">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
-    [HttpPost]
+    [HttpPost("cadastrar-time")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<ActionResult> PostTeam([FromBody] TeamCreateDto teamCreateDto)
     {
@@ -68,7 +68,7 @@ public class TeamController : ControllerBase
     ///     <returns>IActionResult</returns>
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
-    [HttpDelete]
+    [HttpDelete("deletar-time/{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public ActionResult DeleteTeam(string id)
     {
@@ -83,7 +83,7 @@ public class TeamController : ControllerBase
     ///     <returns>IActionResult</returns>
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
-    [HttpPatch]
+    [HttpPatch("update-time/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public ActionResult UpdateTeam(string id, TeamUpdateDto team)
     {
