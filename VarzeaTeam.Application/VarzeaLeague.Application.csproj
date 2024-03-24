@@ -25,4 +25,10 @@
     <ProjectReference Include="..\VarzeamTeam.Infra.CrossCutting\VarzeamLeague.Infra.CrossCutting.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="docker-compose.override.yml">
+      <DependentUpon>docker-compose.yml</DependentUpon>
+    </None>
+  </ItemGroup>
+
 </Project>
