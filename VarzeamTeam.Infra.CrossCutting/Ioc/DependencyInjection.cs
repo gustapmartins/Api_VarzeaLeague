@@ -6,6 +6,9 @@ using Microsoft.Extensions.Configuration;
 using VarzeaLeague.Domain.Interface.Dao;
 using Microsoft.OpenApi.Models;
 using VarzeaTeam.Service;
+using VarzeaLeague.Infra.Data.Repository.EfCore;
+using VarzeaLeague.Domain.Service;
+using Nest;
 
 namespace VarzeamTeam.Infra.CrossCutting.Ioc
 {
@@ -38,9 +41,15 @@ namespace VarzeamTeam.Infra.CrossCutting.Ioc
 
             services.AddCors();
 
-            
             services.AddSingleton<ITeamDao, TeamDaoEfCore>();
-            services.AddSingleton<ITeamService, TeamService>();
+            services.AddScoped<ITeamService, TeamService>();
+
+            services.AddSingleton<IMatchDao, MathDaoEfCore>();
+            services.AddScoped<IMatchService, MatchService>();
+
+            services.AddSingleton<IPlayerDao, PlayerDaoEfCore>();
+            services.AddScoped<IPlayerService, PlayerService>();
+
             services.AddSingleton<VarzeaLeagueDatabaseSettings>();
         }
     }

@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Windows</DockerTargetOS>
-    <ProjectGuid>5395f65c-01b1-4adf-8cdf-db8ab998c54c</ProjectGuid>
+    <ProjectGuid>014180be-2e78-40f7-8600-9c61d5716e65</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://{ServiceIPAddress}{ServicePort}/swagger</DockerServiceUrl>
     <DockerServiceName>varzealeague.application</DockerServiceName>

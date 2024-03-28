@@ -15,6 +15,4 @@ public class MatchViewDto
     public DateTime Date { get; set; }
 
     public TeamModel TeamWin { get; set; }
-
-    public bool Play { get; set; }
 }

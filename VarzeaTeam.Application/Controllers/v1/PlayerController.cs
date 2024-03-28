@@ -1,35 +1,35 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using VarzeaTeam.Domain.Model.Match;
 using VarzeaTeam.Application.DTO.Team;
 using VarzeaLeague.Domain.Interface.Services;
-using VarzeaTeam.Application.DTO.Match;
+using VarzeaTeam.Domain.Model.Player;
+using VarzeaTeam.Application.DTO.Player;
 
-namespace VarzeaTeam.Application.Controllers.v1;
+namespace VarzeaLeague.Application.Controllers.v1;
 
 [ApiController]
 [Route("api/v1/[controller]")]
-public class MatchController : ControllerBase
+public class PlayerController: ControllerBase
 {
-    private readonly IMatchService _matchService;
+    private readonly IPlayerService _playerService;
     private readonly IMapper _mapper;
 
-    public MatchController(IMatchService matchService, IMapper mapper)
+    public PlayerController(IPlayerService playerService, IMapper mapper)
     {
-        _matchService = matchService;
+        _playerService = playerService;
         _mapper = mapper;
     }
 
-    /// <summary>
+     /// <summary>
     ///     Adiciona um filme ao banco de dados
     /// </summary>
     ///     <returns>IActionResult</returns>
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     [HttpGet("buscar-partida")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> GetMatch()
+    public async Task<ActionResult> GetPlayer()
     {
-        return Ok(await _matchService.GetAsync());
+        return Ok(await _playerService.GetAsync());
     }
 
     /// <summary>
@@ -41,9 +41,9 @@ public class MatchController : ControllerBase
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
     [HttpGet("buscar-partida/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetIdMatch(string id)
+    public async Task<IActionResult> GetIdPlayer(string id)
     {
-        return Ok(await _matchService.GetIdAsync(id));
+        return Ok(await _playerService.GetIdAsync(id));
     }
 
     /// <summary>
@@ -55,11 +55,11 @@ public class MatchController : ControllerBase
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<ActionResult> PostTeam([FromBody] MatchCreateDto teamCreateDto)
+    public async Task<ActionResult> PostTeam([FromBody] PlayerCreateDto teamCreateDto)
     {
-        MatchModel matchCreated = _mapper.Map<MatchModel>(teamCreateDto);
+        PlayerModel playerCreated = _mapper.Map<PlayerModel>(teamCreateDto);
 
-        return CreatedAtAction(nameof(GetMatch), await _matchService.CreateAsync(matchCreated));
+        return CreatedAtAction(nameof(GetPlayer), await _playerService.CreateAsync(playerCreated));
     }
 
     /// <summary>
@@ -71,7 +71,7 @@ public class MatchController : ControllerBase
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
     [HttpDelete]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<ActionResult> DeleteMatch(string id)
+    public async Task<ActionResult> DeletePlayer(string id)
     {
         return Ok(id);
     }
@@ -86,7 +86,7 @@ public class MatchController : ControllerBase
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
     [HttpPatch]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> UpdateMatch(string id, TeamUpdateDto team)
+    public async Task<ActionResult> UpdatePlayer(string id, TeamUpdateDto team)
     {
         return Ok(id);
     }

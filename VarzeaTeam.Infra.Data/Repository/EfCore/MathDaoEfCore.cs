@@ -4,6 +4,8 @@ using VarzeaLeague.Infra.Data.Context;
 using VarzeaTeam.Domain.Model.Match;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using VarzeaTeam.Domain.Model.Player;
+using Nest;
 
 namespace VarzeaLeague.Infra.Data.Repository.EfCore;
 
@@ -36,8 +38,16 @@ public class MathDaoEfCore : BaseContext<MatchModel>, IMatchDao
         await _MatchCollection.DeleteOneAsync(x => x.Id == Id);
     }
 
-    public async Task UpdateAsync(string Id, MatchModel updateObject)
+    public async Task<MatchModel> UpdateAsync(string Id, MatchModel updateObject)
     {
-        await _MatchCollection.ReplaceOneAsync(x => x.Id == Id, updateObject);
+        var filter = Builders<MatchModel>.Filter.Eq(x => x.Id, Id);
+        var update = Builders<MatchModel>.Update.Set(x => x.Local, updateObject.Local);
+
+        var options = new FindOneAndUpdateOptions<MatchModel>
+        {
+            ReturnDocument = ReturnDocument.After // Retorna o documento após a atualização
+        };
+
+        return await _MatchCollection.FindOneAndUpdateAsync(filter, update, options);
     }
 }

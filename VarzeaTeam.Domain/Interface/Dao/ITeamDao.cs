@@ -5,4 +5,5 @@ namespace VarzeaLeague.Domain.Interface.Dao;
 
 public interface ITeamDao : BaseDao<TeamModel>
 {
+    Task<TeamModel> TeamExist(string name);
 }

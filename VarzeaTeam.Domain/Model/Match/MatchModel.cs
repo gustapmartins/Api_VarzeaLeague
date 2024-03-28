@@ -23,7 +23,4 @@ public class MatchModel
 
     [BsonElement("teamWin")] // Atributo que mapeia essa propriedade para o campo 'teamWin' no MongoDB
     public TeamModel TeamWin { get; set; }
-
-    [BsonElement("play")] // Atributo que mapeia essa propriedade para o campo 'play' no MongoDB
-    public bool Play { get; set; }
 }

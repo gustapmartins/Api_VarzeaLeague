@@ -7,18 +7,35 @@ services:
       context: .
       dockerfile: VarzeaTeam.Application\Dockerfile
     container_name: varzeaLeague_api_container
-    networks: 
-      - elastic
-    depends_on: 
-      - mongodb
-    ports:
-      - "8080:80"
 
   mongodb:
     image: mongo:latest
     container_name: mongodb_container
     ports:
       - "27017:27017"
+    networks:
+      - elastic
+  elasticsearch:
+    image: elasticsearch:7.17.9
+    container_name: elasticSearch_container
+    ports:
+      - "9200:9200"
+    environment:
+      - discovery.type=single-node
+    ulimits: 
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      - elastic
+
+  kibana: 
+    image: kibana:7.17.9
+    container_name: kibana_container
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
     networks:
       - elastic
 

@@ -1,5 +1,6 @@
 ﻿namespace VarzeaTeam.Domain.Exceptions;
 
+[Serializable]
 public class ExceptionFilter: Exception
 {
     public ExceptionFilter() { }

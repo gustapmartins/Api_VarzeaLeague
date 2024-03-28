@@ -1,9 +1,9 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using VarzeaTeam.Domain.Model.Team;
 
-namespace VarzeaTeam.Application.DTO.Player;
+namespace VarzeaLeague.Application.DTO.Player;
 
-public class PlayerUpdateDto
+public class PlayerViewDto
 {
     [BsonId]
     [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
@@ -16,5 +16,5 @@ public class PlayerUpdateDto
     public int Age { get; set; }
 
     [BsonElement("teamId")]
-    public string TeamId { get; set; } = string.Empty;
+    public TeamModel Team { get; set; }
 }

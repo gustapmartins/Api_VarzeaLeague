@@ -1,6 +1,7 @@
 ﻿using VarzeaLeague.Domain.Interface.Services;
 using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaTeam.Domain.Model.Team;
+using VarzeaTeam.Domain.Exceptions;
 
 namespace VarzeaTeam.Service;
 
@@ -13,38 +14,87 @@ public class TeamService : ITeamService
         _teamDao = teamDao;
     }
 
-    public async Task<TeamModel> CreateAsync(TeamModel addObject)
-    {
-        await _teamDao.CreateAsync(addObject);
-
-        return addObject;
-    }
-
     public async Task<List<TeamModel>> GetAsync()
     {
-        return await _teamDao.GetAsync();
+        try 
+        {
+            List<TeamModel> GetAll = await _teamDao.GetAsync();
+
+            if(GetAll.Count == 0)
+                throw new ExceptionFilter($"Não existe nenhum time cadastrado");
+
+            return GetAll;
+        }
+        catch(Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
     }
 
     public async Task<TeamModel> GetIdAsync(string Id)
     {
-        return await _teamDao.GetIdAsync(Id);
+        try
+        {
+            TeamModel getId = await _teamDao.GetIdAsync(Id);
+
+            if(getId == null)
+                throw new ExceptionFilter($"O Time com o id '{Id}', não existe.");
+
+            return getId;
+        }
+        catch(Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+
+    public async Task<TeamModel> CreateAsync(TeamModel addObject)
+    {
+        try
+        {
+            TeamModel teamExist = await _teamDao.TeamExist(addObject.Name);
+
+            if(teamExist != null)
+                throw new ExceptionFilter($"O Time com o nome '{addObject.Name}', já existe.");
+
+            await _teamDao.CreateAsync(addObject);
+            return addObject;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
     }
 
     public async Task<TeamModel> RemoveAsync(string Id)
     {
-        var findId = await _teamDao.GetIdAsync(Id);
+        try
+        {
+            var findId = await GetIdAsync(Id);
 
-        await _teamDao.RemoveAsync(Id);
+            await _teamDao.RemoveAsync(Id);
 
-        return findId;
+            return findId;
+        }
+        catch(Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
     }
 
     public async Task<TeamModel> UpdateAsync(string Id, TeamModel updateObject)
     {
-        var findId = await _teamDao.GetIdAsync(Id);
+        try
+        {
+            TeamModel findTeam = await GetIdAsync(Id);
 
-        await _teamDao.UpdateAsync(Id, updateObject);
+            TeamModel updateTeam = await _teamDao.UpdateAsync(Id, updateObject);
 
-        return findId;
+            return updateTeam;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
     }
 }

@@ -11,8 +11,8 @@ public class TeamModel: IEntity
 {
     [BsonId] // Atributo que indica que esta propriedade é o ID do documento no MongoDB
     [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)] // Representação do tipo de dados ObjectId do MongoDB
-    public string Id { get; set; }
+    public string Id { get; set; } = string.Empty;
 
     [BsonElement("name")] // Atributo que mapeia essa propriedade para o campo 'name' no MongoDB
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 }

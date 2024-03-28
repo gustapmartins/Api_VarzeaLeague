@@ -1,10 +1,15 @@
+using VarzeaLeague.Application.Extension;
 using VarzeamTeam.Infra.CrossCutting.Ioc;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddElasticSearch(builder.Configuration);
+
 DependencyInjection.ConfigureService(builder.Services, builder.Configuration);
 
 var app = builder.Build();
+
+app.UseMiddleware<ElasticsearchMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -4,7 +4,7 @@ namespace VarzeaTeam.Application.DTO.Match;
 
 public class MatchUpdateDto
 {
-    public int Id { get; set; }
+    public string Id { get; set; } = string.Empty;
 
     public TeamModel HomeTeam { get; set; }
 
@@ -15,6 +15,4 @@ public class MatchUpdateDto
     public DateTime Date { get; set; }
 
     public TeamModel TeamWin { get; set; }
-
-    public bool Play { get; set; }
 }

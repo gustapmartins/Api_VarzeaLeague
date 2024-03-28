@@ -2,6 +2,7 @@
 ﻿using VarzeaLeague.Domain.Interface.Services;
 using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaTeam.Domain.Model.Match;
+using VarzeaTeam.Domain.Exceptions;
 
 namespace VarzeaLeague.Domain.Service;
 
@@ -16,36 +17,81 @@ public class MatchService : IMatchService
 
     public async Task<MatchModel> CreateAsync(MatchModel addObject)
     {
-        await _matchDao.CreateAsync(addObject);
+        try
+        {
+            await _matchDao.CreateAsync(addObject);
 
-        return addObject;
+            return addObject;
+        }
+        catch (Exception ex) 
+        {
+            throw new Exception(ex.Message);
+        }
     }
 
     public async Task<List<MatchModel>> GetAsync()
     {
-        return await _matchDao.GetAsync();
+        try
+        {
+            List<MatchModel> GetAll = await _matchDao.GetAsync();
+
+            if (GetAll.Count == 0)
+                throw new ExceptionFilter($"Não existe nenhuma partida cadastrada");
+
+            return GetAll;
+        }
+        catch (Exception ex) 
+        {
+            throw new Exception(ex.Message);
+        }
     }
 
     public async Task<MatchModel> GetIdAsync(string Id)
     {
-        return await _matchDao.GetIdAsync(Id);
+        try
+        {
+            MatchModel GetId = await _matchDao.GetIdAsync(Id);
+
+            if (GetId == null)
+                throw new ExceptionFilter($"A partida com o id '{Id}', não existe.");
+
+            return GetId;
+        }
+        catch (Exception ex) 
+        {
+            throw new Exception(ex.Message);
+        }
     }
 
     public async Task<MatchModel> RemoveAsync(string Id)
     {
-        var findId = await _matchDao.GetIdAsync(Id);
+        try
+        {
+            MatchModel findId = await _matchDao.GetIdAsync(Id);
 
-        await _matchDao.RemoveAsync(Id);
+            await _matchDao.RemoveAsync(Id);
 
-        return findId;
+            return findId;
+        }
+        catch(Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
     }
 
     public async Task<MatchModel> UpdateAsync(string Id, MatchModel updateObject)
     {
-        var findId = await _matchDao.GetIdAsync(Id);
+        try
+        {
+            MatchModel findId = await _matchDao.GetIdAsync(Id);
 
-        await _matchDao.UpdateAsync(Id, updateObject);
+            await _matchDao.UpdateAsync(Id, updateObject);
 
-        return findId;
+            return findId;
+        }
+        catch(Exception ex) 
+        {
+            throw new Exception(ex.Message);
+        }
     }
 }

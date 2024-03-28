@@ -1,4 +1,6 @@
-﻿namespace VarzeaTeam.Infra.Data.Repository.Utils;
+﻿using VarzeaTeam.Domain.Model.Team;
+
+namespace VarzeaTeam.Infra.Data.Repository.Utils;
 
 public interface BaseDao<T>
 {
@@ -10,5 +12,5 @@ public interface BaseDao<T>
 
     Task RemoveAsync(string Id);
 
-    Task UpdateAsync(string Id, T updateObject);
+    Task<T> UpdateAsync(string Id, T updateObject);
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using VarzeaLeague.Application.DTO.Team;
 using VarzeaLeague.Domain.Interface.Services;
 using VarzeaTeam.Application.DTO.Team;
 using VarzeaTeam.Domain.Model.Team;
@@ -20,40 +21,47 @@ public class TeamController : ControllerBase
     }
 
     /// <summary>
-    ///     Adiciona um filme ao banco de dados
+    ///    Buscar todos os times cadastrados
     /// </summary>
-    ///     <returns>IActionResult</returns>
-    /// <response code="200">Caso inserção seja feita com sucesso</response>
+    /// <returns>IActionResult</returns>
+    /// <response code="200">Caso exista informações cadastradas</response>
+    /// <response code="404">Caso as informações sejam passadas erradas</response>
     [HttpGet("consultar-time")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> GetTeams()
     {
         return Ok(await _teamService.GetAsync());
     }
 
     /// <summary>
-    ///     Consultar categoria pelo id
+    ///     Buscar o time pelo seu identificador
     /// </summary>
-    /// <param name="id">Objeto com os campos necessários para criação de um filme</param>
-    ///     <returns>IActionResult</returns>
+    /// <param name="id">Objeto com os campos necessários para buscar um time</param>
+    /// <returns>IActionResult</returns>
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
     [HttpGet("consultar-time/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public IActionResult GetIdTeams(string id)
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetIdTeams(string id)
     {
-        return Ok(id);
+        TeamViewDto teamVieew = _mapper.Map<TeamViewDto>(await _teamService.GetIdAsync(id));
+
+        return Ok(teamVieew);
     }
 
     /// <summary>
-    ///     Adiciona um filme ao banco de dados
+    ///     Adiciona um time ao banco de dados
     /// </summary>
-    /// <param name="team">Objeto com os campos necessários para criação de um filme</param>
-    ///     <returns>IActionResult</returns>
+    /// <param name="teamCreateDto">Objeto com os campos necessários para criação de um time</param>
+    /// <returns>IActionResult</returns>
     /// <response code="201">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
     [HttpPost("cadastrar-time")]
     [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> PostTeam([FromBody] TeamCreateDto teamCreateDto)
     {
         TeamModel teamCreated = _mapper.Map<TeamModel>(teamCreateDto);
@@ -62,32 +70,41 @@ public class TeamController : ControllerBase
     }
 
     /// <summary>
-    ///     Faz 
+    ///     Faz a remoção de um time no banco de dados 
     /// </summary>
     /// <param name="id"></param>
-    ///     <returns>IActionResult</returns>
+    /// <returns>IActionResult</returns>
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
     [HttpDelete("deletar-time/{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public ActionResult DeleteTeam(string id)
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> DeleteTeam(string id)
     {
-        return Ok(id);
+        TeamViewDto teamView = _mapper.Map<TeamViewDto>(await _teamService.RemoveAsync(id));
+
+        return Ok(teamView); 
     }
 
     /// <summary>
-    ///     Consultar categoria pelo id
+    ///     Consulta o time pelo identificador e atualiza 
     /// </summary>
     /// <param name="id">Objeto com os campos necessários para criação de um filme</param>
     /// <param name="team">TEAM</param>
-    ///     <returns>IActionResult</returns>
+    /// <returns>IActionResult</returns>
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
     [HttpPatch("update-time/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public ActionResult UpdateTeam(string id, TeamUpdateDto team)
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> UpdateTeam([FromRoute] string id, [FromBody] TeamModel team)
     {
-        return Ok(id);
+        TeamModel teamUpdate = _mapper.Map<TeamModel>(team);
+
+        TeamViewDto teamView = _mapper.Map<TeamViewDto>(await _teamService.UpdateAsync(id, teamUpdate));
+
+        return Ok(teamView);
     }
 
 }
