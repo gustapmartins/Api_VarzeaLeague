@@ -11,7 +11,7 @@ public class PlayerDaoEfCore : BaseContext<PlayerModel>, IPlayerDao
 {
     private readonly IMongoCollection<PlayerModel> _PlayerCollection;
 
-    public PlayerDaoEfCore(IOptions<VarzeaLeagueDatabaseSettings> options) : base(options)
+    public PlayerDaoEfCore(IOptions<VarzeaLeagueDatabaseSettings> options) : base(options, "PlayerCollection")
     {
         _PlayerCollection = Collection;
     }
@@ -33,7 +33,7 @@ public class PlayerDaoEfCore : BaseContext<PlayerModel>, IPlayerDao
 
     public async Task<PlayerModel> PlayerExist(string name)
     {
-        return await _PlayerCollection.Find(x => x.Name == name).FirstOrDefaultAsync<PlayerModel>();
+        return await _PlayerCollection.Find(x => x.NamePlayer == name).FirstOrDefaultAsync<PlayerModel>();
     }
 
     public async Task RemoveAsync(string Id)
@@ -44,7 +44,7 @@ public class PlayerDaoEfCore : BaseContext<PlayerModel>, IPlayerDao
     public async Task<PlayerModel> UpdateAsync(string Id, PlayerModel updateObject)
     {
         var filter = Builders<PlayerModel>.Filter.Eq(x => x.Id, Id);
-        var update = Builders<PlayerModel>.Update.Set(x => x.Name, updateObject.Name);
+        var update = Builders<PlayerModel>.Update.Set(x => x.NamePlayer, updateObject.NamePlayer);
 
         var options = new FindOneAndUpdateOptions<PlayerModel>
         {

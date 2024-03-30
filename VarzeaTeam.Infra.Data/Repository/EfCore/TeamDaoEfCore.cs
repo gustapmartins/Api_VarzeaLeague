@@ -10,7 +10,7 @@ namespace VarzeaTeam.Infra.Data.Repository.EfCore;
 public class TeamDaoEfCore : BaseContext<TeamModel>, ITeamDao
 {
     private readonly IMongoCollection<TeamModel> _TeamCollection;
-    public TeamDaoEfCore(IOptions<VarzeaLeagueDatabaseSettings> options) : base(options)
+    public TeamDaoEfCore(IOptions<VarzeaLeagueDatabaseSettings> options) : base(options, "TeamCollection")
     {
         _TeamCollection = Collection;
     }
@@ -37,13 +37,13 @@ public class TeamDaoEfCore : BaseContext<TeamModel>, ITeamDao
 
     public async Task<TeamModel> TeamExist(string name)
     {
-        return await _TeamCollection.Find(x => x.Name.Equals(name)).FirstOrDefaultAsync<TeamModel>();
+        return await _TeamCollection.Find(x => x.NameTeam.Equals(name)).FirstOrDefaultAsync<TeamModel>();
     }
 
     public async Task<TeamModel> UpdateAsync(string Id, TeamModel updateObject)
     {
         var filter = Builders<TeamModel>.Filter.Eq(x => x.Id, Id);
-        var update = Builders<TeamModel>.Update.Set(x => x.Name, updateObject.Name);
+        var update = Builders<TeamModel>.Update.Set(x => x.NameTeam, updateObject.NameTeam);
 
         var options = new FindOneAndUpdateOptions<TeamModel>
         {

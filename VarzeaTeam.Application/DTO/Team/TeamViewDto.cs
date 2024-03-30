@@ -1,9 +1,8 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-
-namespace VarzeaLeague.Application.DTO.Team;
+﻿namespace VarzeaLeague.Application.DTO.Team;
 
 public class TeamViewDto
 {
-    [BsonElement("name")] // Atributo que mapeia essa propriedade para o campo 'name' no MongoDB
-    public string Name { get; set; } = string.Empty;
+    public string Id { get; set; } = string.Empty;
+
+    public string NameTeam { get; set; } = string.Empty;
 }

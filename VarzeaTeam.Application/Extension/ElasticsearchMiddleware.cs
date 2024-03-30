@@ -6,11 +6,13 @@ public class ElasticsearchMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly IElasticClient _elasticClient;
+    private readonly IConfiguration _configuration;
 
-    public ElasticsearchMiddleware(RequestDelegate next, IElasticClient elasticClient)
+    public ElasticsearchMiddleware(RequestDelegate next, IElasticClient elasticClient, IConfiguration configuration)
     {
         _next = next;
         _elasticClient = elasticClient;
+        _configuration = configuration;
     }
 
     public async Task InvokeAsync(HttpContext context)
@@ -43,7 +45,7 @@ public class ElasticsearchMiddleware
         {
             Timestamp = DateTime.UtcNow,
             Message = message
-        }, idx => idx.Index("varzealeague"));
+        }, idx => idx.Index(_configuration["ElasticSearchSettings:defaultIndex"]));
 
         if (!indexResponse.IsValid)
         {

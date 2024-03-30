@@ -52,10 +52,10 @@ public class TeamService : ITeamService
     {
         try
         {
-            TeamModel teamExist = await _teamDao.TeamExist(addObject.Name);
+            TeamModel teamExist = await _teamDao.TeamExist(addObject.NameTeam);
 
             if(teamExist != null)
-                throw new ExceptionFilter($"O Time com o nome '{addObject.Name}', já existe.");
+                throw new ExceptionFilter($"O Time com o nome '{addObject.NameTeam}', já existe.");
 
             await _teamDao.CreateAsync(addObject);
             return addObject;

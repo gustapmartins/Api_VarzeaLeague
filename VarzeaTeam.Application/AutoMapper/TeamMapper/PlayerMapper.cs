@@ -10,6 +10,7 @@ public class PlayerMapper : Profile
     public PlayerMapper()
     {
         CreateMap<PlayerCreateDto, PlayerModel>();
+        CreateMap<PlayerViewDto, PlayerModel>();
         CreateMap<PlayerModel, PlayerViewDto>();
         CreateMap<PlayerModel, PlayerUpdateDto>();
     }

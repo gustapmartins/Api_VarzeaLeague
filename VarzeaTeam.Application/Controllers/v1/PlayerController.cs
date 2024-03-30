@@ -25,11 +25,13 @@ public class PlayerController: ControllerBase
     /// </summary>
     ///     <returns>IActionResult</returns>
     /// <response code="200">Caso inserção seja feita com sucesso</response>
-    [HttpGet("buscar-partida")]
+    [HttpGet("search-players")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> GetPlayer()
     {
-        return Ok(await _playerService.GetAsync());
+        List<PlayerViewDto> playerView = _mapper.Map<List<PlayerViewDto>>(await _playerService.GetAsync());
+
+        return Ok(playerView);
     }
 
     /// <summary>
@@ -39,25 +41,26 @@ public class PlayerController: ControllerBase
     ///     <returns>IActionResult</returns>
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
-    [HttpGet("buscar-partida/{id}")]
+    [HttpGet("search-player/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetIdPlayer(string id)
+    public async Task<IActionResult> GetIdPlayer([FromRoute] string id)
     {
-        return Ok(await _playerService.GetIdAsync(id));
+        PlayerViewDto playerView = _mapper.Map<PlayerViewDto>(await _playerService.GetIdAsync(id));
+
+        return Ok(playerView);
     }
 
     /// <summary>
     ///     Adiciona um filme ao banco de dados
     /// </summary>
     /// <param name="playerCreateDto">Objeto com os campos necessários para criação de um filme</param>
-    ///     <returns>IActionResult</returns>
     /// <response code="201">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
-    [HttpPost]
+    [HttpPost("created-player")]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<ActionResult> PostTeam([FromBody] PlayerCreateDto playerCreateDto)
+    public async Task<ActionResult> CreatePlayer([FromBody] PlayerCreateDto playerCreatedDto)
     {
-        PlayerModel playerCreated = _mapper.Map<PlayerModel>(playerCreateDto);
+        PlayerModel playerCreated = _mapper.Map<PlayerModel>(playerCreatedDto);
 
         return CreatedAtAction(nameof(GetPlayer), await _playerService.CreateAsync(playerCreated));
     }
@@ -69,13 +72,13 @@ public class PlayerController: ControllerBase
     ///     <returns>IActionResult</returns>
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
-    [HttpDelete]
+    [HttpDelete("delete-player/{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<ActionResult> DeletePlayer(string id)
+    public async Task<ActionResult> DeletePlayer([FromRoute] string id)
     {
-        PlayerViewDto teamView = _mapper.Map<PlayerViewDto>(await _playerService.RemoveAsync(id));
+        PlayerViewDto playerView = _mapper.Map<PlayerViewDto>(await _playerService.RemoveAsync(id));
 
-        return Ok(teamView);
+        return Ok(playerView);
     }
 
     /// <summary>
@@ -86,14 +89,16 @@ public class PlayerController: ControllerBase
     ///     <returns>IActionResult</returns>
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
-    [HttpPatch]
+    [HttpPatch("update-player/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> UpdatePlayer(string id, PlayerUpdateDto team)
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> UpdatePlayer([FromRoute] string id, [FromBody] PlayerUpdateDto team)
     {
-        PlayerModel teamUpdate = _mapper.Map<PlayerModel>(team);
+        PlayerModel playerModel = _mapper.Map<PlayerModel>(team);
 
-        PlayerViewDto teamView = _mapper.Map<PlayerViewDto>(await _playerService.UpdateAsync(id, teamUpdate));
+        PlayerViewDto playerView = _mapper.Map<PlayerViewDto>(await _playerService.UpdateAsync(id, playerModel));
 
-        return Ok(teamView);
+        return Ok(playerView);
     }
 }

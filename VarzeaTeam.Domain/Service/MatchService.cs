@@ -3,30 +3,19 @@
 using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaTeam.Domain.Model.Match;
 using VarzeaTeam.Domain.Exceptions;
+using VarzeaTeam.Domain.Model.Team;
 
 namespace VarzeaLeague.Domain.Service;
 
 public class MatchService : IMatchService
 {
     private readonly IMatchDao _matchDao;
+    private readonly ITeamDao _teamDao;
 
-    public MatchService(IMatchDao matchDao)
+    public MatchService(IMatchDao matchDao, ITeamDao teamDao)
     {
         _matchDao = matchDao;
-    }
-
-    public async Task<MatchModel> CreateAsync(MatchModel addObject)
-    {
-        try
-        {
-            await _matchDao.CreateAsync(addObject);
-
-            return addObject;
-        }
-        catch (Exception ex) 
-        {
-            throw new Exception(ex.Message);
-        }
+        _teamDao = teamDao;
     }
 
     public async Task<List<MatchModel>> GetAsync()
@@ -58,6 +47,41 @@ public class MatchService : IMatchService
             return GetId;
         }
         catch (Exception ex) 
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+
+    public async Task<MatchModel> CreateAsync(MatchModel addObject)
+    {
+        try
+        {
+            TeamModel homeTeam = await _teamDao.GetIdAsync(addObject.HomeTeamId);
+            TeamModel visitingTeam = await _teamDao.GetIdAsync(addObject.VisitingTeamId);
+
+            // Verificar se os times foram encontrados
+            if (homeTeam == null || visitingTeam == null)
+            {
+                throw new ExceptionFilter("Um ou ambos os times não foram encontrados.");
+            }
+
+            // Criar a partida com os times encontrados
+            MatchModel match = new()
+            {
+                HomeTeam = homeTeam,
+                HomeTeamId = addObject.HomeTeamId,
+                VisitingTeam = visitingTeam,
+                VisitingTeamId = addObject.VisitingTeamId,
+                Local = addObject.Local,
+                Date = addObject.Date,
+            };
+
+            // Salvar a partida no banco de dados
+            await _matchDao.CreateAsync(match);
+
+            return match;
+        }
+        catch (Exception ex)
         {
             throw new Exception(ex.Message);
         }

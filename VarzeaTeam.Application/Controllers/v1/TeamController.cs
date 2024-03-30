@@ -26,7 +26,7 @@ public class TeamController : ControllerBase
     /// <returns>IActionResult</returns>
     /// <response code="200">Caso exista informações cadastradas</response>
     /// <response code="404">Caso as informações sejam passadas erradas</response>
-    [HttpGet("consultar-time")]
+    [HttpGet("search-teams")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> GetTeams()
@@ -41,10 +41,10 @@ public class TeamController : ControllerBase
     /// <returns>IActionResult</returns>
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
-    [HttpGet("consultar-time/{id}")]
+    [HttpGet("search-team/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetIdTeams(string id)
+    public async Task<IActionResult> GetIdTeams([FromRoute] string id)
     {
         TeamViewDto teamVieew = _mapper.Map<TeamViewDto>(await _teamService.GetIdAsync(id));
 
@@ -58,11 +58,11 @@ public class TeamController : ControllerBase
     /// <returns>IActionResult</returns>
     /// <response code="201">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
-    [HttpPost("cadastrar-time")]
+    [HttpPost("created-team")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> PostTeam([FromBody] TeamCreateDto teamCreateDto)
+    public async Task<ActionResult> CreateTeam([FromBody] TeamCreateDto teamCreateDto)
     {
         TeamModel teamCreated = _mapper.Map<TeamModel>(teamCreateDto);
 
@@ -76,10 +76,10 @@ public class TeamController : ControllerBase
     /// <returns>IActionResult</returns>
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
-    [HttpDelete("deletar-time/{id}")]
+    [HttpDelete("delete-team/{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> DeleteTeam(string id)
+    public async Task<ActionResult> DeleteTeam([FromRoute] string id)
     {
         TeamViewDto teamView = _mapper.Map<TeamViewDto>(await _teamService.RemoveAsync(id));
 
@@ -94,7 +94,7 @@ public class TeamController : ControllerBase
     /// <returns>IActionResult</returns>
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
-    [HttpPatch("update-time/{id}")]
+    [HttpPatch("update-team/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -106,5 +106,4 @@ public class TeamController : ControllerBase
 
         return Ok(teamView);
     }
-
 }

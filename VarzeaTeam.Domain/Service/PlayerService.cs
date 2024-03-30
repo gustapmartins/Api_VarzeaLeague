@@ -38,12 +38,19 @@ public class PlayerService : IPlayerService
     {
         try
         {
-            PlayerModel getId = await _playerDao.GetIdAsync(Id);
+            PlayerModel player = await _playerDao.GetIdAsync(Id);
 
-            if (getId == null)
-                throw new ExceptionFilter($"O Time com o id '{Id}', não existe.");
+            if (player == null)
+                throw new ExceptionFilter($"O jogador com o id '{Id}' não existe.");
 
-            return getId;
+            // Buscar o objeto de time associado a este jogador
+            TeamModel team = await _teamDao.GetIdAsync(player.TeamId);
+
+            if (team == null)
+                throw new Exception($"O time com o ID '{player.TeamId}' não foi encontrado.");
+
+           
+            return player;
         }
         catch(Exception ex)
         {
@@ -55,10 +62,10 @@ public class PlayerService : IPlayerService
     {
         try
         {
-            PlayerModel player = await _playerDao.PlayerExist(addObject.Name);
+            PlayerModel existingPlayer = await _playerDao.PlayerExist(addObject.NamePlayer);
 
-            if(player != null)
-                throw new Exception($"O jogador com o nome '{addObject.Name}' já existe.");
+            if(existingPlayer != null)
+                throw new Exception($"O jogador com o nome '{addObject.NamePlayer}' já existe.");
 
             TeamModel team = await _teamDao.GetIdAsync(addObject.TeamId);
 
@@ -66,8 +73,10 @@ public class PlayerService : IPlayerService
                 throw new Exception($"O time com o ID '{addObject.TeamId}' não foi encontrado.");
 
             addObject.TeamId = team.Id;
+            addObject.Team = team;
 
             await _playerDao.CreateAsync(addObject);
+
             return addObject;
         }
         catch (Exception ex)
