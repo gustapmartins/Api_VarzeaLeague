@@ -13,7 +13,7 @@ public class MathDaoEfCore : BaseContext<MatchModel>, IMatchDao
 {
     private readonly IMongoCollection<MatchModel> _MatchCollection;
 
-    public MathDaoEfCore(IOptions<VarzeaLeagueDatabaseSettings> options) : base(options)
+    public MathDaoEfCore(IOptions<VarzeaLeagueDatabaseSettings> options) : base(options, "MatchCollection")
     {
         _MatchCollection = Collection;
     }

@@ -4,7 +4,7 @@ namespace VarzeaLeague.Application.DTO.Match;
 
 public class MatchViewDto
 {
-    public int Id { get; set; }
+    public string Id { get; set; } = string.Empty;
 
     public TeamModel HomeTeam { get; set; }
 

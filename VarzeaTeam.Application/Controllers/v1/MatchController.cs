@@ -4,6 +4,7 @@ using VarzeaTeam.Domain.Model.Match;
 using VarzeaTeam.Application.DTO.Team;
 using VarzeaLeague.Domain.Interface.Services;
 using VarzeaTeam.Application.DTO.Match;
+using VarzeaLeague.Application.DTO.Match;
 
 namespace VarzeaTeam.Application.Controllers.v1;
 
@@ -25,11 +26,13 @@ public class MatchController : ControllerBase
     /// </summary>
     ///     <returns>IActionResult</returns>
     /// <response code="200">Caso inserção seja feita com sucesso</response>
-    [HttpGet("buscar-partida")]
+    [HttpGet("search-matchs")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> GetMatch()
     {
-        return Ok(await _matchService.GetAsync());
+        List<MatchViewDto> matchView = _mapper.Map<List<MatchViewDto>>(await _matchService.GetAsync());
+
+        return Ok(matchView);
     }
 
     /// <summary>
@@ -39,25 +42,27 @@ public class MatchController : ControllerBase
     ///     <returns>IActionResult</returns>
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
-    [HttpGet("buscar-partida/{id}")]
+    [HttpGet("search-match/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetIdMatch(string id)
     {
-        return Ok(await _matchService.GetIdAsync(id));
+        MatchViewDto matchView = _mapper.Map<MatchViewDto>(await _matchService.GetIdAsync(id));
+
+        return Ok(matchView);
     }
 
     /// <summary>
     ///     Adiciona um filme ao banco de dados
     /// </summary>
-    /// <param name="teamCreateDto">Objeto com os campos necessários para criação de um filme</param>
+    /// <param name="matchCreateDto">Objeto com os campos necessários para criação de um filme</param>
     ///     <returns>IActionResult</returns>
     /// <response code="201">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
-    [HttpPost]
+    [HttpPost("created-match")]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<ActionResult> PostTeam([FromBody] MatchCreateDto teamCreateDto)
+    public async Task<ActionResult> PostTeam([FromBody] MatchCreateDto matchCreateDto)
     {
-        MatchModel matchCreated = _mapper.Map<MatchModel>(teamCreateDto);
+        MatchModel matchCreated = _mapper.Map<MatchModel>(matchCreateDto);
 
         return CreatedAtAction(nameof(GetMatch), await _matchService.CreateAsync(matchCreated));
     }
@@ -69,11 +74,13 @@ public class MatchController : ControllerBase
     ///     <returns>IActionResult</returns>
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
-    [HttpDelete]
+    [HttpDelete("delete-match/{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> DeleteMatch(string id)
     {
-        return Ok(id);
+        MatchViewDto matchView = _mapper.Map<MatchViewDto>(await _matchService.RemoveAsync(id));
+
+        return Ok(matchView);
     }
 
     /// <summary>
@@ -84,10 +91,16 @@ public class MatchController : ControllerBase
     ///     <returns>IActionResult</returns>
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
-    [HttpPatch]
+    [HttpPatch("update-match/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> UpdateMatch(string id, TeamUpdateDto team)
     {
-        return Ok(id);
+        MatchModel matchModel = _mapper.Map<MatchModel>(team);
+
+        MatchViewDto matchView = _mapper.Map<MatchViewDto>(await _matchService.UpdateAsync(id, matchModel));
+
+        return Ok(matchView);
     }
 }

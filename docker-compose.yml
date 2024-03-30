@@ -6,7 +6,11 @@ services:
     build:
       context: .
       dockerfile: VarzeaTeam.Application\Dockerfile
-    container_name: varzeaLeague_api_container
+    container_name: varzeaLeague_api_containercls
+    networks:
+      - elastic
+    depends_on: 
+      - mongodb
 
   mongodb:
     image: mongo:latest
@@ -15,6 +19,7 @@ services:
       - "27017:27017"
     networks:
       - elastic
+
   elasticsearch:
     image: elasticsearch:7.17.9
     container_name: elasticSearch_container

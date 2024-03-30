@@ -6,11 +6,17 @@ namespace VarzeaTeam.Domain.Model.Match;
 public class MatchModel
 {
     [BsonId] // Atributo que indica que esta propriedade é o ID do documento no MongoDB
-    [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)] // Representação do tipo de dados ObjectId do MongoDBw
+    [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)] // Representação do tipo de dados ObjectId do MongoDB
     public string Id { get; set; }
+
+    [BsonElement("homeTeamId")] // Atributo que mapeia essa propriedade para o campo 'homeTeam' no MongoDB
+    public string HomeTeamId { get; set; } = string.Empty;
 
     [BsonElement("homeTeam")] // Atributo que mapeia essa propriedade para o campo 'homeTeam' no MongoDB
     public TeamModel HomeTeam { get; set; }
+
+    [BsonElement("visitingTeamId")] // Atributo que mapeia essa propriedade para o campo 'visitingTeam' no MongoDB
+    public string VisitingTeamId { get; set; } = string.Empty;
 
     [BsonElement("visitingTeam")] // Atributo que mapeia essa propriedade para o campo 'visitingTeam' no MongoDB
     public TeamModel VisitingTeam { get; set; }

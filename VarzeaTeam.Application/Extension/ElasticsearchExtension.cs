@@ -9,9 +9,9 @@ public static class ElasticsearchExtension
 {
     public static void AddElasticSearch(this IServiceCollection services, IConfiguration configuration)
     {
-        var defaultIndex = "varzealeague"; // Nome do índice padrão
+        var defaultIndex = configuration["ElasticSearchSettings:defaultIndex"]; // Nome do índice padrão
 
-        var settings = new ConnectionSettings(new Uri("http://localhost:9200"))
+        var settings = new ConnectionSettings(new Uri(configuration["ElasticSearchSettings:Url"]))
             .DefaultIndex(defaultIndex)
             .DefaultMappingFor<TeamModel>(m => m
                 .IndexName(defaultIndex)
