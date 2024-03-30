@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using VarzeaTeam.Application.DTO.Team;
 using VarzeaLeague.Domain.Interface.Services;
 using VarzeaTeam.Domain.Model.Player;
 using VarzeaTeam.Application.DTO.Player;
+using VarzeaLeague.Application.DTO.Player;
 
 namespace VarzeaLeague.Application.Controllers.v1;
 
@@ -49,15 +49,15 @@ public class PlayerController: ControllerBase
     /// <summary>
     ///     Adiciona um filme ao banco de dados
     /// </summary>
-    /// <param name="teamCreateDto">Objeto com os campos necessários para criação de um filme</param>
+    /// <param name="playerCreateDto">Objeto com os campos necessários para criação de um filme</param>
     ///     <returns>IActionResult</returns>
     /// <response code="201">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<ActionResult> PostTeam([FromBody] PlayerCreateDto teamCreateDto)
+    public async Task<ActionResult> PostTeam([FromBody] PlayerCreateDto playerCreateDto)
     {
-        PlayerModel playerCreated = _mapper.Map<PlayerModel>(teamCreateDto);
+        PlayerModel playerCreated = _mapper.Map<PlayerModel>(playerCreateDto);
 
         return CreatedAtAction(nameof(GetPlayer), await _playerService.CreateAsync(playerCreated));
     }
@@ -73,7 +73,9 @@ public class PlayerController: ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> DeletePlayer(string id)
     {
-        return Ok(id);
+        PlayerViewDto teamView = _mapper.Map<PlayerViewDto>(await _playerService.RemoveAsync(id));
+
+        return Ok(teamView);
     }
 
     /// <summary>
@@ -86,8 +88,12 @@ public class PlayerController: ControllerBase
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
     [HttpPatch]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> UpdatePlayer(string id, TeamUpdateDto team)
+    public async Task<ActionResult> UpdatePlayer(string id, PlayerUpdateDto team)
     {
-        return Ok(id);
+        PlayerModel teamUpdate = _mapper.Map<PlayerModel>(team);
+
+        PlayerViewDto teamView = _mapper.Map<PlayerViewDto>(await _playerService.UpdateAsync(id, teamUpdate));
+
+        return Ok(teamView);
     }
 }
