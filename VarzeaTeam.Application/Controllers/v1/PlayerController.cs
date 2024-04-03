@@ -54,8 +54,7 @@ public class PlayerController : ControllerBase
     /// <summary>
     ///     Adiciona um filme ao banco de dados
     /// </summary>
-    /// <param name="playerCreatedDto">Objeto com os campos necessários para criação de um filme</param>
-    ///     <returns>IActionResult</returns>
+    /// <param name="playerCreateDto">Objeto com os campos necessários para criação de um filme</param>
     /// <response code="201">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
     [HttpPost("created-player")]

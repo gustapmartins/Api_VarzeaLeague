@@ -106,5 +106,4 @@ public class TeamController : ControllerBase
 
         return Ok(teamView);
     }
-
 }
