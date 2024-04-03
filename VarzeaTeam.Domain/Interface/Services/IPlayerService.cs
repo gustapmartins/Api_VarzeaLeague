@@ -5,4 +5,5 @@ namespace VarzeaLeague.Domain.Interface.Services;
 
 public interface IPlayerService: BaseService<PlayerModel>
 {
+    Task ProduceAsync(string message);
 }

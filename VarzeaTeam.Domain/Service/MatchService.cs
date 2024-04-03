@@ -4,6 +4,7 @@ using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaTeam.Domain.Model.Match;
 using VarzeaTeam.Domain.Exceptions;
 using VarzeaTeam.Domain.Model.Team;
+using System.Globalization;
 
 namespace VarzeaLeague.Domain.Service;
 

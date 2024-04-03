@@ -8,7 +8,7 @@ using Microsoft.OpenApi.Models;
 using VarzeaTeam.Service;
 using VarzeaLeague.Infra.Data.Repository.EfCore;
 using VarzeaLeague.Domain.Service;
-using Nest;
+
 
 namespace VarzeamTeam.Infra.CrossCutting.Ioc
 {
@@ -16,6 +16,8 @@ namespace VarzeamTeam.Infra.CrossCutting.Ioc
     {
         public static void ConfigureService(IServiceCollection services, IConfiguration configuration)
         {
+
+
             services.Configure<VarzeaLeagueDatabaseSettings>
                 (configuration.GetSection("VarzeaLeagueDatabase"));
 

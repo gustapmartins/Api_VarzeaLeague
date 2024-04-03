@@ -5,11 +5,12 @@ using VarzeaTeam.Domain.Model.Player;
 using VarzeaTeam.Application.DTO.Player;
 using VarzeaLeague.Application.DTO.Player;
 
+
 namespace VarzeaLeague.Application.Controllers.v1;
 
 [ApiController]
 [Route("api/v1/[controller]")]
-public class PlayerController: ControllerBase
+public class PlayerController : ControllerBase
 {
     private readonly IPlayerService _playerService;
     private readonly IMapper _mapper;
@@ -20,7 +21,7 @@ public class PlayerController: ControllerBase
         _mapper = mapper;
     }
 
-     /// <summary>
+    /// <summary>
     ///     Adiciona um filme ao banco de dados
     /// </summary>
     ///     <returns>IActionResult</returns>
@@ -101,5 +102,19 @@ public class PlayerController: ControllerBase
         PlayerViewDto playerView = _mapper.Map<PlayerViewDto>(await _playerService.UpdateAsync(id, playerModel));
 
         return Ok(playerView);
+    }
+
+
+    /// <summary>
+    ///     Consultar categoria pelo id
+    /// </summary>
+    ///     <returns>IActionResult</returns>
+    /// <response code="200">Caso inserção seja feita com sucesso</response>
+    /// <response code="404">Caso inserção não seja feita com sucesso</response>
+    [HttpPost("producer")]
+    public async Task<ActionResult> ProduceAsync()
+    {
+        await _playerService.ProduceAsync("Testando os valores");
+        return Ok("Mensagem enviada para o Kafka.");
     }
 }
