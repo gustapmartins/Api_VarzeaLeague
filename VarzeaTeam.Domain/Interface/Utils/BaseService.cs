@@ -2,7 +2,7 @@
 
 public interface BaseService<T>
 {
-    Task<List<T>> GetAsync();
+    Task<List<T>> GetAsync(int page, int pageSize);
 
     Task<T> GetIdAsync(string Id);
 

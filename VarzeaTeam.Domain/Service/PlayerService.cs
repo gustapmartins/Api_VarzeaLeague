@@ -1,5 +1,4 @@
-﻿using Confluent.Kafka;
-using VarzeaLeague.Domain.Interface.Dao;
+﻿using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaLeague.Domain.Interface.Services;
 using VarzeaTeam.Domain.Exceptions;
 using VarzeaTeam.Domain.Model.Player;
@@ -18,11 +17,11 @@ public class PlayerService : IPlayerService
         _teamDao = teamDao;
     }
 
-    public async Task<List<PlayerModel>> GetAsync()
+    public async Task<List<PlayerModel>> GetAsync(int page, int pageSize)
     {
         try
         {
-            List<PlayerModel> GetAll = await _playerDao.GetAsync();
+            List<PlayerModel> GetAll = await _playerDao.GetAsync(page, pageSize);
 
             if (GetAll.Count == 0)
                 throw new ExceptionFilter($"Não existe nenhum time cadastrado");
@@ -115,27 +114,6 @@ public class PlayerService : IPlayerService
         catch (Exception ex)
         {
             throw new Exception(ex.Message);
-        }
-    }
-
-    public async Task ProduceAsync(string message)
-    {
-        var config = new ProducerConfig
-        {
-            BootstrapServers = "localhost:9092"
-        };
-
-        var producer = new ProducerBuilder<Null, string>(config).Build();
-
-        try
-        {
-            var deliveryResult = await producer.ProduceAsync("varzea-league", new Message<Null, string> { Value = message });
-
-            Console.WriteLine($"Mensagem produzida: '{message}', Offset: {deliveryResult.Offset}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Erro ao produzir mensagem: {ex.Message}");
         }
     }
 }

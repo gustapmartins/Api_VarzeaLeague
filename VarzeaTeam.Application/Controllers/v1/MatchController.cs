@@ -5,6 +5,7 @@ using VarzeaTeam.Application.DTO.Team;
 using VarzeaLeague.Domain.Interface.Services;
 using VarzeaTeam.Application.DTO.Match;
 using VarzeaLeague.Application.DTO.Match;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace VarzeaTeam.Application.Controllers.v1;
 
@@ -28,9 +29,10 @@ public class MatchController : ControllerBase
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     [HttpGet("search-matchs")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> GetMatch()
+    [SwaggerOperation(Summary = "Get matches with optional pagination parameters")]
+    public async Task<ActionResult> GetMatch([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        List<MatchViewDto> matchView = _mapper.Map<List<MatchViewDto>>(await _matchService.GetAsync());
+        List<MatchViewDto> matchView = _mapper.Map<List<MatchViewDto>>(await _matchService.GetAsync(page, pageSize));
 
         return Ok(matchView);
     }
@@ -44,7 +46,7 @@ public class MatchController : ControllerBase
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
     [HttpGet("search-match/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetIdMatch(string id)
+    public async Task<IActionResult> GetIdMatch([FromRoute] string id)
     {
         MatchViewDto matchView = _mapper.Map<MatchViewDto>(await _matchService.GetIdAsync(id));
 

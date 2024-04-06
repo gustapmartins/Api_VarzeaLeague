@@ -4,7 +4,6 @@ using VarzeaLeague.Infra.Data.Context;
 using VarzeaTeam.Domain.Model.Match;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using VarzeaTeam.Domain.Model.Player;
 using Nest;
 
 namespace VarzeaLeague.Infra.Data.Repository.EfCore;
@@ -23,9 +22,17 @@ public class MathDaoEfCore : BaseContext<MatchModel>, IMatchDao
         await _MatchCollection.InsertOneAsync(addObject);
     }
 
-    public async Task<List<MatchModel>> GetAsync()
+    public async Task<List<MatchModel>> GetAsync(int page, int pageSize)
     {
-        return await _MatchCollection.Find(_ => true).ToListAsync();
+        int skip = (page - 1) * pageSize;
+
+        var options = new FindOptions<MatchModel>
+        {
+            Limit = pageSize,
+            Skip = skip
+        };
+
+        return await _MatchCollection.FindSync(_ => true, options).ToListAsync();
     }
 
     public async Task<MatchModel> GetIdAsync(string Id)
@@ -49,5 +56,13 @@ public class MathDaoEfCore : BaseContext<MatchModel>, IMatchDao
         };
 
         return await _MatchCollection.FindOneAndUpdateAsync(filter, update, options);
+    }
+
+    public async Task<MatchModel> MatchExistsAsync(string homeTeamId, string visitingTeamId)
+    {
+        MatchModel existingMatch = await _MatchCollection.Find(m => (m.HomeTeamId == homeTeamId && m.VisitingTeamId == visitingTeamId) ||
+                                   (m.HomeTeamId == visitingTeamId && m.VisitingTeamId == homeTeamId)).FirstOrDefaultAsync();
+
+        return existingMatch;
     }
 }

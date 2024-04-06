@@ -13,12 +13,14 @@ namespace VarzeaLeague.Application.Controllers.v1;
 public class PlayerController : ControllerBase
 {
     private readonly IPlayerService _playerService;
+    private readonly IMessagePublisher _messagePublisher;
     private readonly IMapper _mapper;
 
-    public PlayerController(IPlayerService playerService, IMapper mapper)
+    public PlayerController(IPlayerService playerService, IMapper mapper, IMessagePublisher messagePublisher)
     {
         _playerService = playerService;
         _mapper = mapper;
+        _messagePublisher = messagePublisher;
     }
 
     /// <summary>
@@ -28,9 +30,9 @@ public class PlayerController : ControllerBase
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     [HttpGet("search-players")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> GetPlayer()
+    public async Task<ActionResult> GetPlayer([FromRoute] int page = 1, [FromRoute] int pageSize = 10)
     {
-        List<PlayerViewDto> playerView = _mapper.Map<List<PlayerViewDto>>(await _playerService.GetAsync());
+        List<PlayerViewDto> playerView = _mapper.Map<List<PlayerViewDto>>(await _playerService.GetAsync(page, pageSize));
 
         return Ok(playerView);
     }
@@ -113,7 +115,7 @@ public class PlayerController : ControllerBase
     [HttpPost("producer")]
     public async Task<ActionResult> ProduceAsync()
     {
-        await _playerService.ProduceAsync("Testando os valores");
+        await _messagePublisher.ProduceAsync("Testando os valores");
         return Ok("Mensagem enviada para o Kafka.");
     }
 }

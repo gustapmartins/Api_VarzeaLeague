@@ -29,9 +29,11 @@ public class TeamController : ControllerBase
     [HttpGet("search-teams")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> GetTeams()
+    public async Task<ActionResult> GetTeams([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        return Ok(await _teamService.GetAsync());
+        TeamViewDto teamView = _mapper.Map<TeamViewDto>(await _teamService.GetAsync(page, pageSize));
+
+        return Ok(teamView);
     }
 
     /// <summary>

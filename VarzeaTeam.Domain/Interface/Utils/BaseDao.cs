@@ -4,7 +4,7 @@ namespace VarzeaTeam.Infra.Data.Repository.Utils;
 
 public interface BaseDao<T>
 {
-    Task<List<T>> GetAsync();
+    Task<List<T>> GetAsync(int page, int pageSize);
 
     Task<T> GetIdAsync(string Id);
 
