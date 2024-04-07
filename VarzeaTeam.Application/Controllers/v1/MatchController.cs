@@ -5,6 +5,7 @@ using VarzeaTeam.Application.DTO.Team;
 using VarzeaLeague.Domain.Interface.Services;
 using VarzeaTeam.Application.DTO.Match;
 using VarzeaLeague.Application.DTO.Match;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace VarzeaTeam.Application.Controllers.v1;
 
@@ -22,29 +23,31 @@ public class MatchController : ControllerBase
     }
 
     /// <summary>
-    ///     Adiciona um filme ao banco de dados
+    ///     Consultar todas as partidas criadas
     /// </summary>
+    /// <param name="page">Objeto com os campos necessários para definir as paginas</param> 
+    /// <param name="pageSize">Objeto com os campos necessários para os limites das paginas</param> 
     ///     <returns>IActionResult</returns>
-    /// <response code="200">Caso inserção seja feita com sucesso</response>
+    /// <response code="200">Caso a busca seja feita com sucesso</response>
     [HttpGet("search-matchs")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> GetMatch()
+    [SwaggerOperation(Summary = "Get matches with optional pagination parameters")]
+    public async Task<ActionResult> GetMatch([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        List<MatchViewDto> matchView = _mapper.Map<List<MatchViewDto>>(await _matchService.GetAsync());
+        List<MatchViewDto> matchView = _mapper.Map<List<MatchViewDto>>(await _matchService.GetAsync(page, pageSize));
 
         return Ok(matchView);
     }
 
     /// <summary>
-    ///     Consultar categoria pelo id
+    ///     Consultar partida a partir pelo id
     /// </summary>
     /// <param name="id">Objeto com os campos necessários para criação de um filme</param>
     ///     <returns>IActionResult</returns>
-    /// <response code="200">Caso inserção seja feita com sucesso</response>
-    /// <response code="404">Caso inserção não seja feita com sucesso</response>
+    /// <response code="200">Caso a busca seja feita com sucesso</response>
     [HttpGet("search-match/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetIdMatch(string id)
+    public async Task<IActionResult> GetIdMatch([FromRoute] string id)
     {
         MatchViewDto matchView = _mapper.Map<MatchViewDto>(await _matchService.GetIdAsync(id));
 
@@ -52,7 +55,7 @@ public class MatchController : ControllerBase
     }
 
     /// <summary>
-    ///     Adiciona um filme ao banco de dados
+    ///     Adiciona uma partida no banco de dados
     /// </summary>
     /// <param name="matchCreateDto">Objeto com os campos necessários para criação de um filme</param>
     ///     <returns>IActionResult</returns>
@@ -68,7 +71,7 @@ public class MatchController : ControllerBase
     }
 
     /// <summary>
-    ///     Faz 
+    ///     Deleta uma partida a partir do id
     /// </summary>
     /// <param name="id"></param>
     ///     <returns>IActionResult</returns>
@@ -84,7 +87,7 @@ public class MatchController : ControllerBase
     }
 
     /// <summary>
-    ///     Consultar categoria pelo id
+    ///     Atualiza a partida a partir do id
     /// </summary>
     /// <param name="id">Objeto com os campos necessários para criação de um filme</param>
     /// <param name="team">TEAM</param>

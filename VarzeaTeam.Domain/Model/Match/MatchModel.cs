@@ -7,7 +7,7 @@ public class MatchModel
 {
     [BsonId] // Atributo que indica que esta propriedade é o ID do documento no MongoDB
     [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)] // Representação do tipo de dados ObjectId do MongoDB
-    public string Id { get; set; }
+    public string Id { get; set; } = string.Empty;
 
     [BsonElement("homeTeamId")] // Atributo que mapeia essa propriedade para o campo 'homeTeam' no MongoDB
     public string HomeTeamId { get; set; } = string.Empty;
@@ -22,7 +22,7 @@ public class MatchModel
     public TeamModel VisitingTeam { get; set; }
 
     [BsonElement("local")] // Atributo que mapeia essa propriedade para o campo 'local' no MongoDB
-    public string Local { get; set; }
+    public string Local { get; set; } = string.Empty;
 
     [BsonElement("date")] // Atributo que mapeia essa propriedade para o campo 'date' no MongoDB
     public DateTime Date { get; set; }

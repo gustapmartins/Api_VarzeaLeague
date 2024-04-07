@@ -4,6 +4,7 @@ using VarzeaLeague.Infra.Data.Context;
 using VarzeaTeam.Domain.Model.Team;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using VarzeaTeam.Domain.Model.Player;
 
 namespace VarzeaTeam.Infra.Data.Repository.EfCore;
 
@@ -20,9 +21,17 @@ public class TeamDaoEfCore : BaseContext<TeamModel>, ITeamDao
         await _TeamCollection.InsertOneAsync(addObject);
     }
 
-    public async Task<List<TeamModel>> GetAsync()
+    public async Task<List<TeamModel>> GetAsync(int page, int pageSize)
     {
-        return await _TeamCollection.Find(_ => true).ToListAsync();
+        int skip = (page - 1) * pageSize;
+
+        var options = new FindOptions<TeamModel>
+        {
+            Limit = pageSize,
+            Skip = skip
+        };
+
+        return await _TeamCollection.FindSync(_ => true, options).ToListAsync();
     }
 
     public async Task<TeamModel> GetIdAsync(string Id)

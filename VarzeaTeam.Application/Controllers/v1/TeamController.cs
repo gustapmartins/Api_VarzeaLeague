@@ -23,15 +23,19 @@ public class TeamController : ControllerBase
     /// <summary>
     ///    Buscar todos os times cadastrados
     /// </summary>
+    /// <param name="page">Objeto com os campos necessários para definir as paginas</param> 
+    /// <param name="pageSize">Objeto com os campos necessários para os limites das paginas</param> 
     /// <returns>IActionResult</returns>
     /// <response code="200">Caso exista informações cadastradas</response>
     /// <response code="404">Caso as informações sejam passadas erradas</response>
     [HttpGet("search-teams")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> GetTeams()
+    public async Task<ActionResult> GetTeams([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        return Ok(await _teamService.GetAsync());
+        TeamViewDto teamView = _mapper.Map<TeamViewDto>(await _teamService.GetAsync(page, pageSize));
+
+        return Ok(teamView);
     }
 
     /// <summary>

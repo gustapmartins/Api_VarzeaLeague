@@ -1,9 +1,9 @@
-
 using VarzeaLeague.Domain.Interface.Services;
 using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaTeam.Domain.Model.Match;
 using VarzeaTeam.Domain.Exceptions;
 using VarzeaTeam.Domain.Model.Team;
+using VarzeaLeague.Domain.Utils;
 
 namespace VarzeaLeague.Domain.Service;
 
@@ -18,11 +18,11 @@ public class MatchService : IMatchService
         _teamDao = teamDao;
     }
 
-    public async Task<List<MatchModel>> GetAsync()
+    public async Task<List<MatchModel>> GetAsync(int page, int pageSize)
     {
         try
         {
-            List<MatchModel> GetAll = await _matchDao.GetAsync();
+            List<MatchModel> GetAll = await _matchDao.GetAsync(page, pageSize);
 
             if (GetAll.Count == 0)
                 throw new ExceptionFilter($"Não existe nenhuma partida cadastrada");
@@ -59,10 +59,24 @@ public class MatchService : IMatchService
             TeamModel homeTeam = await _teamDao.GetIdAsync(addObject.HomeTeamId);
             TeamModel visitingTeam = await _teamDao.GetIdAsync(addObject.VisitingTeamId);
 
+            MatchModel matchExist = await _matchDao.MatchExistsAsync(addObject.HomeTeamId, addObject.VisitingTeamId);
+
+            if (matchExist != null)
+            {
+                throw new ExceptionFilter("Já existe uma partida cadastrada com esses times.");
+            }
+
             // Verificar se os times foram encontrados
             if (homeTeam == null || visitingTeam == null)
             {
                 throw new ExceptionFilter("Um ou ambos os times não foram encontrados.");
+            }
+
+            bool andressExist = await ViaCep.GetCep(addObject.Local);
+
+            if(!andressExist)
+            {
+                throw new ExceptionFilter("Esse endereço não existe");
             }
 
             // Criar a partida com os times encontrados

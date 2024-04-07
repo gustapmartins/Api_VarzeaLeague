@@ -4,6 +4,7 @@ using VarzeaLeague.Domain.Model.DatabaseSettings;
 using VarzeaLeague.Infra.Data.Context;
 using VarzeaTeam.Domain.Model.Player;
 using MongoDB.Driver;
+using System.Text.RegularExpressions;
 
 namespace VarzeaLeague.Infra.Data.Repository.EfCore;
 
@@ -21,9 +22,17 @@ public class PlayerDaoEfCore : BaseContext<PlayerModel>, IPlayerDao
         await _PlayerCollection.InsertOneAsync(addObject);
     }
 
-    public async Task<List<PlayerModel>> GetAsync()
+    public async Task<List<PlayerModel>> GetAsync(int page, int pageSize)
     {
-        return await _PlayerCollection.Find(_ => true).ToListAsync();
+        int skip = (page - 1) * pageSize;
+
+        var options = new FindOptions<PlayerModel>
+        {
+            Limit = pageSize,
+            Skip = skip
+        };
+
+        return await _PlayerCollection.FindSync(_ => true, options).ToListAsync();
     }
 
     public async Task<PlayerModel> GetIdAsync(string Id)

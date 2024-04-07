@@ -1,14 +1,14 @@
 ﻿using VarzeaLeague.Domain.Model.DatabaseSettings;
 using Microsoft.Extensions.DependencyInjection;
+using VarzeaLeague.Infra.Data.Repository.EfCore;
 using VarzeaTeam.Infra.Data.Repository.EfCore;
 using VarzeaLeague.Domain.Interface.Services;
 using Microsoft.Extensions.Configuration;
 using VarzeaLeague.Domain.Interface.Dao;
+using VarzeaLeague.Domain.Exceptions;
+using VarzeaLeague.Domain.Service;
 using Microsoft.OpenApi.Models;
 using VarzeaTeam.Service;
-using VarzeaLeague.Infra.Data.Repository.EfCore;
-using VarzeaLeague.Domain.Service;
-
 
 namespace VarzeamTeam.Infra.CrossCutting.Ioc
 {
@@ -16,8 +16,6 @@ namespace VarzeamTeam.Infra.CrossCutting.Ioc
     {
         public static void ConfigureService(IServiceCollection services, IConfiguration configuration)
         {
-
-
             services.Configure<VarzeaLeagueDatabaseSettings>
                 (configuration.GetSection("VarzeaLeagueDatabase"));
 
@@ -37,11 +35,16 @@ namespace VarzeamTeam.Infra.CrossCutting.Ioc
                 });
             });
 
+            services.AddControllers(opts =>
+            {
+                opts.Filters.Add<ExceptionFilterGeneric>();
+            });
+
+            services.AddCors();
+
             services.AddHttpContextAccessor();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-            services.AddCors();
 
             services.AddSingleton<ITeamDao, TeamDaoEfCore>();
             services.AddScoped<ITeamService, TeamService>();
@@ -51,6 +54,8 @@ namespace VarzeamTeam.Infra.CrossCutting.Ioc
 
             services.AddSingleton<IPlayerDao, PlayerDaoEfCore>();
             services.AddScoped<IPlayerService, PlayerService>();
+
+            services.AddScoped<IMessagePublisher>(c => new MessagePublisher(configuration["Kafka:BootstrapServers"]));
 
             services.AddSingleton<VarzeaLeagueDatabaseSettings>();
         }
