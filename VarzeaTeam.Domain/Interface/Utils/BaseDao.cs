@@ -1,6 +1,4 @@
-﻿using VarzeaTeam.Domain.Model.Team;
-
-namespace VarzeaTeam.Infra.Data.Repository.Utils;
+﻿namespace VarzeaTeam.Infra.Data.Repository.Utils;
 
 public interface BaseDao<T>
 {

@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using VarzeaTeam.Domain.Model.Team;
 
 namespace VarzeaTeam.Application.DTO.Match;
 

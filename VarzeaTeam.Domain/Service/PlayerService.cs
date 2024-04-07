@@ -1,8 +1,7 @@
 ﻿using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaLeague.Domain.Interface.Services;
+using VarzeaLeague.Domain.Model;
 using VarzeaTeam.Domain.Exceptions;
-using VarzeaTeam.Domain.Model.Player;
-using VarzeaTeam.Domain.Model.Team;
 
 namespace VarzeaLeague.Domain.Service;
 

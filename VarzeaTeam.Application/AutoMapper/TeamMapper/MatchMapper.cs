@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using VarzeaLeague.Application.DTO.Match;
-using VarzeaLeague.Application.DTO.Player;
 using VarzeaLeague.Domain.Model;
 using VarzeaTeam.Application.DTO.Match;
-using VarzeaTeam.Domain.Model.Player;
 
 namespace VarzeaLeague.Application.AutoMapper.TeamMapper;
 

@@ -1,10 +1,10 @@
 ﻿using VarzeaLeague.Domain.Model.DatabaseSettings;
 using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaLeague.Infra.Data.Context;
-using VarzeaTeam.Domain.Model.Match;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Nest;
+using VarzeaLeague.Domain.Model;
 
 namespace VarzeaLeague.Infra.Data.Repository.EfCore;
 

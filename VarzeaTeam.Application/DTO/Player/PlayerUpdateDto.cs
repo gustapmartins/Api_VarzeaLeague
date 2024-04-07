@@ -1,7 +1,4 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using VarzeaTeam.Domain.Model.Team;
-
-namespace VarzeaTeam.Application.DTO.Player;
+﻿namespace VarzeaTeam.Application.DTO.Player;
 
 public class PlayerUpdateDto
 {
