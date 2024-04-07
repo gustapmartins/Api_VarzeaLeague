@@ -1,4 +1,4 @@
-﻿using VarzeaTeam.Domain.Model.Team;
+﻿using VarzeaLeague.Domain.Model;
 
 namespace VarzeaTeam.Application.DTO.Match;
 

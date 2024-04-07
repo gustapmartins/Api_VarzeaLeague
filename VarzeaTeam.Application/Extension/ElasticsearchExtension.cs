@@ -1,7 +1,7 @@
 ﻿
 
 using Nest;
-using VarzeaTeam.Domain.Model.Team;
+using VarzeaLeague.Domain.Model;
 
 namespace VarzeaLeague.Application.Extension;
 

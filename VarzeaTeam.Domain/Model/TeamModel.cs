@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 
-namespace VarzeaTeam.Domain.Model.Team;
+namespace VarzeaLeague.Domain.Model;
 
 public class TeamModel
 {

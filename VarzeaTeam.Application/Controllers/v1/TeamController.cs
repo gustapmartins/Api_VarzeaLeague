@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using VarzeaLeague.Application.DTO.Team;
 using VarzeaLeague.Domain.Interface.Services;
+using VarzeaLeague.Domain.Model;
 using VarzeaTeam.Application.DTO.Team;
-using VarzeaTeam.Domain.Model.Team;
 
 namespace VarzeaTeam.Application.Controllers.v1;
 

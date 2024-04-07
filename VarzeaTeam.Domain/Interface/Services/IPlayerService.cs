@@ -1,5 +1,5 @@
 ﻿using VarzeaLeague.Domain.Interface.Utils;
-using VarzeaTeam.Domain.Model.Player;
+using VarzeaLeague.Domain.Model;
 
 namespace VarzeaLeague.Domain.Interface.Services;
 

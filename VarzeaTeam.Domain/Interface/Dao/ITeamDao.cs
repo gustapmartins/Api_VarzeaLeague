@@ -1,4 +1,4 @@
-﻿using VarzeaTeam.Domain.Model.Team;
+﻿using VarzeaLeague.Domain.Model;
 using VarzeaTeam.Infra.Data.Repository.Utils;
 
 namespace VarzeaLeague.Domain.Interface.Dao;

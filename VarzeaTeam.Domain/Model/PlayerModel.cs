@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using VarzeaTeam.Domain.Model.Team;
 
-namespace VarzeaTeam.Domain.Model.Player;
+namespace VarzeaLeague.Domain.Model;
 
 public class PlayerModel
 {

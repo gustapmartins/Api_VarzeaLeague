@@ -2,9 +2,9 @@
 using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaLeague.Domain.Model.DatabaseSettings;
 using VarzeaLeague.Infra.Data.Context;
-using VarzeaTeam.Domain.Model.Player;
 using MongoDB.Driver;
 using System.Text.RegularExpressions;
+using VarzeaLeague.Domain.Model;
 
 namespace VarzeaLeague.Infra.Data.Repository.EfCore;
 

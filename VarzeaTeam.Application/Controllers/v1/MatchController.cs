@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using VarzeaTeam.Domain.Model.Match;
 using VarzeaTeam.Application.DTO.Team;
 using VarzeaLeague.Domain.Interface.Services;
 using VarzeaTeam.Application.DTO.Match;
 using VarzeaLeague.Application.DTO.Match;
 using Swashbuckle.AspNetCore.Annotations;
+using VarzeaLeague.Domain.Model;
 
 namespace VarzeaTeam.Application.Controllers.v1;
 
