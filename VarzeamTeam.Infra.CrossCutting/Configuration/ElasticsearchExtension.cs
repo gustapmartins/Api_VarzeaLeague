@@ -1,5 +1,5 @@
-﻿
-
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Nest;
 using VarzeaLeague.Domain.Model;
 

@@ -3,8 +3,6 @@ using VarzeamTeam.Infra.CrossCutting.Ioc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddElasticSearch(builder.Configuration);
-
 DependencyInjection.ConfigureService(builder.Services, builder.Configuration);
 
 var app = builder.Build();

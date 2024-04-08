@@ -9,6 +9,8 @@ using VarzeaLeague.Domain.Exceptions;
 using VarzeaLeague.Domain.Service;
 using Microsoft.OpenApi.Models;
 using VarzeaTeam.Service;
+using VarzeaLeague.Application.Extension;
+using Ticket.Configure;
 
 namespace VarzeamTeam.Infra.CrossCutting.Ioc
 {
@@ -22,6 +24,8 @@ namespace VarzeamTeam.Infra.CrossCutting.Ioc
             services.AddEndpointsApiExplorer();
 
             services.AddControllers();
+
+            services.AddElasticSearch(configuration);
 
             services.AddSwaggerGen(c =>
             {
@@ -61,6 +65,8 @@ namespace VarzeamTeam.Infra.CrossCutting.Ioc
             services.AddScoped<IMessagePublisher>(c => new MessagePublisher(configuration["Kafka:BootstrapServers"]));
 
             services.AddSingleton<VarzeaLeagueDatabaseSettings>();
+
+            Authentication.ConfigureAuth(services);
         }
     }
 }

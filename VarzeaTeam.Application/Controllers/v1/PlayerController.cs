@@ -4,10 +4,11 @@ using VarzeaLeague.Domain.Interface.Services;
 using VarzeaTeam.Application.DTO.Player;
 using VarzeaLeague.Application.DTO.Player;
 using VarzeaLeague.Domain.Model;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace VarzeaLeague.Application.Controllers.v1;
 
+[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
 public class PlayerController : ControllerBase
