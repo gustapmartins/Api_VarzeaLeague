@@ -1,9 +1,9 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using VarzeaLeague.Domain.Interface.Services;
 using VarzeaLeague.Application.DTO.Team;
-using VarzeaLeague.Domain.Interface.Services;
-using VarzeaLeague.Domain.Model;
 using VarzeaTeam.Application.DTO.Team;
+using VarzeaLeague.Domain.Model;
+using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 
 namespace VarzeaTeam.Application.Controllers.v1;
 
