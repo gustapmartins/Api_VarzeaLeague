@@ -1,16 +1,9 @@
-﻿using VarzeaLeague.Domain.Model;
+﻿using VarzeaLeague.Domain.Interface.Utils;
+using VarzeaLeague.Domain.Model;
 
 namespace VarzeaLeague.Domain.Interface.Services;
 
-public interface IAuthService
+public interface IAuthService : BaseService<UserModel>
 {
-    List<UserModel> FindAll();
-
-    Task<string> Login(UserModel loginDto);
-
-    Task<UserModel> RegisterAsync(UserModel registerDto);
-
-    Task<string> ForgetPasswordAsync(string email);
-
-    Task<string> ResetPasswordAsync(UserModel passwordResetDto);
+    Task<string> Login(UserModel userLogin);
 }

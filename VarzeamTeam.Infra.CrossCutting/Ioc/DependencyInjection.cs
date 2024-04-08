@@ -55,6 +55,9 @@ namespace VarzeamTeam.Infra.CrossCutting.Ioc
             services.AddSingleton<IPlayerDao, PlayerDaoEfCore>();
             services.AddScoped<IPlayerService, PlayerService>();
 
+            services.AddSingleton<IAuthDao, AuthDaoEfCore>();
+            services.AddScoped<IAuthService, AutheService>();
+
             services.AddScoped<IMessagePublisher>(c => new MessagePublisher(configuration["Kafka:BootstrapServers"]));
 
             services.AddSingleton<VarzeaLeagueDatabaseSettings>();

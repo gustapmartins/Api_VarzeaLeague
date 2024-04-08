@@ -18,17 +18,18 @@ public class MessagePublisher : IMessagePublisher
 
     public async Task ProduceAsync(string message)
     {
-        var producer = new ProducerBuilder<Null, string>(_config).Build();
-
-        try
+        using (var producer = new ProducerBuilder<Null, string>(_config).Build())
         {
-            var deliveryResult = await producer.ProduceAsync(Constans.KAFKA_TOPICO_VARZEALEAGUE, new Message<Null, string> { Value = message });
+            try
+            {
+                var deliveryResult = await producer.ProduceAsync(Constants.KAFKA_TOPICO_VARZEALEAGUE, new Message<Null, string> { Value = message });
 
-            Console.WriteLine($"Mensagem produzida: '{message}', Offset: {deliveryResult.Offset}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Erro ao produzir mensagem: {ex.Message}");
+                Console.WriteLine($"Mensagem produzida: '{message}', Offset: {deliveryResult.Offset}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao produzir mensagem: {ex.Message}");
+            }
         }
     }
 }

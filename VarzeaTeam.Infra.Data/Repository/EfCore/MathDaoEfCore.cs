@@ -17,11 +17,6 @@ public class MathDaoEfCore : BaseContext<MatchModel>, IMatchDao
         _MatchCollection = Collection;
     }
 
-    public async Task CreateAsync(MatchModel addObject)
-    {
-        await _MatchCollection.InsertOneAsync(addObject);
-    }
-
     public async Task<List<MatchModel>> GetAsync(int page, int pageSize)
     {
         int skip = (page - 1) * pageSize;
@@ -38,6 +33,11 @@ public class MathDaoEfCore : BaseContext<MatchModel>, IMatchDao
     public async Task<MatchModel> GetIdAsync(string Id)
     {
         return await _MatchCollection.Find(x => x.Id == Id).FirstOrDefaultAsync();
+    }
+
+    public async Task CreateAsync(MatchModel addObject)
+    {
+        await _MatchCollection.InsertOneAsync(addObject);
     }
 
     public async Task RemoveAsync(string Id)

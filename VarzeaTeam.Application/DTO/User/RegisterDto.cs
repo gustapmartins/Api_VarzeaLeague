@@ -1,0 +1,28 @@
+﻿using System.ComponentModel.DataAnnotations;
+using VarzeaTeam.Domain.Enum;
+
+namespace VarzeaLeague.Application.DTO.User;
+
+public class RegisterDto
+{
+    [Required(ErrorMessage = "Name is required")]
+    public string Username { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Email is required")]
+    public string Email { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Password is required")]
+    [DataType(DataType.Password)]
+    [RegularExpression("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{4,8}$", ErrorMessage = "Must contain uppercase and lowercase letter and number")]
+    public string Password { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Confirm your password")]
+    [Compare("Password")]
+    public string ConfirmPassword { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Confirm is required")]
+    public string Cpf { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "YearsOld is required")]
+    public Role Role { get; set; } = Role.User;
+}
