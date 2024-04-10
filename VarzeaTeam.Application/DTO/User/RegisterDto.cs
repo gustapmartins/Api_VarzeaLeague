@@ -9,6 +9,7 @@ public class RegisterDto
     public string Username { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Email is required")]
+    [RegularExpression("/^[a-z0-9.]+@[a-z0-9]+\\.[a-z]+\\.([a-z]+)?$/i", ErrorMessage = "Email does not contain the correct format")]
     public string Email { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Password is required")]
@@ -21,6 +22,7 @@ public class RegisterDto
     public string ConfirmPassword { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Confirm is required")]
+    [RegularExpression("([0-9]{2}[\\.]?[0-9]{3}[\\.]?[0-9]{3}[\\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\\.]?[0-9]{3}[\\.]?[0-9]{3}[-]?[0-9]{2})", ErrorMessage = "Invalid CPF")]
     public string Cpf { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "YearsOld is required")]

@@ -9,10 +9,12 @@ namespace VarzeaLeague.Domain.Service;
 public class AutheService : IAuthService
 {
     private readonly IAuthDao _authDao;
+    private readonly IMessagePublisher _messagePublisher;
 
-    public AutheService(IAuthDao authDao)
+    public AutheService(IAuthDao authDao, IMessagePublisher messagePublisher)
     {
         _authDao = authDao;
+        _messagePublisher = messagePublisher;
     }
 
     public async Task<List<UserModel>> GetAsync(int page, int pageSize)
@@ -77,35 +79,59 @@ public class AutheService : IAuthService
 
     public async Task<UserModel> CreateAsync(UserModel addObject)
     {
-        UserModel findEmail = await _authDao.FindEmail(addObject.Email);
-
-        if (findEmail != null)
-            throw new ExceptionFilter($"Usuario com esse email: '{addObject.Email}', já existe.");
-
-        addObject.Password = GenerateHash.GenerateHashParameters(addObject.Password);
-
-        UserModel user = new()
+        try
         {
-            UserName = addObject.UserName,
-            Email = addObject.Email,
-            Password = addObject.Password,
-            Cpf = addObject.Cpf,
-            Role = addObject.Role,
-        };
+            UserModel findEmail = await _authDao.FindEmail(addObject.Email);
 
-        await _authDao.CreateAsync(user);
+            if (findEmail != null)
+                throw new ExceptionFilter($"Usuario com esse email: '{addObject.Email}', já existe.");
 
-        return user;
+            addObject.Password = GenerateHash.GenerateHashParameters(addObject.Password);
+
+            UserModel user = new()
+            {
+                UserName = addObject.UserName,
+                Email = addObject.Email,
+                Password = addObject.Password,
+                Cpf = addObject.Cpf,
+                Role = addObject.Role,
+            };
+
+            await _authDao.CreateAsync(user);
+
+            return user;
+        }
+        catch(Exception ex) 
+        {
+           throw new Exception(ex.Message, ex);
+        }
     }
+
+
 
     public Task<UserModel> RemoveAsync(string Id)
     {
-        throw new NotImplementedException();
+        try
+        {
+
+            throw new NotImplementedException();
+        }
+        catch(Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
     }
 
     public Task<UserModel> UpdateAsync(string Id, UserModel updateObject)
     {
-        throw new NotImplementedException();
+        try
+        {
+            throw new NotImplementedException();
+        }
+        catch(Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
     }
 }
     

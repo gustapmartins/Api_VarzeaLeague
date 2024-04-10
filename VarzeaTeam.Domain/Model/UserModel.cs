@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+using VarzeaLeague.Domain.Enum;
 using VarzeaTeam.Domain.Enum;
 
 namespace VarzeaLeague.Domain.Model;
@@ -21,6 +22,11 @@ public class UserModel
 
     [BsonElement("Cpf")] // Atributo que mapeia essa propriedade para o campo 'Cpf' no MongoDB
     public string Cpf {  get; set; } = string.Empty;
+
+    public AccountStatus AccountStatus { get; set; }
+
+    [BsonElement("DateCreated")] // Atributo que mapeia essa propriedade para o campo 'Cpf' no MongoDB
+    public DateTime DateCreated { get; set; }
 
     [BsonElement("Role")] // Atributo que mapeia essa propriedade para o campo 'Role' no MongoDB
     public Role Role { get; set; }
