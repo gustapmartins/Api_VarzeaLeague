@@ -9,7 +9,6 @@ public class RegisterDto
     public string Username { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Email is required")]
-    [RegularExpression("/^[a-z0-9.]+@[a-z0-9]+\\.[a-z]+\\.([a-z]+)?$/i", ErrorMessage = "Email does not contain the correct format")]
     public string Email { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Password is required")]
@@ -26,5 +25,5 @@ public class RegisterDto
     public string Cpf { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "YearsOld is required")]
-    public Role Role { get; set; } = Role.User;
+    public Role Role { get; set; }
 }

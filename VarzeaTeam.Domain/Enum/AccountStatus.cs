@@ -2,6 +2,7 @@
 
 public enum AccountStatus
 {
-    blocked = 0,
-    active = 1
+    blocked = 0, //Conta bloqueada
+    active = 1, //Conta ativa
+    suspended = 2, //Conta suspensa
 }

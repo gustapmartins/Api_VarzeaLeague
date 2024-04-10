@@ -43,6 +43,9 @@ public class AutheService : IAuthService
             if (GetId == null)
                 throw new ExceptionFilter($"A partida com o id '{Id}', não existe.");
 
+            if(GetId.AccountStatus == 0)
+                throw new ExceptionFilter($"Esse usuario '{Id}' está bloqueado.");
+
             return GetId;
         }
         catch (Exception ex)
@@ -95,6 +98,8 @@ public class AutheService : IAuthService
                 Password = addObject.Password,
                 Cpf = addObject.Cpf,
                 Role = addObject.Role,
+                AccountStatus = Enum.AccountStatus.active,
+                DateCreated = DateTime.Now
             };
 
             await _authDao.CreateAsync(user);
@@ -106,8 +111,6 @@ public class AutheService : IAuthService
            throw new Exception(ex.Message, ex);
         }
     }
-
-
 
     public Task<UserModel> RemoveAsync(string Id)
     {

@@ -23,9 +23,10 @@ public class UserModel
     [BsonElement("Cpf")] // Atributo que mapeia essa propriedade para o campo 'Cpf' no MongoDB
     public string Cpf {  get; set; } = string.Empty;
 
-    public AccountStatus AccountStatus { get; set; }
+    [BsonElement("AccountStatus")] // Atributo que mapeia essa propriedade para o campo 'AccountStatus' no MongoDB
+    public AccountStatus AccountStatus { get; set; } 
 
-    [BsonElement("DateCreated")] // Atributo que mapeia essa propriedade para o campo 'Cpf' no MongoDB
+    [BsonElement("DateCreated")] // Atributo que mapeia essa propriedade para o campo 'DateCreated' no MongoDB
     public DateTime DateCreated { get; set; }
 
     [BsonElement("Role")] // Atributo que mapeia essa propriedade para o campo 'Role' no MongoDB
