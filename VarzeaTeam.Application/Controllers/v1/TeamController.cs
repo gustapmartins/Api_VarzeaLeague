@@ -1,4 +1,5 @@
 ﻿using VarzeaLeague.Domain.Interface.Services;
+using Microsoft.AspNetCore.Authorization;
 using VarzeaLeague.Application.DTO.Team;
 using VarzeaTeam.Application.DTO.Team;
 using VarzeaLeague.Domain.Model;
@@ -7,6 +8,7 @@ using AutoMapper;
 
 namespace VarzeaTeam.Application.Controllers.v1;
 
+[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
 public class TeamController : ControllerBase

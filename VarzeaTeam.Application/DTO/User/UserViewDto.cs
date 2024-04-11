@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System.ComponentModel.DataAnnotations;
+using VarzeaLeague.Domain.Enum;
 using VarzeaTeam.Domain.Enum;
 
 namespace VarzeaLeague.Application.DTO.User;
@@ -15,6 +17,10 @@ public class UserViewDto
     public string Password { get; set; } = string.Empty;
 
     public string Cpf { get; set; } = string.Empty;
+
+    public AccountStatus AccountStatus { get; set; }
+
+    public DateTime DateCreated { get; set; }
 
     public Role Role { get; set; } = Role.User;
 }

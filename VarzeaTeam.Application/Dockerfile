@@ -8,6 +8,9 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 8080
 
+ENV ASPNETCORE_URLS=http://+:8000;http://+:80;
+ENV ASPNETCORE_ENVIRONMENT=Development
+
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["VarzeaTeam.Application/VarzeaLeague.Application.csproj", "VarzeaTeam.Application/"]

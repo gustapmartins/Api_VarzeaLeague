@@ -3,18 +3,21 @@ using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaTeam.Domain.Exceptions;
 using VarzeaLeague.Domain.Model;
 using VarzeaLeague.Domain.Utils;
+using Newtonsoft.Json.Linq;
 
 namespace VarzeaLeague.Domain.Service;
 
 public class AutheService : IAuthService
 {
     private readonly IAuthDao _authDao;
+    private readonly IEmailService _emailService;
     private readonly IMessagePublisher _messagePublisher;
 
-    public AutheService(IAuthDao authDao, IMessagePublisher messagePublisher)
+    public AutheService(IAuthDao authDao, IMessagePublisher messagePublisher, IEmailService emailService)
     {
         _authDao = authDao;
         _messagePublisher = messagePublisher;
+        _emailService = emailService;
     }
 
     public async Task<List<UserModel>> GetAsync(int page, int pageSize)
@@ -111,6 +114,34 @@ public class AutheService : IAuthService
            throw new Exception(ex.Message, ex);
         }
     }
+
+    public async Task<string> ForgetPassword(string email)
+    {
+        try
+        {
+            var findEmail = await _authDao.FindEmail(email);
+
+            if (findEmail == null)
+            {
+                throw new ExceptionFilter($"This {email} is not valid");
+            }
+
+            var token = GenerateHash.GenerateHashRandom();
+
+            _emailService.SendMail(
+                  email,
+                  "Redefinição da sua senha",
+                  $"Verifique sua conta, com essa token: {token}"
+               );
+
+            return "Um e-mail de redefinição de senha foi enviado para o seu endereço de e-mail";
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
+
 
     public Task<UserModel> RemoveAsync(string Id)
     {

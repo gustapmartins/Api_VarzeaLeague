@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Models;
 using VarzeaTeam.Service;
 using VarzeaLeague.Application.Extension;
 using Ticket.Configure;
+using Ticket.Service;
 
 namespace VarzeamTeam.Infra.CrossCutting.Ioc
 {
@@ -61,6 +62,8 @@ namespace VarzeamTeam.Infra.CrossCutting.Ioc
 
             services.AddSingleton<IAuthDao, AuthDaoEfCore>();
             services.AddScoped<IAuthService, AutheService>();
+
+            services.AddScoped<IEmailService, EmailService>();
 
             services.AddScoped<IMessagePublisher>(c => new MessagePublisher(configuration["Kafka:BootstrapServers"]));
 

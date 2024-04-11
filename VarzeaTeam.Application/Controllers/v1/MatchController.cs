@@ -5,10 +5,12 @@ using VarzeaLeague.Domain.Interface.Services;
 using VarzeaTeam.Application.DTO.Match;
 using VarzeaLeague.Application.DTO.Match;
 using Swashbuckle.AspNetCore.Annotations;
+using Microsoft.AspNetCore.Authorization;
 using VarzeaLeague.Domain.Model;
 
 namespace VarzeaTeam.Application.Controllers.v1;
 
+[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
 public class MatchController : ControllerBase

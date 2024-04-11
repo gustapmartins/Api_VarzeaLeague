@@ -70,4 +70,19 @@ public class AuthController : ControllerBase
 
         return CreatedAtAction(nameof(GetUsers), await _authService.CreateAsync(UserCreated));
     }
+
+    /// <summary>
+    ///     Redefinir a senha de um usuario no banco de dados
+    /// </summary>
+    /// <param name="email">Objeto com os campos necessários para mudar a senha de um usuário</param>
+    ///     <returns>IActionResult</returns>
+    /// <response code="201">Caso inserção seja feita com sucesso</response>
+    /// <response code="400">Caso a requisição esteja errada</response>
+    [HttpPost("forget-password")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> ForgetPassword([FromHeader] string email)
+    {
+        return Ok(await _authService.ForgetPassword(email));
+    }
 }

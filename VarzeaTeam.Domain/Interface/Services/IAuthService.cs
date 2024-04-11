@@ -6,4 +6,6 @@ namespace VarzeaLeague.Domain.Interface.Services;
 public interface IAuthService : BaseService<UserModel>
 {
     Task<string> Login(UserModel userLogin);
+
+    Task<string> ForgetPassword(string email);
 }
