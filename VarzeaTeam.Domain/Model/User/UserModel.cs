@@ -2,7 +2,7 @@
 using VarzeaLeague.Domain.Enum;
 using VarzeaTeam.Domain.Enum;
 
-namespace VarzeaLeague.Domain.Model;
+namespace VarzeaLeague.Domain.Model.User;
 
 public class UserModel
 {
@@ -18,13 +18,13 @@ public class UserModel
     public string Email { get; set; } = string.Empty;
 
     [BsonElement("Password")] // Atributo que mapeia essa propriedade para o campo 'Password' no MongoDB
-    public string Password {  get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
 
     [BsonElement("Cpf")] // Atributo que mapeia essa propriedade para o campo 'Cpf' no MongoDB
-    public string Cpf {  get; set; } = string.Empty;
+    public string Cpf { get; set; } = string.Empty;
 
     [BsonElement("AccountStatus")] // Atributo que mapeia essa propriedade para o campo 'AccountStatus' no MongoDB
-    public AccountStatus AccountStatus { get; set; } 
+    public AccountStatus AccountStatus { get; set; }
 
     [BsonElement("DateCreated")] // Atributo que mapeia essa propriedade para o campo 'DateCreated' no MongoDB
     public DateTime DateCreated { get; set; }

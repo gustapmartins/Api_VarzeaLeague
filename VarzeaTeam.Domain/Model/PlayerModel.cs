@@ -19,5 +19,5 @@ public class PlayerModel
     public string TeamId { get; set; } = string.Empty;
 
     [BsonElement("team")]
-    public TeamModel Team { get; set; }
+    public TeamModel? Team { get; set; }
 }

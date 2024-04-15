@@ -2,8 +2,9 @@
 using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaLeague.Infra.Data.Context;
 using Microsoft.Extensions.Options;
-using VarzeaLeague.Domain.Model;
 using MongoDB.Driver;
+using VarzeaLeague.Domain.Model.User;
+using VarzeaLeague.Domain.Utils;
 
 namespace VarzeaLeague.Infra.Data.Repository.EfCore;
 
@@ -52,7 +53,9 @@ public class AuthDaoEfCore : BaseContext<UserModel>, IAuthDao
     public async Task<UserModel> UpdateAsync(string Id, UserModel updateObject)
     {
         var filter = Builders<UserModel>.Filter.Eq(x => x.Id, Id);
-        var update = Builders<UserModel>.Update.Set(x => x.UserName, updateObject.UserName);
+        var update = Builders<UserModel>.Update
+            .Set(x => x.UserName, updateObject.UserName)
+            .Set(x => x.Password, GenerateHash.GenerateHashParameters(updateObject.Password));
 
         var options = new FindOneAndUpdateOptions<UserModel>
         {

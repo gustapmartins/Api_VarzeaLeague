@@ -2,8 +2,8 @@
 using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaLeague.Infra.Data.Context;
 using Microsoft.Extensions.Options;
-using MongoDB.Driver;
 using VarzeaLeague.Domain.Model;
+using MongoDB.Driver;
 
 namespace VarzeaTeam.Infra.Data.Repository.EfCore;
 
@@ -51,7 +51,9 @@ public class TeamDaoEfCore : BaseContext<TeamModel>, ITeamDao
     public async Task<TeamModel> UpdateAsync(string Id, TeamModel updateObject)
     {
         var filter = Builders<TeamModel>.Filter.Eq(x => x.Id, Id);
-        var update = Builders<TeamModel>.Update.Set(x => x.NameTeam, updateObject.NameTeam);
+        var update = Builders<TeamModel>.Update
+            .Set(x => x.NameTeam, updateObject.NameTeam);
+
 
         var options = new FindOneAndUpdateOptions<TeamModel>
         {

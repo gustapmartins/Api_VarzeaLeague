@@ -10,7 +10,7 @@ public class MatchViewDto
 
     public TeamModel VisitingTeam { get; set; }
 
-    public string Local { get; set; }
+    public string Local { get; set; } = string.Empty;
 
     public DateTime Date { get; set; }
 

@@ -47,6 +47,8 @@ namespace VarzeamTeam.Infra.CrossCutting.Ioc
 
             services.AddCors();
 
+            services.AddMemoryCache();
+
             services.AddHttpContextAccessor();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -60,8 +62,10 @@ namespace VarzeamTeam.Infra.CrossCutting.Ioc
             services.AddSingleton<IPlayerDao, PlayerDaoEfCore>();
             services.AddScoped<IPlayerService, PlayerService>();
 
+            services.AddScoped<IMemoryCacheService, MemoryCacheService>();
+
             services.AddSingleton<IAuthDao, AuthDaoEfCore>();
-            services.AddScoped<IAuthService, AutheService>();
+            services.AddScoped<IAuthService, AuthService>();
 
             services.AddScoped<IEmailService, EmailService>();
 
