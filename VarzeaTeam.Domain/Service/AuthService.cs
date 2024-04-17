@@ -91,7 +91,7 @@ public class AuthService : IAuthService
             UserModel findEmail = await _authDao.FindEmail(addObject.Email);
 
             if (findEmail != null)
-                throw new ExceptionFilter($"Usuario com esse email: '{addObject.Email}', já existe.");
+                throw new ExceptionFilter($"user with this email: '{addObject.Email}', already exists.");
 
             addObject.Password = GenerateHash.GenerateHashParameters(addObject.Password);
 
@@ -177,10 +177,15 @@ public class AuthService : IAuthService
         }
     }
 
-    public Task<UserModel> RemoveAsync(string Id)
+    public async Task<UserModel> RemoveAsync(string Id)
     {
         try
         {
+            UserModel userView = await _authDao.GetIdAsync(Id);
+
+            if (userView == null)
+                throw new ExceptionFilter($"This user: {userView} not exists");
+            
 
             throw new NotImplementedException();
         }
