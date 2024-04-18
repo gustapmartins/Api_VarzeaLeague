@@ -1,23 +1,24 @@
 ﻿using VarzeaLeague.Domain.Interface.Services;
 using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaTeam.Domain.Exceptions;
-using VarzeaLeague.Domain.Model;
 using VarzeaLeague.Domain.Utils;
-using Newtonsoft.Json.Linq;
+using VarzeaLeague.Domain.Model.User;
 
 namespace VarzeaLeague.Domain.Service;
 
-public class AutheService : IAuthService
+public class AuthService : IAuthService
 {
     private readonly IAuthDao _authDao;
+    private readonly IMemoryCacheService _memoryCacheService;
     private readonly IEmailService _emailService;
     private readonly IMessagePublisher _messagePublisher;
 
-    public AutheService(IAuthDao authDao, IMessagePublisher messagePublisher, IEmailService emailService)
+    public AuthService(IAuthDao authDao, IMessagePublisher messagePublisher, IEmailService emailService, IMemoryCacheService memoryCacheService)
     {
         _authDao = authDao;
         _messagePublisher = messagePublisher;
         _emailService = emailService;
+        _memoryCacheService = memoryCacheService;
     }
 
     public async Task<List<UserModel>> GetAsync(int page, int pageSize)
@@ -90,7 +91,7 @@ public class AutheService : IAuthService
             UserModel findEmail = await _authDao.FindEmail(addObject.Email);
 
             if (findEmail != null)
-                throw new ExceptionFilter($"Usuario com esse email: '{addObject.Email}', já existe.");
+                throw new ExceptionFilter($"user with this email: '{addObject.Email}', already exists.");
 
             addObject.Password = GenerateHash.GenerateHashParameters(addObject.Password);
 
@@ -119,17 +120,22 @@ public class AutheService : IAuthService
     {
         try
         {
-            var findEmail = await _authDao.FindEmail(email);
+            UserModel findEmail = await _authDao.FindEmail(email);
 
             if (findEmail == null)
-            {
                 throw new ExceptionFilter($"This {email} is not valid");
-            }
 
             var token = GenerateHash.GenerateHashRandom();
 
+            var PasswordReset = new PasswordReset
+            {
+                Token = token,
+                Email = email,
+            };
 
-            return "Um e-mail de redefinição de senha foi enviado para o seu endereço de e-mail";
+            _memoryCacheService.AddToCache(token, PasswordReset, 5); //5 minutos de cache
+
+            return token;
         }
         catch (Exception ex)
         {
@@ -137,13 +143,46 @@ public class AutheService : IAuthService
         }
     }
 
-
-    public Task<UserModel> RemoveAsync(string Id)
+    public async Task<string> ResetPassword(PasswordReset passwordReset)
     {
         try
         {
+            PasswordReset passwordResetCache = _memoryCacheService.GetCache<PasswordReset>(passwordReset.Token);
 
-            throw new NotImplementedException();
+            if(passwordResetCache == null)
+                throw new ExceptionFilter($"This token has expired");
+
+            UserModel findEmail = await _authDao.FindEmail(passwordResetCache.Email);
+
+            if(findEmail == null)
+                throw new ExceptionFilter($"This {passwordReset.Email} is not valid");
+
+            findEmail.Password = passwordReset.Password;
+
+            UserModel updatePassword = await _authDao.UpdateAsync(findEmail.Id, findEmail);
+
+            _memoryCacheService.RemoveFromCache<PasswordReset>(passwordReset.Token);
+
+            return "Senha redefinida";
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
+
+    public async Task<UserModel> RemoveAsync(string Id)
+    {
+        try
+        {
+            UserModel userView = await _authDao.GetIdAsync(Id);
+
+            if (userView == null)
+                throw new ExceptionFilter($"This user: {userView} not exists");
+
+            userView.AccountStatus = Enum.AccountStatus.suspended;
+
+            return userView;
         }
         catch(Exception ex)
         {
@@ -151,11 +190,15 @@ public class AutheService : IAuthService
         }
     }
 
-    public Task<UserModel> UpdateAsync(string Id, UserModel updateObject)
+    public async Task<UserModel> UpdateAsync(string Id, UserModel updateObject)
     {
         try
         {
-            throw new NotImplementedException();
+            UserModel userId = await _authDao.GetIdAsync(Id);
+
+            await _authDao.UpdateAsync(Id, updateObject);
+
+            return userId;
         }
         catch(Exception ex)
         {

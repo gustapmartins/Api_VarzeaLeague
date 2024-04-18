@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using VarzeaLeague.Application.DTO.User;
-using VarzeaLeague.Domain.Model;
+using VarzeaLeague.Domain.Model.User;
 
 namespace VarzeaLeague.Application.AutoMapper.TeamMapper;
 
@@ -12,5 +12,6 @@ public class AuthMapper : Profile
         CreateMap<LoginDto, UserModel>();
         CreateMap<UserViewDto, UserModel>();
         CreateMap<UserModel, UserViewDto>();
+        CreateMap<PasswordResetDto, PasswordReset>().ReverseMap();
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
-using VarzeaLeague.Domain.Model;
 using System.Security.Claims;
 using System.Text;
 using VarzeaTeam.Domain.Common;
+using VarzeaLeague.Domain.Model.User;
 
 namespace VarzeaLeague.Domain.Utils;
 
@@ -21,7 +21,6 @@ public static class GenerateHash
             return hash;
         }
     }
-
 
     public static string GenerateHashParameters(string password)
     {

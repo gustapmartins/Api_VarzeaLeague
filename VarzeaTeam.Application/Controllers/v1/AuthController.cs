@@ -1,9 +1,9 @@
 ﻿using VarzeaLeague.Domain.Interface.Services;
 using Swashbuckle.AspNetCore.Annotations;
 using VarzeaLeague.Application.DTO.User;
-using VarzeaLeague.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
+using VarzeaLeague.Domain.Model.User;
 
 namespace VarzeaLeague.Application.Controllers.v1;
 
@@ -34,6 +34,24 @@ public class AuthController : ControllerBase
     public async Task<ActionResult> GetUsers([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
         List<UserViewDto> authView = _mapper.Map<List<UserViewDto>>(await _authService.GetAsync(page, pageSize));
+
+        return Ok(authView);
+    }
+
+    /// <summary>
+    ///     Consultar todas as partidas criadas
+    /// </summary>
+    /// <param name="page">Objeto com os campos necessários para definir as paginas</param> 
+    /// <param name="pageSize">Objeto com os campos necessários para os limites das paginas</param> 
+    ///     <returns>IActionResult</returns>
+    /// <response code="200">Caso a busca seja feita com sucesso</response>
+    [HttpGet("search-auths")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [SwaggerOperation(Summary = "Get matches with optional pagination parameters")]
+    public async Task<ActionResult> GetUser([FromQuery] string id)
+    {
+        UserViewDto authView = _mapper.Map<UserViewDto>(await _authService.GetIdAsync(id));
 
         return Ok(authView);
     }
@@ -83,6 +101,41 @@ public class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> ForgetPassword([FromHeader] string email)
     {
-        return Ok(await _authService.ForgetPassword(email));
+        string token = await _authService.ForgetPassword(email);
+
+        return Ok(new { token });
+    }
+
+    /// <summary>
+    ///     Redefinir a senha de um usuario no banco de dados
+    /// </summary>
+    /// <param name="passwordResetDto">Objeto com os campos necessários para mudar a senha de um usuário</param>
+    ///     <returns>IActionResult</returns>
+    /// <response code="201">Caso inserção seja feita com sucesso</response>
+    /// <response code="400">Caso a requisição esteja errada</response>
+    [HttpPost("reset-password")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> ResetPassword([FromBody] PasswordResetDto passwordResetDto)
+    {
+        PasswordReset passwordReset = _mapper.Map<PasswordReset>(passwordResetDto);
+
+        return Ok(await _authService.ResetPassword(passwordReset));
+    }
+
+    /// <summary>
+    ///     Apagar um usuario no banco de dados
+    /// </summary>
+    /// <param name="Id">Objeto com os campos necessários para delete um     usuário</param>
+    ///     <returns>IActionResult</returns>
+    /// <response code="201">Caso inserção seja feita com sucesso</response>
+    /// <response code="400">Caso a requisição esteja errada</response>
+    [HttpPost("delete-user/{id}")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> ResetPassword([FromQuery]  string id)
+    {
+        return Ok(await _authService.RemoveAsync(id));
     }
 }
+

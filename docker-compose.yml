@@ -22,6 +22,15 @@ services:
     networks:
       - elastic
 
+  compass:
+     image: mongo/mongosh
+     container_name: mongodb_compass
+     command: mongosh --host mongodb
+     depends_on:
+      - mongodb
+     networks:
+       - elastic
+
   elasticsearch:
     image: elasticsearch:7.17.9
     container_name: elasticSearch_container
