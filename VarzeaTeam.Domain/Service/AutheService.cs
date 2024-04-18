@@ -128,11 +128,6 @@ public class AutheService : IAuthService
 
             var token = GenerateHash.GenerateHashRandom();
 
-            _emailService.SendMail(
-                  email,
-                  "Redefinição da sua senha",
-                  $"Verifique sua conta, com essa token: {token}"
-               );
 
             return "Um e-mail de redefinição de senha foi enviado para o seu endereço de e-mail";
         }
