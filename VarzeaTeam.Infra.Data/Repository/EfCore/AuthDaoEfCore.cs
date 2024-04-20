@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using VarzeaLeague.Domain.Model.User;
 using VarzeaLeague.Domain.Utils;
+using VarzeaLeague.Domain.Enum;
 
 namespace VarzeaLeague.Infra.Data.Repository.EfCore;
 
@@ -21,13 +22,15 @@ public class AuthDaoEfCore : BaseContext<UserModel>, IAuthDao
     {
         int skip = (page - 1) * pageSize;
 
+        var filter = Builders<UserModel>.Filter.Eq(x => x.AccountStatus, AccountStatus.active); // Supondo que 1 represente o status de conta ativa
+
         var options = new FindOptions<UserModel>
         {
             Limit = pageSize,
             Skip = skip
         };
 
-        return await _AuthCollection.FindSync(_ => true, options).ToListAsync();
+        return await _AuthCollection.FindSync(filter, options).ToListAsync();
     }
 
     public async Task<UserModel> GetIdAsync(string Id)
@@ -55,7 +58,8 @@ public class AuthDaoEfCore : BaseContext<UserModel>, IAuthDao
         var filter = Builders<UserModel>.Filter.Eq(x => x.Id, Id);
         var update = Builders<UserModel>.Update
             .Set(x => x.UserName, updateObject.UserName)
-            .Set(x => x.Password, GenerateHash.GenerateHashParameters(updateObject.Password));
+            .Set(x => x.Password, GenerateHash.GenerateHashParameters(updateObject.Password))
+            .Set(x => x.AccountStatus, updateObject.AccountStatus);
 
         var options = new FindOneAndUpdateOptions<UserModel>
         {

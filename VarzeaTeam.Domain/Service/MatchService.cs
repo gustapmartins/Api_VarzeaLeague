@@ -87,6 +87,7 @@ public class MatchService : IMatchService
                 VisitingTeamId = addObject.VisitingTeamId,
                 Local = addObject.Local,
                 Date = addObject.Date,
+                DateCreated = DateTime.Now,
             };
 
             // Salvar a partida no banco de dados

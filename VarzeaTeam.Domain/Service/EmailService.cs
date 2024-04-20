@@ -20,11 +20,11 @@ public class EmailService: IEmailService
 
         SmtpClient client = new(_configuration["EmailTrap:Host"], int.Parse(_configuration["EmailTrap:Port"]))
         {
-            Credentials = new NetworkCredential(mail, "Gu59382231!"),
+            Credentials = new NetworkCredential(mail, "aotkepgejomvfqks"),
             EnableSsl = true,
-            UseDefaultCredentials = false,
- 
+            UseDefaultCredentials = false,  
         };
+
 
         client.Send(mail, email, subject, message);
     }

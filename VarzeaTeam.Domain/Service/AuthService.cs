@@ -120,10 +120,10 @@ public class AuthService : IAuthService
     {
         try
         {
-            UserModel findEmail = await _authDao.FindEmail(email);
+            //UserModel findEmail = await _authDao.FindEmail(email);
 
-            if (findEmail == null)
-                throw new ExceptionFilter($"This {email} is not valid");
+            //if (findEmail == null)
+            //    throw new ExceptionFilter($"This {email} is not valid");
 
             var token = GenerateHash.GenerateHashRandom();
 
@@ -132,6 +132,8 @@ public class AuthService : IAuthService
                 Token = token,
                 Email = email,
             };
+
+            _emailService.SendMail("gustavo.martinsxfirex@gmail.com", "test", "test");
 
             _memoryCacheService.AddToCache(token, PasswordReset, 5); //5 minutos de cache
 
@@ -142,7 +144,6 @@ public class AuthService : IAuthService
             throw new Exception(ex.Message, ex);
         }
     }
-
     public async Task<string> ResetPassword(PasswordReset passwordReset)
     {
         try
@@ -177,10 +178,7 @@ public class AuthService : IAuthService
         {
             UserModel userView = await _authDao.GetIdAsync(Id);
 
-            if (userView == null)
-                throw new ExceptionFilter($"This user: {userView} not exists");
-
-            userView.AccountStatus = Enum.AccountStatus.suspended;
+            await _authDao.RemoveAsync(Id);
 
             return userView;
         }

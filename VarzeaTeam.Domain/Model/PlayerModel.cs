@@ -20,4 +20,7 @@ public class PlayerModel
 
     [BsonElement("team")]
     public TeamModel? Team { get; set; }
+
+    [BsonElement("DateCreated")] // Atributo que mapeia essa propriedade para o campo 'DateCreated' no MongoDB
+    public DateTime DateCreated { get; set; } = DateTime.Now;
 }
