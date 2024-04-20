@@ -177,10 +177,7 @@ public class AuthService : IAuthService
         {
             UserModel userView = await _authDao.GetIdAsync(Id);
 
-            if (userView == null)
-                throw new ExceptionFilter($"This user: {userView} not exists");
-
-            userView.AccountStatus = Enum.AccountStatus.suspended;
+            await _authDao.RemoveAsync(Id);
 
             return userView;
         }
