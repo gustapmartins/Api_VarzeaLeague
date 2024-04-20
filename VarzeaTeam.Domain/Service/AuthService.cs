@@ -130,10 +130,14 @@ public class AuthService : IAuthService
             var PasswordReset = new PasswordReset
             {
                 Token = token,
-                Email = email,
+                Email = email,   
             };
 
-            _emailService.SendMail("gustavo.martinsxfirex@gmail.com", "test", "test");
+            //_emailService.SendMail(
+            //          email,
+            //          "Redefinição da sua senha",
+            //          $"Verifique sua conta, com essa token: {token}"
+            //       );
 
             _memoryCacheService.AddToCache(token, PasswordReset, 5); //5 minutos de cache
 
@@ -144,6 +148,7 @@ public class AuthService : IAuthService
             throw new Exception(ex.Message, ex);
         }
     }
+
     public async Task<string> ResetPassword(PasswordReset passwordReset)
     {
         try
@@ -178,7 +183,9 @@ public class AuthService : IAuthService
         {
             UserModel userView = await _authDao.GetIdAsync(Id);
 
-            await _authDao.RemoveAsync(Id);
+            userView.AccountStatus = Enum.AccountStatus.blocked;
+
+            await _authDao.UpdateAsync(Id, userView);
 
             return userView;
         }
