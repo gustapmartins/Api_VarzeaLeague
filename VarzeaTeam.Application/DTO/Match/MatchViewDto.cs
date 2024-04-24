@@ -1,18 +1,16 @@
-﻿using VarzeaLeague.Domain.Model;
-
-namespace VarzeaLeague.Application.DTO.Match;
+﻿namespace VarzeaLeague.Application.DTO.Match;
 
 public class MatchViewDto
 {
     public string Id { get; set; } = string.Empty;
 
-    public TeamModel HomeTeam { get; set; }
+    public string HomeTeamId { get; set; }
 
-    public TeamModel VisitingTeam { get; set; }
+    public string VisitingTeamId { get; set; }
 
     public string Local { get; set; } = string.Empty;
 
     public DateTime Date { get; set; }
 
-    public TeamModel TeamWin { get; set; }
+    public string TeamWin { get; set; }
 }

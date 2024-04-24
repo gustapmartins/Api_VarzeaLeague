@@ -13,7 +13,7 @@ public class RegisterDto
 
     [Required(ErrorMessage = "Password is required")]
     [DataType(DataType.Password)]
-    [RegularExpression("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{4,8}$", ErrorMessage = "Must contain uppercase and lowercase letter and number")]
+    [RegularExpression("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}$", ErrorMessage = "Must contain uppercase and lowercase letter and number")]
     public string Password { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Confirm your password")]

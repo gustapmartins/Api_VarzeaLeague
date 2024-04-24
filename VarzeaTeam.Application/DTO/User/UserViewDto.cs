@@ -18,9 +18,9 @@ public class UserViewDto
 
     public string Cpf { get; set; } = string.Empty;
 
-    public AccountStatus AccountStatus { get; set; }
-
     public DateTime DateCreated { get; set; }
 
     public Role Role { get; set; } = Role.User;
+
+    public AccountStatus AccountStatus { get; set; }
 }

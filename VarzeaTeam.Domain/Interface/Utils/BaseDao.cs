@@ -2,7 +2,7 @@
 
 public interface BaseDao<T>
 {
-    Task<List<T>> GetAsync(int page, int pageSize);
+    Task<IEnumerable<T>> GetAsync(int page, int pageSize);
 
     Task<T> GetIdAsync(string Id);
 

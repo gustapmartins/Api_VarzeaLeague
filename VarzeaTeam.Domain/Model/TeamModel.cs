@@ -1,5 +1,4 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-using VarzeaLeague.Domain.Model.User;
 
 namespace VarzeaLeague.Domain.Model;
 
@@ -12,12 +11,9 @@ public class TeamModel
     [BsonElement("NameTeam")] // Atributo que mapeia essa propriedade para o campo 'nameTeam' no MongoDB
     public string NameTeam { get; set; } = string.Empty;
 
-    [BsonElement("UserId")] // Atributo que mapeia essa propriedade para o campo 'UserId' no MongoDB
-    public string UserId { get; set; } = string.Empty;
-
-    [BsonElement("UserModel")] // Atributo que mapeia essa propriedade para o campo 'UserModel' no MongoDB
-    public UserModel? UserModel { get; set; }
-
     [BsonElement("Active")] // Atributo que mapeia essa propriedade para o campo 'Active' no MongoDB
     public bool Active { get; set; }
+
+    [BsonElement("DateCreated")] // Atributo que mapeia essa propriedade para o campo 'DateCreated' no MongoDB
+    public DateTime DateCreated { get; set; } = DateTime.Now;
 }

@@ -10,6 +10,7 @@ public class TeamMapper: Profile
     public TeamMapper() 
     {
         CreateMap<TeamCreateDto, TeamModel>();
+        CreateMap<TeamViewDto, TeamModel>();
         CreateMap<TeamModel, TeamViewDto>();
         CreateMap<TeamModel, TeamUpdateDto>();
     }

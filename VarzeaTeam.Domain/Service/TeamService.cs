@@ -14,13 +14,13 @@ public class TeamService : ITeamService
         _teamDao = teamDao;
     }
 
-    public async Task<List<TeamModel>> GetAsync(int page, int pageSize)
+    public async Task<IEnumerable<TeamModel>> GetAsync(int page, int pageSize)
     {
         try 
         {
-            List<TeamModel> GetAll = await _teamDao.GetAsync(page, pageSize);
+            IEnumerable<TeamModel> GetAll = await _teamDao.GetAsync(page, pageSize);
 
-            if(GetAll.Count == 0)
+            if(GetAll.Count() == 0)
                 throw new ExceptionFilter($"Não existe nenhum time cadastrado");
 
             return GetAll;

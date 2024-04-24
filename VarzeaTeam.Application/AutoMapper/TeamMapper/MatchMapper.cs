@@ -9,9 +9,8 @@ public class MatchMapper: Profile
 {
    public MatchMapper() 
    {
-        CreateMap<MatchCreateDto, MatchModel>();
-        CreateMap<MatchViewDto, MatchModel>();
-        CreateMap<MatchModel, MatchViewDto>();
-        CreateMap<MatchModel, MatchUpdateDto>();
+        CreateMap<MatchCreateDto, MatchModel>().ReverseMap();
+        CreateMap<MatchModel, MatchViewDto>().ReverseMap();
+        CreateMap<MatchModel, MatchUpdateDto>().ReverseMap();
     }
 }

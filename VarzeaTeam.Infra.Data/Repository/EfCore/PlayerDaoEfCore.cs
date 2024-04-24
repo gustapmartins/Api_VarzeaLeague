@@ -3,7 +3,6 @@ using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaLeague.Domain.Model.DatabaseSettings;
 using VarzeaLeague.Infra.Data.Context;
 using MongoDB.Driver;
-using System.Text.RegularExpressions;
 using VarzeaLeague.Domain.Model;
 
 namespace VarzeaLeague.Infra.Data.Repository.EfCore;
@@ -22,14 +21,15 @@ public class PlayerDaoEfCore : BaseContext<PlayerModel>, IPlayerDao
         await _PlayerCollection.InsertOneAsync(addObject);
     }
 
-    public async Task<List<PlayerModel>> GetAsync(int page, int pageSize)
+    public async Task<IEnumerable<PlayerModel>> GetAsync(int page, int pageSize)
     {
         int skip = (page - 1) * pageSize;
 
         var options = new FindOptions<PlayerModel>
         {
             Limit = pageSize,
-            Skip = skip
+            Skip = skip,
+            Sort = Builders<PlayerModel>.Sort.Descending(x => x.DateCreated) // Ordenar por data de criação no próprio banco de dados
         };
 
         return await _PlayerCollection.FindSync(_ => true, options).ToListAsync();
@@ -53,7 +53,13 @@ public class PlayerDaoEfCore : BaseContext<PlayerModel>, IPlayerDao
     public async Task<PlayerModel> UpdateAsync(string Id, PlayerModel updateObject)
     {
         var filter = Builders<PlayerModel>.Filter.Eq(x => x.Id, Id);
-        var update = Builders<PlayerModel>.Update.Set(x => x.NamePlayer, updateObject.NamePlayer);
+        var update = Builders<PlayerModel>.Update.Combine();
+
+        update = updateObject.NamePlayer != null ? update.Set(x => x.NamePlayer, updateObject.NamePlayer) : update;
+
+        update = updateObject.Age != -1 ? update.Set(x => x.Age, updateObject.Age) : update;
+
+        update = updateObject.TeamId != null ? update.Set(x => x.TeamId, updateObject.TeamId) : update;
 
         var options = new FindOneAndUpdateOptions<PlayerModel>
         {

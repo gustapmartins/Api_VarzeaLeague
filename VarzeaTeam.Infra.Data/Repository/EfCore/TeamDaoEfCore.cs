@@ -20,17 +20,20 @@ public class TeamDaoEfCore : BaseContext<TeamModel>, ITeamDao
         await _TeamCollection.InsertOneAsync(addObject);
     }
 
-    public async Task<List<TeamModel>> GetAsync(int page, int pageSize)
+    public async Task<IEnumerable<TeamModel>> GetAsync(int page, int pageSize)
     {
         int skip = (page - 1) * pageSize;
 
-        var options = new FindOptions<TeamModel>
+        FilterDefinition<TeamModel> filter = Builders<TeamModel>.Filter.Where(x => x.Active == true);
+
+        FindOptions<TeamModel> options = new()
         {
             Limit = pageSize,
-            Skip = skip
+            Skip = skip,
+            Sort = Builders<TeamModel>.Sort.Descending(x => x.DateCreated) // Ordena por data de criação no próprio banco de dados
         };
 
-        return await _TeamCollection.FindSync(_ => true, options).ToListAsync();
+        return await _TeamCollection.FindSync(filter, options).ToListAsync();
     }
 
     public async Task<TeamModel> GetIdAsync(string Id)
@@ -51,9 +54,9 @@ public class TeamDaoEfCore : BaseContext<TeamModel>, ITeamDao
     public async Task<TeamModel> UpdateAsync(string Id, TeamModel updateObject)
     {
         var filter = Builders<TeamModel>.Filter.Eq(x => x.Id, Id);
-        var update = Builders<TeamModel>.Update
-            .Set(x => x.NameTeam, updateObject.NameTeam);
-
+        var update = Builders<TeamModel>.Update.Combine();
+            
+        update = updateObject.NameTeam != null ? update.Set(x => x.NameTeam, updateObject.NameTeam) : update;
 
         var options = new FindOneAndUpdateOptions<TeamModel>
         {

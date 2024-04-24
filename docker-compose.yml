@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: VarzeaTeam.Application\Dockerfile
-    container_name: varzeaLeague_api_containercls
+    container_name: varzeaLeague_api_container
     networks:
       - elastic
     depends_on: 
@@ -21,15 +21,6 @@ services:
       - "27017:27017"
     networks:
       - elastic
-
-  compass:
-     image: mongo/mongosh
-     container_name: mongodb_compass
-     command: mongosh --host mongodb
-     depends_on:
-      - mongodb
-     networks:
-       - elastic
 
   elasticsearch:
     image: elasticsearch:7.17.9

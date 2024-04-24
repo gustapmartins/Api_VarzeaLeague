@@ -21,13 +21,13 @@ public class AuthService : IAuthService
         _memoryCacheService = memoryCacheService;
     }
 
-    public async Task<List<UserModel>> GetAsync(int page, int pageSize)
+    public async Task<IEnumerable<UserModel>> GetAsync(int page, int pageSize)
     {
         try
         {
-            List<UserModel> GetAll = await _authDao.GetAsync(page, pageSize);
+            IEnumerable<UserModel> GetAll = await _authDao.GetAsync(page, pageSize);
 
-            if (GetAll.Count == 0)
+            if (GetAll.Count() == 0)
                 throw new ExceptionFilter($"Não existe nenhuma partida cadastrada");
 
             return GetAll;
@@ -130,8 +130,14 @@ public class AuthService : IAuthService
             var PasswordReset = new PasswordReset
             {
                 Token = token,
-                Email = email,
+                Email = email,   
             };
+
+            _emailService.SendMail(
+                      email,
+                      "Redefinição da sua senha",
+                      $"Verifique sua conta, com essa token: {token}"
+                   );
 
             _memoryCacheService.AddToCache(token, PasswordReset, 5); //5 minutos de cache
 
@@ -157,9 +163,12 @@ public class AuthService : IAuthService
             if(findEmail == null)
                 throw new ExceptionFilter($"This {passwordReset.Email} is not valid");
 
-            findEmail.Password = passwordReset.Password;
+            UserModel userlUpdatePassword = new()
+            {
+                Password = passwordReset.Password,
+            };
 
-            UserModel updatePassword = await _authDao.UpdateAsync(findEmail.Id, findEmail);
+            UserModel updatePassword = await _authDao.UpdateAsync(findEmail.Id, userlUpdatePassword);
 
             _memoryCacheService.RemoveFromCache<PasswordReset>(passwordReset.Token);
 
@@ -177,7 +186,12 @@ public class AuthService : IAuthService
         {
             UserModel userView = await _authDao.GetIdAsync(Id);
 
-            await _authDao.RemoveAsync(Id);
+            UserModel userRemove = new()
+            {
+                AccountStatus = Enum.AccountStatus.blocked
+            };
+
+            await _authDao.UpdateAsync(Id, userRemove);
 
             return userView;
         }
@@ -193,9 +207,9 @@ public class AuthService : IAuthService
         {
             UserModel userId = await _authDao.GetIdAsync(Id);
 
-            await _authDao.UpdateAsync(Id, updateObject);
+            UserModel userUpdate = await _authDao.UpdateAsync(Id, updateObject);
 
-            return userId;
+            return userUpdate;
         }
         catch(Exception ex)
         {

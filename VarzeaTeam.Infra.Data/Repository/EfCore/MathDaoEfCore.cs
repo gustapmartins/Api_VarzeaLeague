@@ -3,8 +3,8 @@ using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaLeague.Infra.Data.Context;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using Nest;
 using VarzeaLeague.Domain.Model;
+using VarzeaLeague.Domain.Model.User;
 
 namespace VarzeaLeague.Infra.Data.Repository.EfCore;
 
@@ -17,14 +17,15 @@ public class MathDaoEfCore : BaseContext<MatchModel>, IMatchDao
         _MatchCollection = Collection;
     }
 
-    public async Task<List<MatchModel>> GetAsync(int page, int pageSize)
+    public async Task<IEnumerable<MatchModel>> GetAsync(int page, int pageSize)
     {
         int skip = (page - 1) * pageSize;
 
         var options = new FindOptions<MatchModel>
         {
             Limit = pageSize,
-            Skip = skip
+            Skip = skip,
+            Sort = Builders<MatchModel>.Sort.Descending(x => x.DateCreated) // Ordena por data de criação no próprio banco de dados
         };
 
         return await _MatchCollection.FindSync(_ => true, options).ToListAsync();
@@ -48,7 +49,17 @@ public class MathDaoEfCore : BaseContext<MatchModel>, IMatchDao
     public async Task<MatchModel> UpdateAsync(string Id, MatchModel updateObject)
     {
         var filter = Builders<MatchModel>.Filter.Eq(x => x.Id, Id);
-        var update = Builders<MatchModel>.Update.Set(x => x.Local, updateObject.Local);
+        var update = Builders<MatchModel>.Update.Combine();
+
+        update = updateObject.Local != null ? update.Set(x => x.Local, updateObject.Local) : update;
+
+        update = updateObject.HomeTeamId != null ? update.Set(x => x.HomeTeamId, updateObject.HomeTeamId) : update;
+
+        update = updateObject.VisitingTeamId != null ? update.Set(x => x.VisitingTeamId, updateObject.VisitingTeamId) : update;
+
+        update = updateObject.TeamWin != null ? update.Set(x => x.TeamWin, updateObject.TeamWin) : update;
+
+        update = updateObject.Date != null ? update.Set(x => x.Date, updateObject.Date) : update;
 
         var options = new FindOneAndUpdateOptions<MatchModel>
         {

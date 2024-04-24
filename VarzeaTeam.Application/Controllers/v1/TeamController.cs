@@ -35,7 +35,7 @@ public class TeamController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> GetTeams([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        TeamViewDto teamView = _mapper.Map<TeamViewDto>(await _teamService.GetAsync(page, pageSize));
+        List<TeamViewDto> teamView = _mapper.Map<List<TeamViewDto>>(await _teamService.GetAsync(page, pageSize));
 
         return Ok(teamView);
     }

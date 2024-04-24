@@ -17,13 +17,13 @@ public class MatchService : IMatchService
         _teamDao = teamDao;
     }
 
-    public async Task<List<MatchModel>> GetAsync(int page, int pageSize)
+    public async Task<IEnumerable<MatchModel>> GetAsync(int page, int pageSize)
     {
         try
         {
-            List<MatchModel> GetAll = await _matchDao.GetAsync(page, pageSize);
+            IEnumerable<MatchModel> GetAll = await _matchDao.GetAsync(page, pageSize);
 
-            if (GetAll.Count == 0)
+            if (GetAll.Count() == 0)
                 throw new ExceptionFilter($"Não existe nenhuma partida cadastrada");
 
             return GetAll;
@@ -57,18 +57,17 @@ public class MatchService : IMatchService
         {
             TeamModel homeTeam = await _teamDao.GetIdAsync(addObject.HomeTeamId);
             TeamModel visitingTeam = await _teamDao.GetIdAsync(addObject.VisitingTeamId);
-
             MatchModel matchExist = await _matchDao.MatchExistsAsync(addObject.HomeTeamId, addObject.VisitingTeamId);
-
-            if (matchExist != null)
-            {
-                throw new ExceptionFilter("Já existe uma partida cadastrada com esses times.");
-            }
 
             // Verificar se os times foram encontrados
             if (homeTeam == null || visitingTeam == null)
             {
                 throw new ExceptionFilter("Um ou ambos os times não foram encontrados.");
+            }
+
+            if (matchExist != null)
+            {
+                throw new ExceptionFilter("Já existe uma partida cadastrada com esses times.");
             }
 
             bool andressExist = await ViaCep.GetCep(addObject.Local);
@@ -81,12 +80,11 @@ public class MatchService : IMatchService
             // Criar a partida com os times encontrados
             MatchModel match = new()
             {
-                HomeTeam = homeTeam,
                 HomeTeamId = addObject.HomeTeamId,
-                VisitingTeam = visitingTeam,
                 VisitingTeamId = addObject.VisitingTeamId,
                 Local = addObject.Local,
                 Date = addObject.Date,
+                DateCreated = DateTime.Now,
             };
 
             // Salvar a partida no banco de dados
@@ -120,11 +118,11 @@ public class MatchService : IMatchService
     {
         try
         {
-            MatchModel findId = await _matchDao.GetIdAsync(Id);
+            MatchModel findId = await GetIdAsync(Id);
 
-            await _matchDao.UpdateAsync(Id, updateObject);
+            MatchModel matchUpdate = await _matchDao.UpdateAsync(Id, updateObject);
 
-            return findId;
+            return matchUpdate;
         }
         catch(Exception ex) 
         {

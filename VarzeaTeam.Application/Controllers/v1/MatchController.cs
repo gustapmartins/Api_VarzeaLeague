@@ -100,9 +100,9 @@ public class MatchController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> UpdateMatch(string id, TeamUpdateDto team)
+    public async Task<ActionResult> UpdateMatch(string id, MatchUpdateDto matchUpdateDto)
     {
-        MatchModel matchModel = _mapper.Map<MatchModel>(team);
+        MatchModel matchModel = _mapper.Map<MatchModel>(matchUpdateDto);
 
         MatchViewDto matchView = _mapper.Map<MatchViewDto>(await _matchService.UpdateAsync(id, matchModel));
 

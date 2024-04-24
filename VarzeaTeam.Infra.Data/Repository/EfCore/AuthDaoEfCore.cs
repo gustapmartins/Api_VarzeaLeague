@@ -5,6 +5,9 @@ using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using VarzeaLeague.Domain.Model.User;
 using VarzeaLeague.Domain.Utils;
+using VarzeaLeague.Domain.Enum;
+using Elasticsearch.Net;
+using Nest;
 
 namespace VarzeaLeague.Infra.Data.Repository.EfCore;
 
@@ -17,17 +20,20 @@ public class AuthDaoEfCore : BaseContext<UserModel>, IAuthDao
         _AuthCollection = Collection;
     }
 
-    public async Task<List<UserModel>> GetAsync(int page, int pageSize)
+    public async Task<IEnumerable<UserModel>> GetAsync(int page, int pageSize)
     {
         int skip = (page - 1) * pageSize;
 
-        var options = new FindOptions<UserModel>
+        FilterDefinition<UserModel> filter = Builders<UserModel>.Filter.Where(x => x.AccountStatus == AccountStatus.active); // Supondo que 1 represente o status de conta ativa
+
+        FindOptions<UserModel> options = new()
         {
             Limit = pageSize,
-            Skip = skip
+            Skip = skip,
+            Sort = Builders<UserModel>.Sort.Descending(x => x.DateCreated) // Ordena os usuários por data de criação no próprio banco de dados
         };
 
-        return await _AuthCollection.FindSync(_ => true, options).ToListAsync();
+        return await _AuthCollection.FindSync(filter, options).ToListAsync();
     }
 
     public async Task<UserModel> GetIdAsync(string Id)
@@ -53,9 +59,22 @@ public class AuthDaoEfCore : BaseContext<UserModel>, IAuthDao
     public async Task<UserModel> UpdateAsync(string Id, UserModel updateObject)
     {
         var filter = Builders<UserModel>.Filter.Eq(x => x.Id, Id);
-        var update = Builders<UserModel>.Update
-            .Set(x => x.UserName, updateObject.UserName)
-            .Set(x => x.Password, GenerateHash.GenerateHashParameters(updateObject.Password));
+        var update = Builders<UserModel>.Update.Combine();
+
+        if (!string.IsNullOrEmpty(updateObject.UserName))
+        {
+            update = update.Set(x => x.UserName, updateObject.UserName);
+        }
+
+        if (!string.IsNullOrEmpty(updateObject.Password))
+        {
+            update = update.Set(x => x.Password, GenerateHash.GenerateHashParameters(updateObject.Password));
+        }
+
+        if (updateObject.AccountStatus != default(AccountStatus))
+        {
+            update = update.Set(x => x.AccountStatus, updateObject.AccountStatus);
+        }
 
         var options = new FindOneAndUpdateOptions<UserModel>
         {

@@ -16,13 +16,13 @@ public class PlayerService : IPlayerService
         _teamDao = teamDao;
     }
 
-    public async Task<List<PlayerModel>> GetAsync(int page, int pageSize)
+    public async Task<IEnumerable<PlayerModel>> GetAsync(int page, int pageSize)
     {
         try
         {
-            List<PlayerModel> GetAll = await _playerDao.GetAsync(page, pageSize);
+            IEnumerable<PlayerModel> GetAll = await _playerDao.GetAsync(page, pageSize);
 
-            if (GetAll.Count == 0)
+            if (GetAll.Count() == 0)
                 throw new ExceptionFilter($"Não existe nenhum time cadastrado");
 
             return GetAll;
@@ -72,7 +72,6 @@ public class PlayerService : IPlayerService
                 throw new Exception($"O time com o ID '{addObject.TeamId}' não foi encontrado.");
 
             addObject.TeamId = team.Id;
-            addObject.Team = team;
 
             await _playerDao.CreateAsync(addObject);
 
@@ -106,9 +105,9 @@ public class PlayerService : IPlayerService
         {
             PlayerModel findId = await _playerDao.GetIdAsync(Id);
 
-            await _playerDao.UpdateAsync(Id, updateObject);
+            PlayerModel updatePlayer = await _playerDao.UpdateAsync(Id, updateObject);
 
-            return findId;
+            return updatePlayer;
         }
         catch (Exception ex)
         {

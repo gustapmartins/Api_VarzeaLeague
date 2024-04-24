@@ -11,14 +11,8 @@ public class MatchModel
     [BsonElement("homeTeamId")] // Atributo que mapeia essa propriedade para o campo 'homeTeam' no MongoDB
     public string HomeTeamId { get; set; } = string.Empty;
 
-    [BsonElement("homeTeam")] // Atributo que mapeia essa propriedade para o campo 'homeTeam' no MongoDB
-    public TeamModel? HomeTeam { get; set; }
-
     [BsonElement("visitingTeamId")] // Atributo que mapeia essa propriedade para o campo 'visitingTeam' no MongoDB
     public string VisitingTeamId { get; set; } = string.Empty;
-
-    [BsonElement("visitingTeam")] // Atributo que mapeia essa propriedade para o campo 'visitingTeam' no MongoDB
-    public TeamModel? VisitingTeam { get; set; }
 
     [BsonElement("local")] // Atributo que mapeia essa propriedade para o campo 'local' no MongoDB
     public string Local { get; set; } = string.Empty;
@@ -27,5 +21,8 @@ public class MatchModel
     public DateTime Date { get; set; }
 
     [BsonElement("teamWin")] // Atributo que mapeia essa propriedade para o campo 'teamWin' no MongoDB
-    public TeamModel? TeamWin { get; set; }
+    public string? TeamWin { get; set; }
+
+    [BsonElement("DateCreated")] // Atributo que mapeia essa propriedade para o campo 'DateCreated' no MongoDB
+    public DateTime DateCreated { get; set; } = DateTime.Now;
 }

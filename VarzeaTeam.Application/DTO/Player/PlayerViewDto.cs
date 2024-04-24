@@ -11,5 +11,5 @@ public class PlayerViewDto
 
     public int Age { get; set; }
 
-    public TeamModel Team { get; set; }
+    public string TeamId { get; set; } = string.Empty;
 }

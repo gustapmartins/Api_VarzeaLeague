@@ -27,7 +27,7 @@ public class AuthController : ControllerBase
     /// <param name="pageSize">Objeto com os campos necessários para os limites das paginas</param> 
     ///     <returns>IActionResult</returns>
     /// <response code="200">Caso a busca seja feita com sucesso</response>
-    [HttpGet("search-auths")]
+    [HttpGet("search-users")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [SwaggerOperation(Summary = "Get matches with optional pagination parameters")]
@@ -41,15 +41,14 @@ public class AuthController : ControllerBase
     /// <summary>
     ///     Consultar todas as partidas criadas
     /// </summary>
-    /// <param name="page">Objeto com os campos necessários para definir as paginas</param> 
-    /// <param name="pageSize">Objeto com os campos necessários para os limites das paginas</param> 
+    /// <param name="id">Objeto com os campos necessários para definir as paginas</param>
     ///     <returns>IActionResult</returns>
     /// <response code="200">Caso a busca seja feita com sucesso</response>
-    [HttpGet("search-auths")]
+    [HttpGet("search-user/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [SwaggerOperation(Summary = "Get matches with optional pagination parameters")]
-    public async Task<ActionResult> GetUser([FromQuery] string id)
+    public async Task<ActionResult> GetUser([FromHeader] string id)
     {
         UserViewDto authView = _mapper.Map<UserViewDto>(await _authService.GetIdAsync(id));
 
@@ -126,16 +125,37 @@ public class AuthController : ControllerBase
     /// <summary>
     ///     Apagar um usuario no banco de dados
     /// </summary>
-    /// <param name="Id">Objeto com os campos necessários para delete um     usuário</param>
+    /// <param name="id">Objeto com os campos necessários para delete um     usuário</param>
     ///     <returns>IActionResult</returns>
     /// <response code="201">Caso inserção seja feita com sucesso</response>
     /// <response code="400">Caso a requisição esteja errada</response>
-    [HttpPost("delete-user/{id}")]
+    [HttpDelete("delete-user/{id}")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> ResetPassword([FromQuery]  string id)
+    public async Task<ActionResult> RemoveUser([FromQuery] string id)
     {
         return Ok(await _authService.RemoveAsync(id));
+    }
+
+    /// <summary>
+    ///     Atualiza o usuario a partir do id
+    /// </summary>
+    /// <param name="id">Objeto com os campos necessários para criação de um filme</param>
+    /// <param name="userDto">TEAM</param>
+    ///     <returns>IActionResult</returns>
+    /// <response code="200">Caso inserção seja feita com sucesso</response>
+    /// <response code="404">Caso inserção não seja feita com sucesso</response>
+    [HttpPatch("update-user/{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> UpdateMatch(string id, UserUpdateDto userDto)
+    {
+        UserModel userModel = _mapper.Map<UserModel>(userDto);
+
+        UserViewDto userView = _mapper.Map<UserViewDto>(await _authService.UpdateAsync(id, userModel));
+
+        return Ok(userView);
     }
 }
 

@@ -13,5 +13,6 @@ public class AuthMapper : Profile
         CreateMap<UserViewDto, UserModel>();
         CreateMap<UserModel, UserViewDto>();
         CreateMap<PasswordResetDto, PasswordReset>().ReverseMap();
+        CreateMap<UserUpdateDto, UserModel>().ReverseMap();
     }
 }
