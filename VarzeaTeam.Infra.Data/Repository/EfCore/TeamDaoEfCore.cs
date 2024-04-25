@@ -55,8 +55,10 @@ public class TeamDaoEfCore : BaseContext<TeamModel>, ITeamDao
     {
         var filter = Builders<TeamModel>.Filter.Eq(x => x.Id, Id);
         var update = Builders<TeamModel>.Update.Combine();
-            
-        update = updateObject.NameTeam != null ? update.Set(x => x.NameTeam, updateObject.NameTeam) : update;
+
+        update = updateObject.NameTeam != string.Empty ? update.Set(x => x.NameTeam, updateObject.NameTeam) : update;
+
+        update = updateObject.Active != false ? update.Set(x => x.Active, updateObject.Active) : update;
 
         var options = new FindOneAndUpdateOptions<TeamModel>
         {

@@ -12,7 +12,7 @@ public class TeamModel
     public string NameTeam { get; set; } = string.Empty;
 
     [BsonElement("Active")] // Atributo que mapeia essa propriedade para o campo 'Active' no MongoDB
-    public bool Active { get; set; }
+    public bool Active { get; set; } = true;
 
     [BsonElement("DateCreated")] // Atributo que mapeia essa propriedade para o campo 'DateCreated' no MongoDB
     public DateTime DateCreated { get; set; } = DateTime.Now;

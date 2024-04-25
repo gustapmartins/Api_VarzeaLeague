@@ -1,4 +1,5 @@
-﻿using VarzeaLeague.Domain.Interface.Dao;
+﻿using System.Collections.Immutable;
+using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaLeague.Domain.Interface.Services;
 using VarzeaLeague.Domain.Model;
 using VarzeaTeam.Domain.Exceptions;
@@ -8,24 +9,48 @@ namespace VarzeaLeague.Domain.Service;
 public class PlayerService : IPlayerService
 {
     private readonly IPlayerDao _playerDao;
-    private readonly ITeamDao _teamDao;
+    private readonly ITeamService _teamService;
 
-    public PlayerService(IPlayerDao playerDao, ITeamDao teamDao)
+    public PlayerService(IPlayerDao playerDao, ITeamService teamService)
     {
         _playerDao = playerDao;
-        _teamDao = teamDao;
+        _teamService = teamService;
     }
 
+    public async Task<IEnumerable<PlayerModel>> GetAsyncFilterPlayerTeam(int page, int pageSize, string teamId)
+    {
+        try
+        {
+            IEnumerable<PlayerModel> playerAll = await _playerDao.GetAsync(page, pageSize);
+
+            if (playerAll.Count() == 0)
+                throw new ExceptionFilter($"Não existe nenhum time cadastrado");
+
+            TeamModel teamModel = await _teamService.GetIdAsync(teamId);
+
+            IEnumerable<PlayerModel> filterPlayers = playerAll.Where(x => x.TeamId == teamModel.Id).ToImmutableList();
+
+            return filterPlayers;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+
+
+    //Possiveis solucoes de melhoria 
+    //usar esse metodo no metodo de cima e usar uma rota só para fazer a consulta dos jogadores, e esse filtro se aplica para a rota principal
     public async Task<IEnumerable<PlayerModel>> GetAsync(int page, int pageSize)
     {
         try
         {
-            IEnumerable<PlayerModel> GetAll = await _playerDao.GetAsync(page, pageSize);
+            IEnumerable<PlayerModel> playerAll = await _playerDao.GetAsync(page, pageSize);
 
-            if (GetAll.Count() == 0)
+            if (playerAll.Count() == 0)
                 throw new ExceptionFilter($"Não existe nenhum time cadastrado");
 
-            return GetAll;
+            return playerAll;
         }
         catch (Exception ex)
         {
@@ -43,12 +68,8 @@ public class PlayerService : IPlayerService
                 throw new ExceptionFilter($"O jogador com o id '{Id}' não existe.");
 
             // Buscar o objeto de time associado a este jogador
-            TeamModel team = await _teamDao.GetIdAsync(player.TeamId);
+            TeamModel team = await _teamService.GetIdAsync(player.TeamId);
 
-            if (team == null)
-                throw new Exception($"O time com o ID '{player.TeamId}' não foi encontrado.");
-
-           
             return player;
         }
         catch(Exception ex)
@@ -66,10 +87,7 @@ public class PlayerService : IPlayerService
             if(existingPlayer != null)
                 throw new Exception($"O jogador com o nome '{addObject.NamePlayer}' já existe.");
 
-            TeamModel team = await _teamDao.GetIdAsync(addObject.TeamId);
-
-            if(team == null)
-                throw new Exception($"O time com o ID '{addObject.TeamId}' não foi encontrado.");
+            TeamModel team = await _teamService.GetIdAsync(addObject.TeamId);
 
             addObject.TeamId = team.Id;
 
