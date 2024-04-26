@@ -9,6 +9,7 @@ services:
     container_name: varzeaLeague_api_container
     networks:
       - elastic
+    restart: always
     depends_on: 
       - mongodb
     ports:
@@ -52,6 +53,8 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    ports: 
+      - 2888:3888
     networks: 
       - elastic
 
@@ -74,6 +77,7 @@ services:
 
   kafdrop:
     image: obsidiandynamics/kafdrop:latest
+    container_name: kafka-ui
     depends_on:
       - kafka
     ports:
