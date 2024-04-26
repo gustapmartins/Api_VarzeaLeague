@@ -21,7 +21,7 @@ public class MatchModel
     public DateTime Date { get; set; }
 
     [BsonElement("teamWin")] // Atributo que mapeia essa propriedade para o campo 'teamWin' no MongoDB
-    public string? TeamWin { get; set; }
+    public string? TeamWin { get; set; } 
 
     [BsonElement("DateCreated")] // Atributo que mapeia essa propriedade para o campo 'DateCreated' no MongoDB
     public DateTime DateCreated { get; set; } = DateTime.Now;

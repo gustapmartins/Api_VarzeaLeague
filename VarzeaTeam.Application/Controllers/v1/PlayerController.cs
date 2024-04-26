@@ -24,23 +24,6 @@ public class PlayerController : ControllerBase
         _messagePublisher = messagePublisher;
     }
 
-
-    /// <summary>
-    ///     Adiciona um filme ao banco de dados
-    /// </summary>
-    /// <param name="page">Objeto com os campos necessários para definir as paginas</param> 
-    /// <param name="pageSize">Objeto com os campos necessários para os limites das paginas</param> 
-    ///     <returns>IActionResult</returns>
-    /// <response code="200">Caso inserção seja feita com sucesso</response>
-    [HttpGet("search-filterPlayerTeam/{teamId}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> GetAsyncFilterPlayerTeam([FromRoute] string teamId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
-    {
-        List<PlayerViewDto> playerView = _mapper.Map<List<PlayerViewDto>>(await _playerService.GetAsyncFilterPlayerTeam(page, pageSize, teamId));
-
-        return Ok(playerView);
-    }
-
     /// <summary>
     ///     Adiciona um filme ao banco de dados
     /// </summary>
@@ -50,9 +33,9 @@ public class PlayerController : ControllerBase
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     [HttpGet("search-players")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> GetPlayer([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    public async Task<ActionResult> GetPlayer([FromQuery] string teamId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        List<PlayerViewDto> playerView = _mapper.Map<List<PlayerViewDto>>(await _playerService.GetAsync(page, pageSize));
+        List<PlayerViewDto> playerView = _mapper.Map<List<PlayerViewDto>>(await _playerService.GetAsync(page, pageSize, teamId));
 
         return Ok(playerView);
     }

@@ -55,11 +55,11 @@ public class PlayerDaoEfCore : BaseContext<PlayerModel>, IPlayerDao
         var filter = Builders<PlayerModel>.Filter.Eq(x => x.Id, Id);
         var update = Builders<PlayerModel>.Update.Combine();
 
-        update = updateObject.NamePlayer != null ? update.Set(x => x.NamePlayer, updateObject.NamePlayer) : update;
+        update = updateObject.NamePlayer != string.Empty ? update.Set(x => x.NamePlayer, updateObject.NamePlayer) : update;
 
         update = updateObject.Age != -1 ? update.Set(x => x.Age, updateObject.Age) : update;
 
-        update = updateObject.TeamId != null ? update.Set(x => x.TeamId, updateObject.TeamId) : update;
+        update = updateObject.TeamId != string.Empty ? update.Set(x => x.TeamId, updateObject.TeamId) : update;
 
         var options = new FindOneAndUpdateOptions<PlayerModel>
         {
