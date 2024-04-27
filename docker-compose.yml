@@ -17,6 +17,7 @@ services:
 
   mongodb:
     image: mongo:latest
+    restart: always
     container_name: mongodb_container
     ports:
       - "27017:27017"
@@ -50,6 +51,7 @@ services:
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     container_name: zookeeper
+    restart: always
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -61,6 +63,7 @@ services:
   kafka:
     image: confluentinc/cp-kafka:latest
     container_name: kafka-server
+    restart: always
     depends_on:
       - zookeeper
     ports:

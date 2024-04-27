@@ -13,4 +13,6 @@ public class MatchViewDto
     public DateTime Date { get; set; }
 
     public string TeamWin { get; set; }
+
+    public DateTime DateCreated { get; set; }
 }

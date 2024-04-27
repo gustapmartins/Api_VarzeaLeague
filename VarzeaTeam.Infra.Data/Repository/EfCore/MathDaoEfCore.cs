@@ -4,7 +4,6 @@ using VarzeaLeague.Infra.Data.Context;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using VarzeaLeague.Domain.Model;
-using VarzeaLeague.Domain.Model.User;
 
 namespace VarzeaLeague.Infra.Data.Repository.EfCore;
 
