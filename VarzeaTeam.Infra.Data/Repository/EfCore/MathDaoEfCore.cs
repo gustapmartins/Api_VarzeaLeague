@@ -16,35 +16,6 @@ public class MathDaoEfCore : BaseContext<MatchModel>, IMatchDao
         _MatchCollection = Collection;
     }
 
-    public async Task<IEnumerable<MatchModel>> GetAsync(int page, int pageSize)
-    {
-        int skip = (page - 1) * pageSize;
-
-        var options = new FindOptions<MatchModel>
-        {
-            Limit = pageSize,
-            Skip = skip,
-            Sort = Builders<MatchModel>.Sort.Descending(x => x.DateCreated) // Ordena por data de criação no próprio banco de dados
-        };
-
-        return await _MatchCollection.FindSync(_ => true, options).ToListAsync();
-    }
-
-    public async Task<MatchModel> GetIdAsync(string Id)
-    {
-        return await _MatchCollection.Find(x => x.Id == Id).FirstOrDefaultAsync();
-    }
-
-    public async Task CreateAsync(MatchModel addObject)
-    {
-        await _MatchCollection.InsertOneAsync(addObject);
-    }
-
-    public async Task RemoveAsync(string Id)
-    {
-        await _MatchCollection.DeleteOneAsync(x => x.Id == Id);
-    }
-
     public async Task<MatchModel> UpdateAsync(string Id, MatchModel updateObject)
     {
         var filter = Builders<MatchModel>.Filter.Eq(x => x.Id, Id);

@@ -8,5 +8,5 @@ public interface INotificationService
 
     Task<NotificationModel> SendNotificationAsync(NotificationModel NotificationModel);
 
-    Task DeleteNotificationAsync(string idNotification);
+    Task<NotificationModel> DeleteNotificationAsync(string idNotification);
 }

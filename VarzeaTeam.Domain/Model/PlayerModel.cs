@@ -1,9 +1,8 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-using System.ComponentModel.DataAnnotations;
 
 namespace VarzeaLeague.Domain.Model;
 
-public class PlayerModel
+public class PlayerModel : IEntity
 {
     [BsonId] // Atributo que indica que esta propriedade é o ID do documento no MongoDB
     [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)] // Representação do tipo de dados ObjectId do MongoDBw
@@ -14,6 +13,9 @@ public class PlayerModel
 
     [BsonElement("age")] // Atributo que mapeia essa propriedade para o campo 'name' no MongoDB
     public int Age { get; set; }
+
+    [BsonElement("Team")]
+    public TeamModel TeamModel { get; set; }
 
     [BsonElement("teamId")]
     public string TeamId { get; set; } = string.Empty;

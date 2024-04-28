@@ -16,38 +16,9 @@ public class PlayerDaoEfCore : BaseContext<PlayerModel>, IPlayerDao
         _PlayerCollection = Collection;
     }
 
-    public async Task CreateAsync(PlayerModel addObject)
-    {
-        await _PlayerCollection.InsertOneAsync(addObject);
-    }
-
-    public async Task<IEnumerable<PlayerModel>> GetAsync(int page, int pageSize)
-    {
-        int skip = (page - 1) * pageSize;
-
-        var options = new FindOptions<PlayerModel>
-        {
-            Limit = pageSize,
-            Skip = skip,
-            Sort = Builders<PlayerModel>.Sort.Descending(x => x.DateCreated) // Ordenar por data de criação no próprio banco de dados
-        };
-
-        return await _PlayerCollection.FindSync(_ => true, options).ToListAsync();
-    }
-
-    public async Task<PlayerModel> GetIdAsync(string Id)
-    {
-        return await _PlayerCollection.Find(x => x.Id == Id).FirstOrDefaultAsync<PlayerModel>();
-    }
-
     public async Task<PlayerModel> PlayerExist(string name)
     {
         return await _PlayerCollection.Find(x => x.NamePlayer == name).FirstOrDefaultAsync<PlayerModel>();
-    }
-
-    public async Task RemoveAsync(string Id)
-    {
-        await _PlayerCollection.DeleteOneAsync(x => x.Id == Id);
     }
 
     public async Task<PlayerModel> UpdateAsync(string Id, PlayerModel updateObject)

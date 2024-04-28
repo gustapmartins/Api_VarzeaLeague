@@ -18,40 +18,9 @@ public class AuthDaoEfCore : BaseContext<UserModel>, IAuthDao
         _AuthCollection = Collection;
     }
 
-    public async Task<IEnumerable<UserModel>> GetAsync(int page, int pageSize)
-    {
-        int skip = (page - 1) * pageSize;
-
-        FilterDefinition<UserModel> filter = Builders<UserModel>.Filter.Where(x => x.AccountStatus == AccountStatus.active); // Supondo que 1 represente o status de conta ativa
-
-        FindOptions<UserModel> options = new()
-        {
-            Limit = pageSize,
-            Skip = skip,
-            Sort = Builders<UserModel>.Sort.Descending(x => x.DateCreated) // Ordena os usuários por data de criação no próprio banco de dados
-        };
-
-        return await _AuthCollection.FindSync(filter, options).ToListAsync();
-    }
-
-    public async Task<UserModel> GetIdAsync(string Id)
-    {
-        return await _AuthCollection.Find(x => x.Id == Id).FirstOrDefaultAsync();
-    }
-
     public async Task<UserModel> FindEmail(string Email)
     {
         return await _AuthCollection.Find(x => x.Email == Email).FirstOrDefaultAsync();
-    }
-
-    public async Task CreateAsync(UserModel addObject)
-    {
-        await _AuthCollection.InsertOneAsync(addObject);
-    }
-
-    public async Task RemoveAsync(string Id)
-    {
-        await _AuthCollection.DeleteOneAsync(x => x.Id == Id);
     }
 
     public async Task<UserModel> UpdateAsync(string Id, UserModel updateObject)

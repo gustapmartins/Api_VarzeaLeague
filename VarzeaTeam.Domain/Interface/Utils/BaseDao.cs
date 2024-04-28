@@ -1,8 +1,10 @@
-﻿namespace VarzeaTeam.Infra.Data.Repository.Utils;
+﻿using MongoDB.Driver;
+
+namespace VarzeaTeam.Infra.Data.Repository.Utils;
 
 public interface BaseDao<T>
 {
-    Task<IEnumerable<T>> GetAsync(int page, int pageSize);
+    Task<IEnumerable<T>> GetAsync(int page, int pageSize, FilterDefinition<T> filter);
 
     Task<T> GetIdAsync(string Id);
 

@@ -13,67 +13,69 @@ using VarzeaLeague.Application.Extension;
 using Ticket.Configure;
 using Ticket.Service;
 
-namespace VarzeamTeam.Infra.CrossCutting.Ioc
+namespace VarzeamTeam.Infra.CrossCutting.Ioc;
+
+public static class DependencyInjection
 {
-    public class DependencyInjection
+    public static void ConfigureService(this IServiceCollection services, IConfiguration configuration)
     {
-        public static void ConfigureService(IServiceCollection services, IConfiguration configuration)
+        services.Configure<VarzeaLeagueDatabaseSettings>
+            (configuration.GetSection("VarzeaLeagueDatabase"));
+
+        services.AddEndpointsApiExplorer();
+
+        services.AddControllers();
+
+        services.AddElasticSearch(configuration);
+
+        services.AddSwaggerGen(c =>
         {
-            services.Configure<VarzeaLeagueDatabaseSettings>
-                (configuration.GetSection("VarzeaLeagueDatabase"));
-
-            services.AddEndpointsApiExplorer();
-
-            services.AddControllers();
-
-            services.AddElasticSearch(configuration);
-
-            services.AddSwaggerGen(c =>
+            c.AddSecurityDefinition("v1", new OpenApiSecurityScheme
             {
-                c.AddSecurityDefinition("v1", new OpenApiSecurityScheme
-                {
-                    Description = "Description project",
-                    In = ParameterLocation.Header,
-                    Name = "Tickets",
-                    Type = SecuritySchemeType.ApiKey,
+                Description = "Description project",
+                In = ParameterLocation.Header,
+                Name = "Tickets",
+                Type = SecuritySchemeType.ApiKey,
 
-                });
             });
+        });
 
-            services.AddControllers(opts =>
-            {
-                opts.Filters.Add<ExceptionFilterGeneric>();
-            });
+        services.AddControllers(opts =>
+        {
+            opts.Filters.Add<ExceptionFilterGeneric>();
+        });
 
-            services.AddCors();
+        services.AddCors();
 
-            services.AddMemoryCache();
+        services.AddMemoryCache();
 
-            services.AddHttpContextAccessor();
+        services.AddHttpContextAccessor();
 
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            services.AddSingleton<ITeamDao, TeamDaoEfCore>();
-            services.AddScoped<ITeamService, TeamService>();
+        services.AddSingleton<ITeamDao, TeamDaoEfCore>();
+        services.AddScoped<ITeamService, TeamService>();
 
-            services.AddSingleton<IMatchDao, MathDaoEfCore>();
-            services.AddScoped<IMatchService, MatchService>();
+        services.AddSingleton<IMatchDao, MathDaoEfCore>();
+        services.AddScoped<IMatchService, MatchService>();
 
-            services.AddSingleton<IPlayerDao, PlayerDaoEfCore>();
-            services.AddScoped<IPlayerService, PlayerService>();
+        services.AddSingleton<IPlayerDao, PlayerDaoEfCore>();
+        services.AddScoped<IPlayerService, PlayerService>();
 
-            services.AddScoped<IMemoryCacheService, MemoryCacheService>();
+        services.AddScoped<IMemoryCacheService, MemoryCacheService>();
 
-            services.AddSingleton<IAuthDao, AuthDaoEfCore>();
-            services.AddScoped<IAuthService, AuthService>();
+        services.AddSingleton<IAuthDao, AuthDaoEfCore>();
+        services.AddScoped<IAuthService, AuthService>();
 
-            services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IEmailService, EmailService>();
 
-            services.AddScoped<IMessagePublisher>(c => new MessagePublisher(configuration["Kafka:BootstrapServers"]));
+        services.AddScoped<INotificationDao, NotificationEfDao>();
+        services.AddScoped<INotificationService, NotificationService>();
 
-            services.AddSingleton<VarzeaLeagueDatabaseSettings>();
+        services.AddScoped<IMessagePublisher>(c => new MessagePublisher(configuration["Kafka:BootstrapServers"]));
 
-            Authentication.ConfigureAuth(services);
-        }
+        services.AddSingleton<VarzeaLeagueDatabaseSettings>();
+
+        Authentication.ConfigureAuth(services);
     }
 }

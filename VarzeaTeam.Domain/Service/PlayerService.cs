@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using MongoDB.Driver;
+using System.Collections.Immutable;
 using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaLeague.Domain.Interface.Services;
 using VarzeaLeague.Domain.Model;
@@ -21,19 +22,13 @@ public class PlayerService : IPlayerService
     {
         try
         {
-            IEnumerable<PlayerModel> playerAll = await _playerDao.GetAsync(page, pageSize);
+            TeamModel teamModel = await _teamModel.GetIdAsync(teamId);
+
+            IEnumerable<PlayerModel> playerAll = await _playerDao.GetAsync(page, pageSize, 
+                filter: teamModel != null ? Builders<PlayerModel>.Filter.Where(x => x.TeamId == teamModel.Id) : null);
 
             if (playerAll.Count() == 0)
                 throw new ExceptionFilter($"Não existe nenhum time cadastrado");
-
-            TeamModel teamModel = await _teamModel.GetIdAsync(teamId);
-
-            if(teamModel != null)
-            {
-                IEnumerable<PlayerModel> filterPlayers = playerAll.Where(x => x.TeamId == teamModel.Id).ToImmutableList();
-
-                return filterPlayers;
-            }
 
             return playerAll;
         }
@@ -75,6 +70,7 @@ public class PlayerService : IPlayerService
             TeamModel team = await _teamModel.GetIdAsync(addObject.TeamId);
 
             addObject.TeamId = team.Id;
+            addObject.TeamModel = team;
 
             await _playerDao.CreateAsync(addObject);
 

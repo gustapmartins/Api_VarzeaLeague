@@ -3,6 +3,8 @@ using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaTeam.Domain.Exceptions;
 using VarzeaLeague.Domain.Utils;
 using VarzeaLeague.Domain.Model.User;
+using MongoDB.Driver;
+using VarzeaLeague.Domain.Enum;
 
 namespace VarzeaLeague.Domain.Service;
 
@@ -25,7 +27,7 @@ public class AuthService : IAuthService
     {
         try
         {
-            IEnumerable<UserModel> GetAll = await _authDao.GetAsync(page, pageSize);
+            IEnumerable<UserModel> GetAll = await _authDao.GetAsync(page, pageSize, filter: Builders<UserModel>.Filter.Where(x => x.AccountStatus == AccountStatus.active));
 
             if (GetAll.Count() == 0)
                 throw new ExceptionFilter($"Não existe nenhuma partida cadastrada");

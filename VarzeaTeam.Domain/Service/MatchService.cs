@@ -3,25 +3,26 @@ using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaTeam.Domain.Exceptions;
 using VarzeaLeague.Domain.Utils;
 using VarzeaLeague.Domain.Model;
+using VarzeaLeague.Domain.Model.User;
 
 namespace VarzeaLeague.Domain.Service;
 
 public class MatchService : IMatchService
 {
     private readonly IMatchDao _matchDao;
-    private readonly ITeamDao _teamDao;
+    private readonly ITeamService _teamService;
 
-    public MatchService(IMatchDao matchDao, ITeamDao teamDao)
+    public MatchService(IMatchDao matchDao, ITeamService teamService)
     {
         _matchDao = matchDao;
-        _teamDao = teamDao;
+        _teamService = teamService;
     }
 
     public async Task<IEnumerable<MatchModel>> GetAsync(int page, int pageSize)
     {
         try
         {
-            IEnumerable<MatchModel> GetAll = await _matchDao.GetAsync(page, pageSize);
+            IEnumerable<MatchModel> GetAll = await _matchDao.GetAsync(page, pageSize, filter: null);
 
             if (GetAll.Count() == 0)
                 throw new ExceptionFilter($"Não existe nenhuma partida cadastrada");
@@ -55,16 +56,12 @@ public class MatchService : IMatchService
     {
         try
         {
-            TeamModel homeTeam = await _teamDao.GetIdAsync(addObject.HomeTeamId);
-            TeamModel visitingTeam = await _teamDao.GetIdAsync(addObject.VisitingTeamId);
+            TeamModel homeTeam = await _teamService.GetIdAsync(addObject.HomeTeamId);
+            TeamModel visitingTeam = await _teamService.GetIdAsync(addObject.VisitingTeamId);
             MatchModel matchExist = await _matchDao.MatchExistsAsync(addObject.HomeTeamId, addObject.VisitingTeamId);
 
             // Verificar se os times foram encontrados
-            if (homeTeam == null || visitingTeam == null)
-            {
-                throw new ExceptionFilter("Um ou ambos os times não foram encontrados.");
-            }
-
+            
             if (matchExist != null)
             {
                 throw new ExceptionFilter("Já existe uma partida cadastrada com esses times.");
@@ -80,7 +77,9 @@ public class MatchService : IMatchService
             // Criar a partida com os times encontrados
             MatchModel match = new()
             {
+                HomeTeamModel = homeTeam,
                 HomeTeamId = addObject.HomeTeamId,
+                VisitingTeamModel = visitingTeam,
                 VisitingTeamId = addObject.VisitingTeamId,
                 Local = addObject.Local,
                 Date = addObject.Date,

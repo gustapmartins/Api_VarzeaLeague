@@ -2,6 +2,8 @@
 using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaTeam.Domain.Exceptions;
 using VarzeaLeague.Domain.Model;
+using VarzeaLeague.Domain.Model.User;
+using MongoDB.Driver;
 
 namespace VarzeaTeam.Service;
 
@@ -18,7 +20,7 @@ public class TeamService : ITeamService
     {
         try 
         {
-            IEnumerable<TeamModel> GetAll = await _teamDao.GetAsync(page, pageSize);
+            IEnumerable<TeamModel> GetAll = await _teamDao.GetAsync(page, pageSize, filter: Builders<TeamModel>.Filter.Where(x => x.Active == true));
 
             if(GetAll.Count() == 0)
                 throw new ExceptionFilter($"Não existe nenhum time cadastrado");
@@ -58,6 +60,8 @@ public class TeamService : ITeamService
                 throw new ExceptionFilter($"O Time com o nome '{addObject.NameTeam}', já existe.");
 
             await _teamDao.CreateAsync(addObject);
+
+
             return addObject;
         }
         catch (Exception ex)
