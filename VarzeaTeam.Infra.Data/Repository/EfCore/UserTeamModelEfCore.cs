@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Options;
 using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaLeague.Domain.Model.DatabaseSettings;
-using VarzeaLeague.Domain.Model.User;
 using VarzeaLeague.Infra.Data.Context;
 using MongoDB.Driver;
+using VarzeaLeague.Domain.Model;
 
 namespace VarzeaLeague.Infra.Data.Repository.EfCore;
 
