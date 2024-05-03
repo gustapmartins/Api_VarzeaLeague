@@ -33,7 +33,7 @@ public class PlayerController : ControllerBase
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     [HttpGet("search-players")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> GetPlayer([FromQuery] string teamId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    public async Task<ActionResult> GetPlayer([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] string? teamId = null)
     {
         List<PlayerViewDto> playerView = _mapper.Map<List<PlayerViewDto>>(await _playerService.GetAsync(page, pageSize, teamId));
 

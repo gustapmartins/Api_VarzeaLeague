@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using System.Collections.Immutable;
 using VarzeaLeague.Domain.Model;
 using VarzeaLeague.Domain.Model.DatabaseSettings;
 
@@ -16,7 +17,7 @@ public abstract class BaseContext<T> where T : IEntity
         Collection = database.GetCollection<T>(collectionName);
     }
 
-    public async Task<IEnumerable<T>> GetAsync(int page, int pageSize, FilterDefinition<T> filter = null)
+    public async Task<IEnumerable<T>> GetAsync(int page, int pageSize, FilterDefinition<T> filter)
     {
         int skip = (page - 1) * pageSize;
 
@@ -28,7 +29,9 @@ public abstract class BaseContext<T> where T : IEntity
         };
 
         if (filter == null)
+        {
             return await Collection.FindSync(_ => true, options).ToListAsync();
+        }
         else
             return await Collection.FindSync(filter, options).ToListAsync();
     }

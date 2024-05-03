@@ -20,7 +20,8 @@ public class TeamService : ITeamService
     {
         try 
         {
-            IEnumerable<TeamModel> GetAll = await _teamDao.GetAsync(page, pageSize, filter: Builders<TeamModel>.Filter.Where(x => x.Active == true));
+            IEnumerable<TeamModel> GetAll = await _teamDao.GetAsync(page, pageSize, 
+                filter: Builders<TeamModel>.Filter.Where(x => x.Active == true));
 
             if(GetAll.Count() == 0)
                 throw new ExceptionFilter($"Não existe nenhum time cadastrado");

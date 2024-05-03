@@ -3,7 +3,6 @@ using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaTeam.Domain.Exceptions;
 using VarzeaLeague.Domain.Utils;
 using VarzeaLeague.Domain.Model;
-using VarzeaLeague.Domain.Model.User;
 
 namespace VarzeaLeague.Domain.Service;
 
@@ -22,7 +21,7 @@ public class MatchService : IMatchService
     {
         try
         {
-            IEnumerable<MatchModel> GetAll = await _matchDao.GetAsync(page, pageSize, filter: null);
+            IEnumerable<MatchModel> GetAll = await _matchDao.GetAsync(page, pageSize);
 
             if (GetAll.Count() == 0)
                 throw new ExceptionFilter($"Não existe nenhuma partida cadastrada");

@@ -29,7 +29,7 @@ public class MathDaoEfCore : BaseContext<MatchModel>, IMatchDao
 
         update = updateObject.TeamWin != null ? update.Set(x => x.TeamWin, updateObject.TeamWin) : update;
 
-        update = updateObject.Date != null ? update.Set(x => x.Date, updateObject.Date) : update;
+        update = updateObject.Date != DateTime.MinValue ? update.Set(x => x.Date, updateObject.Date) : update;
 
         var options = new FindOneAndUpdateOptions<MatchModel>
         {

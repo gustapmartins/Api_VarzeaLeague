@@ -4,7 +4,7 @@ namespace VarzeaTeam.Infra.Data.Repository.Utils;
 
 public interface BaseDao<T>
 {
-    Task<IEnumerable<T>> GetAsync(int page, int pageSize, FilterDefinition<T> filter);
+    Task<IEnumerable<T>> GetAsync(int page, int pageSize, FilterDefinition<T>? filter = null);
 
     Task<T> GetIdAsync(string Id);
 
