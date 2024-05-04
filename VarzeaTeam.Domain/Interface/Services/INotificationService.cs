@@ -4,7 +4,7 @@ namespace VarzeaLeague.Domain.Interface.Services;
 
 public interface INotificationService
 {
-    Task<IEnumerable<NotificationModel>> GetNotificationAsync(string idUser);
+    Task<IEnumerable<NotificationModel>> GetNotificationAsync();
 
     Task<NotificationModel> SendNotificationAsync(NotificationModel NotificationModel);
 

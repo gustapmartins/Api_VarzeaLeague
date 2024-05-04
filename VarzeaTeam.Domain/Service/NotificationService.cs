@@ -1,5 +1,7 @@
-﻿using VarzeaLeague.Domain.Interface.Dao;
+﻿using Microsoft.AspNetCore.Http;
+using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaLeague.Domain.Interface.Services;
+using VarzeaLeague.Domain.JwtHelper;
 using VarzeaLeague.Domain.Model;
 using VarzeaTeam.Domain.Exceptions;
 
@@ -8,12 +10,14 @@ namespace VarzeaLeague.Domain.Service;
 public class NotificationService : INotificationService
 {
     private readonly INotificationDao _notificationDao;
+    private readonly HttpContext _httpContext;
 
-    public NotificationService(INotificationDao notificationDao)
+    public NotificationService(INotificationDao notificationDao, HttpContext httpContext)
     {
         _notificationDao = notificationDao;
+        _httpContext = httpContext;
     }
-    public async Task<IEnumerable<NotificationModel>> GetNotificationAsync(string idUser)
+    public async Task<IEnumerable<NotificationModel>> GetNotificationAsync()
     {
         try
         {
@@ -34,6 +38,11 @@ public class NotificationService : INotificationService
     {
         try
         {
+            NotificationModel notificationModel = new()
+            {
+                
+            };
+
             await _notificationDao.CreateAsync(NotificationModel);
 
             return NotificationModel;

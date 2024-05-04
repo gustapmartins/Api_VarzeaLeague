@@ -61,7 +61,6 @@ public class TeamService : ITeamService
 
             await _teamDao.CreateAsync(addObject);
 
-
             return addObject;
         }
         catch (Exception ex)
