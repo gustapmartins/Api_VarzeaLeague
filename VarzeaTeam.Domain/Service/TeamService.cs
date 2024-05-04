@@ -1,19 +1,22 @@
-﻿using VarzeaLeague.Domain.Interface.Services;
-using VarzeaLeague.Domain.Interface.Dao;
-using VarzeaTeam.Domain.Exceptions;
-using VarzeaLeague.Domain.Model;
-using VarzeaLeague.Domain.Model.User;
+﻿using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
+using VarzeaLeague.Domain.Interface.Dao;
+using VarzeaLeague.Domain.Interface.Services;
+using VarzeaLeague.Domain.JwtHelper;
+using VarzeaLeague.Domain.Model;
+using VarzeaTeam.Domain.Exceptions;
 
 namespace VarzeaTeam.Service;
 
 public class TeamService : ITeamService
 {
     private readonly ITeamDao _teamDao;
+    private readonly HttpContext _httpContext;
 
-    public TeamService(ITeamDao teamDao)
+    public TeamService(ITeamDao teamDao, IHttpContextAccessor httpContextAccessor)
     {
         _teamDao = teamDao;
+        _httpContext = httpContextAccessor.HttpContext;
     }
 
     public async Task<IEnumerable<TeamModel>> GetAsync(int page, int pageSize)
@@ -59,6 +62,10 @@ public class TeamService : ITeamService
             if(teamExist != null)
                 throw new ExceptionFilter($"O Time com o nome '{addObject.NameTeam}', já existe.");
 
+            //Visualização através do JWT authenticado na aplicação
+            string clientId = GetTokenId.GetClientIdFromToken(_httpContext);
+
+            addObject.clientId = clientId;
             await _teamDao.CreateAsync(addObject);
 
             return addObject;

@@ -16,7 +16,7 @@ public abstract class BaseContext<T> where T : IEntity
         Collection = database.GetCollection<T>(collectionName);
     }
 
-    public async Task<IEnumerable<T>> GetAsync(int page, int pageSize, FilterDefinition<T> filter = null)
+    public async Task<IEnumerable<T>> GetAsync(int page, int pageSize, FilterDefinition<T> filter)
     {
         int skip = (page - 1) * pageSize;
 

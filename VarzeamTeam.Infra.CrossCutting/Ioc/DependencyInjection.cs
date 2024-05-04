@@ -53,9 +53,6 @@ public static class DependencyInjection
 
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-        services.AddSingleton<ITeamDao, TeamDaoEfCore>();
-        services.AddScoped<ITeamService, TeamService>();
-
         services.AddSingleton<IMatchDao, MathDaoEfCore>();
         services.AddScoped<IMatchService, MatchService>();
 
@@ -71,6 +68,9 @@ public static class DependencyInjection
 
         services.AddScoped<INotificationDao, NotificationEfDao>();
         services.AddScoped<INotificationService, NotificationService>();
+
+        services.AddSingleton<ITeamDao, TeamDaoEfCore>();
+        services.AddScoped<ITeamService, TeamService>();
 
         services.AddScoped<IMessagePublisher>(c => new MessagePublisher(configuration["Kafka:BootstrapServers"]));
 

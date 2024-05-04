@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using VarzeaLeague.Domain.Interface.Services;
 using VarzeaLeague.Domain.Interface.Dao;
-using VarzeaLeague.Domain.Interface.Services;
 using VarzeaLeague.Domain.JwtHelper;
-using VarzeaLeague.Domain.Model;
 using VarzeaTeam.Domain.Exceptions;
+using VarzeaLeague.Domain.Model;
+using Microsoft.AspNetCore.Http;
+using MongoDB.Driver;
 
 namespace VarzeaLeague.Domain.Service;
 
@@ -12,16 +13,20 @@ public class NotificationService : INotificationService
     private readonly INotificationDao _notificationDao;
     private readonly HttpContext _httpContext;
 
-    public NotificationService(INotificationDao notificationDao, HttpContext httpContext)
+    public NotificationService(INotificationDao notificationDao, IHttpContextAccessor httpContextAccessor)
     {
         _notificationDao = notificationDao;
-        _httpContext = httpContext;
+        _httpContext = httpContextAccessor.HttpContext;
     }
-    public async Task<IEnumerable<NotificationModel>> GetNotificationAsync()
+
+    public async Task<IEnumerable<NotificationModel>> GetNotificationAsync(int page, int pageSize)
     {
         try
         {
-            IEnumerable<NotificationModel> notificationAll = await _notificationDao.GetAsync();
+            string clientId = GetTokenId.GetClientIdFromToken(_httpContext);
+
+            IEnumerable<NotificationModel> notificationAll = await _notificationDao.GetAsync(page, pageSize, 
+                filter: Builders<NotificationModel>.Filter.Where(x => x.UserVisitingId == clientId));
 
             if (notificationAll.Count() == 0)
                 throw new ExceptionFilter($"Não existe nenhuma notificação cadastrada");
@@ -34,38 +39,20 @@ public class NotificationService : INotificationService
         }
     }
 
-    public async Task<NotificationModel> SendNotificationAsync(NotificationModel NotificationModel)
+    public async Task<NotificationModel> SendNotificationAsync(NotificationModel notificationModel)
     {
         try
         {
-            NotificationModel notificationModel = new()
+            // Validação do objeto de notificação
+            if (notificationModel == null)
             {
-                
-            };
+                throw new ArgumentNullException(nameof(notificationModel), "O objeto de notificação não pode ser nulo.");
+            }
 
-            await _notificationDao.CreateAsync(NotificationModel);
+            await _notificationDao.CreateAsync(notificationModel);
 
-            return NotificationModel;
+            return notificationModel;
         }catch(Exception ex)
-        {
-            throw new ExceptionFilter(ex.Message);
-        }
-    }
-
-    public async Task<NotificationModel> DeleteNotificationAsync(string idNotification)
-    {
-        try
-        {
-            NotificationModel findId = await _notificationDao.GetIdAsync(idNotification);
-
-            if(findId == null)
-                throw new ExceptionFilter($"O id '{idNotification}' não existe."); 
-
-            await _notificationDao.RemoveAsync(idNotification);
-
-            return findId;
-        }
-        catch (Exception ex)
         {
             throw new ExceptionFilter(ex.Message);
         }

@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Http;
 using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaLeague.Domain.Interface.Services;
+using VarzeaLeague.Domain.JwtHelper;
 using VarzeaLeague.Domain.Model;
 using VarzeaLeague.Domain.Utils;
 using VarzeaTeam.Domain.Exceptions;
@@ -10,11 +12,15 @@ public class MatchService : IMatchService
 {
     private readonly IMatchDao _matchDao;
     private readonly ITeamService _teamService;
+    private readonly INotificationService _notificationService;
+    private readonly HttpContext _httpContext;
 
-    public MatchService(IMatchDao matchDao, ITeamService teamService)
+    public MatchService(IMatchDao matchDao, ITeamService teamService, IHttpContextAccessor httpContextAccessor, INotificationService notificationService)
     {
         _matchDao = matchDao;
         _teamService = teamService;
+        _httpContext = httpContextAccessor.HttpContext;
+        _notificationService = notificationService;
     }
 
     public async Task<IEnumerable<MatchModel>> GetAsync(int page, int pageSize)
@@ -85,7 +91,15 @@ public class MatchService : IMatchService
             // Salvar a partida no banco de dados
             await _matchDao.CreateAsync(match);
 
-            
+            NotificationModel notification = new()
+            {
+                UserHomeId = homeTeam.clientId,
+                UserVisitingId = visitingTeam.clientId,
+                NotificationType = "Agendamento de partida de jogo",
+                DateCreated = DateTime.Now,
+            };
+
+            await _notificationService.SendNotificationAsync(notification);
 
             return match;
         }
