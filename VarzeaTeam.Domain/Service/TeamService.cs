@@ -1,14 +1,8 @@
-<<<<<<< HEAD
-﻿using MongoDB.Driver;
-using VarzeaLeague.Domain.Interface.Dao;
-using VarzeaLeague.Domain.Interface.Services;
-=======
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
 using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaLeague.Domain.Interface.Services;
 using VarzeaLeague.Domain.JwtHelper;
->>>>>>> bfb59e73f68e79ac694e88826d73f04cce24a95d
 using VarzeaLeague.Domain.Model;
 using VarzeaTeam.Domain.Exceptions;
 
