@@ -3,7 +3,6 @@ using VarzeamTeam.Infra.CrossCutting.Ioc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 DependencyInjection.ConfigureService(builder.Services, builder.Configuration);
 
 var app = builder.Build();

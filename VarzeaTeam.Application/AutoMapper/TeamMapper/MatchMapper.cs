@@ -12,5 +12,5 @@ public class MatchMapper: Profile
         CreateMap<MatchCreateDto, MatchModel>().ReverseMap();
         CreateMap<MatchModel, MatchViewDto>().ReverseMap();
         CreateMap<MatchModel, MatchUpdateDto>().ReverseMap();
-    }
+   }
 }

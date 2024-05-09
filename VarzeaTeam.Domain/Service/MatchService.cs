@@ -1,8 +1,13 @@
-using VarzeaLeague.Domain.Interface.Services;
+using Microsoft.AspNetCore.Http;
 using VarzeaLeague.Domain.Interface.Dao;
-using VarzeaTeam.Domain.Exceptions;
-using VarzeaLeague.Domain.Utils;
+using VarzeaLeague.Domain.Interface.Services;
+using VarzeaLeague.Domain.JwtHelper;
 using VarzeaLeague.Domain.Model;
+<<<<<<< HEAD
+=======
+using VarzeaLeague.Domain.Utils;
+using VarzeaTeam.Domain.Exceptions;
+>>>>>>> bfb59e73f68e79ac694e88826d73f04cce24a95d
 
 namespace VarzeaLeague.Domain.Service;
 
@@ -10,11 +15,15 @@ public class MatchService : IMatchService
 {
     private readonly IMatchDao _matchDao;
     private readonly ITeamService _teamService;
+    private readonly INotificationService _notificationService;
+    private readonly HttpContext _httpContext;
 
-    public MatchService(IMatchDao matchDao, ITeamService teamService)
+    public MatchService(IMatchDao matchDao, ITeamService teamService, IHttpContextAccessor httpContextAccessor, INotificationService notificationService)
     {
         _matchDao = matchDao;
         _teamService = teamService;
+        _httpContext = httpContextAccessor.HttpContext;
+        _notificationService = notificationService;
     }
 
     public async Task<IEnumerable<MatchModel>> GetAsync(int page, int pageSize)
@@ -55,16 +64,13 @@ public class MatchService : IMatchService
     {
         try
         {
+            // Verificar se os times foram encontrados
             TeamModel homeTeam = await _teamService.GetIdAsync(addObject.HomeTeamId);
             TeamModel visitingTeam = await _teamService.GetIdAsync(addObject.VisitingTeamId);
             MatchModel matchExist = await _matchDao.MatchExistsAsync(addObject.HomeTeamId, addObject.VisitingTeamId);
 
-            // Verificar se os times foram encontrados
-            
             if (matchExist != null)
-            {
                 throw new ExceptionFilter("Já existe uma partida cadastrada com esses times.");
-            }
 
             bool andressExist = await ViaCep.GetCep(addObject.Local);
 
@@ -87,6 +93,16 @@ public class MatchService : IMatchService
 
             // Salvar a partida no banco de dados
             await _matchDao.CreateAsync(match);
+
+            NotificationModel notification = new()
+            {
+                UserHomeId = homeTeam.clientId,
+                UserVisitingId = visitingTeam.clientId,
+                NotificationType = "Agendamento de partida de jogo",
+                DateCreated = DateTime.Now,
+            };
+
+            await _notificationService.SendNotificationAsync(notification);
 
             return match;
         }

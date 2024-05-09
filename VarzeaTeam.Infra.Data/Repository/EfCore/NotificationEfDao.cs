@@ -17,13 +17,8 @@ public class NotificationEfDao : BaseContext<NotificationModel>, INotificationDa
         _NotificationCollection = Collection;
     }
 
-    public async Task<IEnumerable<NotificationModel>> GetAsync()
+    public Task<NotificationModel> UpdateAsync(string Id, NotificationModel updateObject)
     {
-        var options = new FindOptions<NotificationModel>
-        {
-            Sort = Builders<NotificationModel>.Sort.Descending(x => x.DateCreated) // Ordena por data de criação no próprio banco de dados
-        };
-
-        return await _NotificationCollection.FindSync(_ => true, options).ToListAsync();
+        throw new NotImplementedException();
     }
 }

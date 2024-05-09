@@ -1,14 +1,8 @@
 ﻿using VarzeaLeague.Domain.Model;
+using VarzeaTeam.Infra.Data.Repository.Utils;
 
 namespace VarzeaLeague.Domain.Interface.Dao;
 
-public interface INotificationDao
+public interface INotificationDao: BaseDao<NotificationModel>
 {
-    Task<IEnumerable<NotificationModel>> GetAsync();
-
-    Task<NotificationModel> GetIdAsync(string Id);
-
-    Task CreateAsync(NotificationModel addObject);
-
-    Task RemoveAsync(string Id);
 }
