@@ -22,4 +22,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\VarzeaTeam.Infra.Data\VarzeaLeague.Infra.Data.csproj" />
+  </ItemGroup>
+
 </Project>

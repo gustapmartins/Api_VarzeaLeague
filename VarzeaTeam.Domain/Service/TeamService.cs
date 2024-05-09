@@ -1,9 +1,8 @@
-﻿using VarzeaLeague.Domain.Interface.Services;
+﻿using MongoDB.Driver;
 using VarzeaLeague.Domain.Interface.Dao;
-using VarzeaTeam.Domain.Exceptions;
+using VarzeaLeague.Domain.Interface.Services;
 using VarzeaLeague.Domain.Model;
-using VarzeaLeague.Domain.Model.User;
-using MongoDB.Driver;
+using VarzeaTeam.Domain.Exceptions;
 
 namespace VarzeaTeam.Service;
 
