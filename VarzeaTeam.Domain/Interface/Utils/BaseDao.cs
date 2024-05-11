@@ -1,4 +1,5 @@
 ﻿using MongoDB.Driver;
+using VarzeaLeague.Domain.Model;
 
 namespace VarzeaTeam.Infra.Data.Repository.Utils;
 
@@ -12,5 +13,5 @@ public interface BaseDao<T>
 
     Task RemoveAsync(string Id);
 
-    Task<T> UpdateAsync(string Id, T updateObject);
+    Task<T> UpdateAsync(string Id, IDictionary<string, object> updateFields);
 }

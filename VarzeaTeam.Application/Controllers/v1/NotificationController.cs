@@ -1,8 +1,8 @@
-﻿using AutoMapper;
+﻿using VarzeaLeague.Application.DTO.Notification;
+using VarzeaLeague.Domain.Interface.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using VarzeaLeague.Application.DTO.Notification;
-using VarzeaLeague.Domain.Interface.Services;
+using AutoMapper;
 
 namespace VarzeaLeague.Application.Controllers.v1;
 

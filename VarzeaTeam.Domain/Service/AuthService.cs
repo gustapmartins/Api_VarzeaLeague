@@ -170,7 +170,13 @@ public class AuthService : IAuthService
                 Password = passwordReset.Password,
             };
 
-            UserModel updatePassword = await _authDao.UpdateAsync(findEmail.Id, userlUpdatePassword);
+            var updateFields = new Dictionary<string, object>
+            {
+                { nameof(passwordReset.Password), passwordReset.Password },
+                // Adicione outros campos que deseja atualizar conforme necessário
+            };
+
+            UserModel updatePassword = await _authDao.UpdateAsync(findEmail.Id, updateFields);
 
             _memoryCacheService.RemoveFromCache<PasswordReset>(passwordReset.Token);
 
@@ -188,12 +194,18 @@ public class AuthService : IAuthService
         {
             UserModel userView = await _authDao.GetIdAsync(Id);
 
-            UserModel userRemove = new()
+            var updateFields = new Dictionary<string, object>
             {
-                AccountStatus = Enum.AccountStatus.blocked
+                { nameof(AccountStatus),AccountStatus.blocked },
+                // Adicione outros campos que deseja atualizar conforme necessário
             };
 
-            await _authDao.UpdateAsync(Id, userRemove);
+            UserModel userRemove = new()
+            {
+                AccountStatus = AccountStatus.blocked
+            };
+
+            await _authDao.UpdateAsync(Id, updateFields);
 
             return userView;
         }
@@ -209,7 +221,16 @@ public class AuthService : IAuthService
         {
             UserModel userId = await _authDao.GetIdAsync(Id);
 
-            UserModel userUpdate = await _authDao.UpdateAsync(Id, updateObject);
+            var updateFields = new Dictionary<string, object>
+            {
+                { nameof(updateObject.UserName), updateObject.UserName },
+                { nameof(updateObject.Password), updateObject.Password },
+                { nameof(updateObject.AccountStatus), updateObject.AccountStatus }
+                // Adicione outros campos que deseja atualizar conforme necessário
+            };
+
+
+            UserModel userUpdate = await _authDao.UpdateAsync(Id, updateFields);
 
             return userUpdate;
         }

@@ -103,7 +103,15 @@ public class PlayerService : IPlayerService
         {
             PlayerModel findId = await _playerDao.GetIdAsync(Id);
 
-            PlayerModel updatePlayer = await _playerDao.UpdateAsync(Id, updateObject);
+            var updateFields = new Dictionary<string, object>
+            {
+                { nameof(updateObject.NamePlayer), updateObject.NamePlayer },
+                { nameof(updateObject.Age), updateObject.Age },
+                { nameof(updateObject.TeamId), updateObject.TeamId }
+                // Adicione outros campos que deseja atualizar conforme necessário
+            };
+
+            PlayerModel updatePlayer = await _playerDao.UpdateAsync(Id, updateFields);
 
             return updatePlayer;
         }
