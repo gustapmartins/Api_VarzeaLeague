@@ -130,7 +130,17 @@ public class MatchService : IMatchService
         {
             MatchModel findId = await GetIdAsync(Id);
 
-            MatchModel matchUpdate = await _matchDao.UpdateAsync(Id, updateObject);
+            var updateFields = new Dictionary<string, object>
+            {
+                { nameof(updateObject.HomeTeamId), updateObject.HomeTeamId },
+                { nameof(updateObject.VisitingTeamId), updateObject.VisitingTeamId },
+                { nameof(updateObject.Local), updateObject.Local },
+                { nameof(updateObject.TeamWin), updateObject.TeamWin },
+                { nameof(updateObject.Date), updateObject.Date }
+            // Adicione outros campos que deseja atualizar conforme necessário
+            };
+
+            MatchModel matchUpdate = await _matchDao.UpdateAsync(Id, updateFields);
 
             return matchUpdate;
         }

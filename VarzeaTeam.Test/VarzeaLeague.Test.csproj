@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -10,7 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoFixture" Version="4.18.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
+    <PackageReference Include="Moq" Version="4.20.70" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -23,6 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\VarzeamTeam.Infra.CrossCutting\VarzeamLeague.Infra.CrossCutting.csproj" />
+    <ProjectReference Include="..\VarzeaTeam.Application\VarzeaLeague.Application.csproj" />
+    <ProjectReference Include="..\VarzeaTeam.Domain\VarzeaLeague.Domain.csproj" />
     <ProjectReference Include="..\VarzeaTeam.Infra.Data\VarzeaLeague.Infra.Data.csproj" />
   </ItemGroup>
 

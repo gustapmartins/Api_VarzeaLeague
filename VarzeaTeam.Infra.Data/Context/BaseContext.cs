@@ -52,6 +52,7 @@ public abstract class BaseContext<T> where T : IEntity
         await Collection.DeleteOneAsync(x => x.Id == Id);
     }
 
+<<<<<<< HEAD
     //public async Task<T> UpdateAsync(string Id, IDictionary<string, object> updateFields)
     //{
     //    var filter = Builders<T>.Filter.Eq(x => x.Id, Id);
@@ -69,4 +70,27 @@ public abstract class BaseContext<T> where T : IEntity
 
     //    return await Collection.FindOneAndUpdateAsync(filter, update, options);
     //}
+=======
+    public async Task<T> UpdateAsync(string id, IDictionary<string, object> updateFields)
+    {
+        var filter = Builders<T>.Filter.Eq(x => x.Id, id);
+        var update = Builders<T>.Update.Combine();
+
+        foreach (var field in updateFields)
+        {
+            //Preciso validar se o valor vier null, náo atualizo ele, criando talvez um if
+            if (field.Value != null && !string.IsNullOrEmpty(field.Value.ToString()))
+            {
+                update = update.Set(field.Key, field.Value);
+            }
+        }
+
+        var options = new FindOneAndUpdateOptions<T>
+        {
+            ReturnDocument = ReturnDocument.After
+        };
+
+        return await Collection.FindOneAndUpdateAsync(filter, update, options);
+    }
+>>>>>>> e5e6bcf130e916ec988726a94740f0f194b8dd3f
 }

@@ -19,21 +19,4 @@ public class TeamDaoEfCore : BaseContext<TeamModel>, ITeamDao
     {
         return await _TeamCollection.Find(x => x.NameTeam.Equals(name)).FirstOrDefaultAsync<TeamModel>();
     }
-
-    public async Task<TeamModel> UpdateAsync(string Id, TeamModel updateObject)
-    {
-        var filter = Builders<TeamModel>.Filter.Eq(x => x.Id, Id);
-        var update = Builders<TeamModel>.Update.Combine();
-
-        update = updateObject.NameTeam != string.Empty ? update.Set(x => x.NameTeam, updateObject.NameTeam) : update;
-
-        update = updateObject.Active != false ? update.Set(x => x.Active, updateObject.Active) : update;
-
-        var options = new FindOneAndUpdateOptions<TeamModel>
-        {
-            ReturnDocument = ReturnDocument.After // Retorna o documento após a atualização
-        };
-
-        return await _TeamCollection.FindOneAndUpdateAsync(filter, update, options);
-    }
 }

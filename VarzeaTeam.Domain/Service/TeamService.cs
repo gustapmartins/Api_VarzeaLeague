@@ -1,10 +1,10 @@
+using VarzeaLeague.Domain.Interface.Services;
+using VarzeaLeague.Domain.Interface.Dao;
+using VarzeaLeague.Domain.JwtHelper;
+using VarzeaTeam.Domain.Exceptions;
+using VarzeaLeague.Domain.Model;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
-using VarzeaLeague.Domain.Interface.Dao;
-using VarzeaLeague.Domain.Interface.Services;
-using VarzeaLeague.Domain.JwtHelper;
-using VarzeaLeague.Domain.Model;
-using VarzeaTeam.Domain.Exceptions;
 
 namespace VarzeaTeam.Service;
 
@@ -26,8 +26,8 @@ public class TeamService : ITeamService
             IEnumerable<TeamModel> GetAll = await _teamDao.GetAsync(page, pageSize, 
                 filter: Builders<TeamModel>.Filter.Where(x => x.Active == true));
 
-            if(GetAll.Count() == 0)
-                throw new ExceptionFilter($"Não existe nenhum time cadastrado");
+            if (!GetAll.Any())
+                throw new ExceptionFilter("Não existe nenhum time cadastrado");
 
             return GetAll;
         }
@@ -99,7 +99,14 @@ public class TeamService : ITeamService
         {
             TeamModel findTeam = await GetIdAsync(Id);
 
-            TeamModel updateTeam = await _teamDao.UpdateAsync(Id, updateObject);
+            var updateFields = new Dictionary<string, object>
+            {
+                { nameof(updateObject.NameTeam), updateObject.NameTeam },
+                { nameof(updateObject.Active), updateObject.Active }
+                // Adicione outros campos que deseja atualizar conforme necessário
+            };
+
+            TeamModel updateTeam = await _teamDao.UpdateAsync(Id, updateFields);
 
             return updateTeam;
         }
