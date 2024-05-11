@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Options;
-using MongoDB.Driver;
-using System.Collections.Immutable;
+﻿using VarzeaLeague.Domain.Model.DatabaseSettings;
+using Microsoft.Extensions.Options;
 using VarzeaLeague.Domain.Model;
-using VarzeaLeague.Domain.Model.DatabaseSettings;
+using MongoDB.Driver;
+using Nest;
 
 namespace VarzeaLeague.Infra.Data.Context;
 
@@ -51,4 +51,22 @@ public abstract class BaseContext<T> where T : IEntity
     {
         await Collection.DeleteOneAsync(x => x.Id == Id);
     }
+
+    //public async Task<T> UpdateAsync(string Id, IDictionary<string, object> updateFields)
+    //{
+    //    var filter = Builders<T>.Filter.Eq(x => x.Id, Id);
+    //    var update = Builders<T>.Update.Combine();
+
+    //    foreach (var field in updateFields)
+    //    {
+    //        update = update.Set(field.Key, field.Value);
+    //    }
+
+    //    var options = new FindOneAndUpdateOptions<T>
+    //    {
+    //        ReturnDocument = ReturnDocument.After
+    //    };
+
+    //    return await Collection.FindOneAndUpdateAsync(filter, update, options);
+    //}
 }
