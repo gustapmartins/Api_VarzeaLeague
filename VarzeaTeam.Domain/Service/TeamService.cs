@@ -31,9 +31,9 @@ public class TeamService : ITeamService
 
             return GetAll;
         }
-        catch(Exception ex)
+        catch (ExceptionFilter ex)
         {
-            throw new Exception(ex.Message);
+            throw new ExceptionFilter(ex.Message); // Se não, transforma em uma ExceptionFilter
         }
     }
 
@@ -44,13 +44,13 @@ public class TeamService : ITeamService
             TeamModel getId = await _teamDao.GetIdAsync(Id);
 
             if(getId == null)
-                throw new ExceptionFilter($"O Time com o id '{Id}', não existe.");
+                throw new ExceptionFilter($"O Time com o id {Id}, não existe.");
 
             return getId;
         }
-        catch(Exception ex)
+        catch (ExceptionFilter ex)
         {
-            throw new Exception(ex.Message);
+            throw new ExceptionFilter(ex.Message); // Se não, transforma em uma ExceptionFilter
         }
     }
 
@@ -71,9 +71,9 @@ public class TeamService : ITeamService
 
             return addObject;
         }
-        catch (Exception ex)
+        catch (ExceptionFilter ex)
         {
-            throw new Exception(ex.Message);
+            throw new ExceptionFilter(ex.Message);
         }
     }
 
@@ -87,9 +87,9 @@ public class TeamService : ITeamService
 
             return findId;
         }
-        catch(Exception ex)
+        catch(ExceptionFilter ex)
         {
-            throw new Exception(ex.Message);
+            throw new ExceptionFilter(ex.Message);
         }
     }
 
@@ -110,9 +110,9 @@ public class TeamService : ITeamService
 
             return updateTeam;
         }
-        catch (Exception ex)
+        catch (ExceptionFilter ex)
         {
-            throw new Exception(ex.Message);
+            throw new ExceptionFilter(ex.Message);
         }
     }
 }

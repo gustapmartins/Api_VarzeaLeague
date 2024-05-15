@@ -3,7 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace VarzeaLeague.Domain.JwtHelper;
 
-public class GetTokenId
+public static class GetTokenId
 {
     public static string GetClientIdFromToken(HttpContext httpContext)
     {
