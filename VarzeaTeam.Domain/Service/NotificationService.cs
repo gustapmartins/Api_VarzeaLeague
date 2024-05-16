@@ -1,9 +1,9 @@
-﻿using VarzeaLeague.Domain.Interface.Services;
+﻿using Microsoft.AspNetCore.Http;
 using VarzeaLeague.Domain.Interface.Dao;
-using VarzeaLeague.Domain.JwtHelper;
-using VarzeaTeam.Domain.Exceptions;
+using VarzeaLeague.Domain.Interface.Services;
+using VarzeaLeague.Domain.Interface.Utils;
 using VarzeaLeague.Domain.Model;
-using Microsoft.AspNetCore.Http;
+using VarzeaTeam.Domain.Exceptions;
 using MongoDB.Driver;
 
 namespace VarzeaLeague.Domain.Service;
@@ -12,18 +12,20 @@ public class NotificationService : INotificationService
 {
     private readonly INotificationDao _notificationDao;
     private readonly HttpContext _httpContext;
+    private readonly IGetClientIdToken _getClientIdFromToken;
 
-    public NotificationService(INotificationDao notificationDao, IHttpContextAccessor httpContextAccessor)
+    public NotificationService(INotificationDao notificationDao, IHttpContextAccessor httpContextAccessor, IGetClientIdToken getClientIdFromToken)
     {
         _notificationDao = notificationDao;
         _httpContext = httpContextAccessor.HttpContext;
+        _getClientIdFromToken = getClientIdFromToken;
     }
 
     public async Task<IEnumerable<NotificationModel>> GetNotificationAsync(int page, int pageSize)
     {
         try
         {
-            string clientId = GetTokenId.GetClientIdFromToken(_httpContext);
+            string clientId = _getClientIdFromToken.GetClientIdFromToken(_httpContext);
 
             IEnumerable<NotificationModel> notificationAll = await _notificationDao.GetAsync(page, pageSize, 
                 filter: Builders<NotificationModel>.Filter.Where(x => x.UserVisitingId == clientId));

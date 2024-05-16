@@ -11,10 +11,10 @@ public class PlayerService : IPlayerService
     private readonly IPlayerDao _playerDao;
     private readonly ITeamDao _teamModel;
 
-    public PlayerService(IPlayerDao playerDao, ITeamDao teamModel)
+    public PlayerService(IPlayerDao playerDao, ITeamDao teamDao)
     {
         _playerDao = playerDao;
-        _teamModel = teamModel;
+        _teamModel = teamDao;
     }
 
     public async Task<IEnumerable<PlayerModel>> GetAsync(int page, int pageSize, string teamId)
@@ -27,13 +27,13 @@ public class PlayerService : IPlayerService
                 filter: teamModel != null ? Builders<PlayerModel>.Filter.Where(x => x.TeamId == teamModel.Id) : null);
 
             if (playerAll.Count() == 0)
-                throw new ExceptionFilter($"Não existe nenhum time cadastrado");
+                throw new ExceptionFilter($"Não existe nenhum player cadastrado");
 
             return playerAll;
         }
-        catch (Exception ex)
+        catch (ExceptionFilter ex)
         {
-            throw new Exception(ex.Message);
+            throw new ExceptionFilter(ex.Message);
         }
     }
 
@@ -51,9 +51,9 @@ public class PlayerService : IPlayerService
 
             return player;
         }
-        catch(Exception ex)
+        catch(ExceptionFilter ex)
         {
-            throw new Exception(ex.Message);
+            throw new ExceptionFilter(ex.Message);
         }
     }
 
@@ -75,9 +75,9 @@ public class PlayerService : IPlayerService
 
             return addObject;
         }
-        catch (Exception ex)
+        catch (ExceptionFilter ex)
         {
-            throw new Exception(ex.Message);
+            throw new ExceptionFilter(ex.Message);
         }
     }
 
@@ -85,15 +85,15 @@ public class PlayerService : IPlayerService
     {
         try
         {
-            PlayerModel findId = await _playerDao.GetIdAsync(Id);
+            PlayerModel findId = await GetIdAsync(Id);
 
             await _playerDao.RemoveAsync(Id);
 
             return findId;
         }
-        catch (Exception ex)
+        catch (ExceptionFilter ex)
         {
-            throw new Exception(ex.Message);
+            throw new ExceptionFilter(ex.Message);
         }
     }
 
@@ -115,9 +115,9 @@ public class PlayerService : IPlayerService
 
             return updatePlayer;
         }
-        catch (Exception ex)
+        catch (ExceptionFilter ex)
         {
-            throw new Exception(ex.Message);
+            throw new ExceptionFilter(ex.Message);
         }
     }
 }

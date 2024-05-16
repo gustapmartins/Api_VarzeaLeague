@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.IdentityModel.Tokens.Jwt;
+using VarzeaLeague.Domain.Interface.Utils;
 
 namespace VarzeaLeague.Domain.JwtHelper;
 
-public static class GetTokenId
+public class GetClientIdToken : IGetClientIdToken
 {
-    public static string GetClientIdFromToken(HttpContext httpContext)
+    public string GetClientIdFromToken(HttpContext httpContext)
     {
         var token = httpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 

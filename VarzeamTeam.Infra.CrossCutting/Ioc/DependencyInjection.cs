@@ -12,6 +12,8 @@ using VarzeaTeam.Service;
 using VarzeaLeague.Application.Extension;
 using Ticket.Configure;
 using Ticket.Service;
+using VarzeaLeague.Domain.Interface.Utils;
+using VarzeaLeague.Domain.JwtHelper;
 
 namespace VarzeamTeam.Infra.CrossCutting.Ioc;
 
@@ -71,6 +73,8 @@ public static class DependencyInjection
 
         services.AddSingleton<ITeamDao, TeamDaoEfCore>();
         services.AddScoped<ITeamService, TeamService>();
+
+        services.AddScoped<IGetClientIdToken, GetClientIdToken>();
 
         services.AddScoped<IMessagePublisher>(c => new MessagePublisher(configuration["Kafka:BootstrapServers"]));
 

@@ -2,12 +2,8 @@ using AutoFixture;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
 using Moq;
-using Nest;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Net.Http;
 using VarzeaLeague.Domain.Interface.Dao;
-using VarzeaLeague.Domain.JwtHelper;
+using VarzeaLeague.Domain.Interface.Utils;
 using VarzeaLeague.Domain.Model;
 using VarzeaTeam.Domain.Exceptions;
 using VarzeaTeam.Service;
@@ -18,6 +14,7 @@ public class TeamServiceTest
 {
     private readonly Fixture _fixture;
     private readonly Mock<IHttpContextAccessor> _httpContext;
+    private readonly Mock<IGetClientIdToken> _getClientIdToken;
     private readonly Mock<ITeamDao> _teamDaoMock;
     private readonly TeamService _teamService;
 
@@ -25,7 +22,8 @@ public class TeamServiceTest
     {
         _httpContext = new Mock<IHttpContextAccessor>();
         _teamDaoMock = new Mock<ITeamDao>();
-        _teamService = new TeamService(_teamDaoMock.Object, _httpContext.Object);
+        _getClientIdToken = new Mock<IGetClientIdToken>();
+        _teamService = new TeamService(_teamDaoMock.Object, _httpContext.Object, _getClientIdToken.Object);
         _fixture = new Fixture();
     }
 
@@ -95,30 +93,51 @@ public class TeamServiceTest
     public async Task CreateTeam_WhenNewTeam_ReturnsTeam()
     {
         // Arrange
-        var teamDaoMock = new Mock<ITeamDao>();
-
-        // Configuração do HttpContext para simular a presença de um token JWT na solicitação
+        // Simulação do HttpContext para simular a presença de um token JWT na solicitação
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Headers["Authorization"] = "Bearer valid_jwt_token_here";
         var httpContextAccessorMock = new Mock<IHttpContextAccessor>();
         httpContextAccessorMock.Setup(x => x.HttpContext).Returns(httpContext);
 
-        var teamToAdd = new TeamModel { NameTeam = "NewTeamName" };
+        var teamToAdd = _fixture.Build<TeamModel>()
+                               .With(x => x.NameTeam, "NameTeam")
+                               .With(x => x.clientId, "clientId")
+                               .Create();
+
+        // Configuração do método GetClientIdFromToken para retornar o clientId desejado
+        _getClientIdToken.Setup(x => x.GetClientIdFromToken(It.IsAny<HttpContext>())).Returns(teamToAdd.clientId);
+
         var existingTeam = (TeamModel)null; // Simulando que o time não existe
 
-        teamDaoMock.Setup(dao => dao.TeamExist(teamToAdd.NameTeam)).ReturnsAsync(existingTeam);
-
-        var teamService = new TeamService(teamDaoMock.Object, httpContextAccessorMock.Object);
+        _teamDaoMock.Setup(dao => dao.TeamExist(teamToAdd.NameTeam)).ReturnsAsync(existingTeam);
 
         // Act
-        var createdTeam = await teamService.CreateAsync(teamToAdd);
+        var createdTeam = await _teamService.CreateAsync(teamToAdd);
 
         // Assert
         // Verifica se o método CreateAsync foi chamado no DAO com o objeto de time correto
-        teamDaoMock.Verify(dao => dao.CreateAsync(teamToAdd), Times.Once);
+        _teamDaoMock.Verify(dao => dao.CreateAsync(teamToAdd), Times.Once);
 
         // Verifica se o clientId foi configurado corretamente no objeto de time criado
-        Assert.Equal("valid_client_id_here", createdTeam.clientId);
+        Assert.Equal(teamToAdd.clientId, createdTeam.clientId);
+    }
+
+    [Fact]
+    public async Task CreateTeam_WhenNewTeam_ThrowException()
+    {
+        // Arrange
+        var existingTeamName = "ExistingTeam";
+        var teamToAdd = _fixture.Build<TeamModel>()
+                               .With(x => x.NameTeam, existingTeamName)
+                               .Create();
+
+        _teamDaoMock.Setup(dao => dao.TeamExist(existingTeamName)).ReturnsAsync(teamToAdd);
+
+        var HttpContext = new Mock<HttpContext>();
+        _getClientIdToken.Setup(mock => mock.GetClientIdFromToken(HttpContext.Object)).Returns("clientId");
+
+        // Act & Assert
+        await Assert.ThrowsAsync<ExceptionFilter>(() => _teamService.CreateAsync(teamToAdd));
     }
 
     [Fact]
