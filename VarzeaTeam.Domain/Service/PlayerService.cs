@@ -9,19 +9,19 @@ namespace VarzeaLeague.Domain.Service;
 public class PlayerService : IPlayerService
 {
     private readonly IPlayerDao _playerDao;
-    private readonly ITeamDao _teamModel;
+    private readonly ITeamService _teamService;
 
-    public PlayerService(IPlayerDao playerDao, ITeamDao teamDao)
+    public PlayerService(IPlayerDao playerDao, ITeamService teamService)
     {
         _playerDao = playerDao;
-        _teamModel = teamDao;
+        _teamService = teamService;
     }
 
     public async Task<IEnumerable<PlayerModel>> GetAsync(int page, int pageSize, string teamId)
     {
         try
         {
-            TeamModel teamModel = await _teamModel.GetIdAsync(teamId);
+            TeamModel teamModel = await _teamService.GetIdAsync(teamId);
 
             IEnumerable<PlayerModel> playerAll = await _playerDao.GetAsync(page, pageSize, 
                 filter: teamModel != null ? Builders<PlayerModel>.Filter.Where(x => x.TeamId == teamModel.Id) : null);
@@ -46,9 +46,6 @@ public class PlayerService : IPlayerService
             if (player == null)
                 throw new ExceptionFilter($"O jogador com o id '{Id}' não existe.");
 
-            // Buscar o objeto de time associado a este jogador
-            TeamModel team = await _teamModel.GetIdAsync(player.TeamId);
-
             return player;
         }
         catch(ExceptionFilter ex)
@@ -64,9 +61,9 @@ public class PlayerService : IPlayerService
             PlayerModel existingPlayer = await _playerDao.PlayerExist(addObject.NamePlayer);
 
             if(existingPlayer != null)
-                throw new Exception($"O jogador com o nome '{addObject.NamePlayer}' já existe.");
+                throw new ExceptionFilter($"O jogador com o nome '{addObject.NamePlayer}' já existe.");
 
-            TeamModel team = await _teamModel.GetIdAsync(addObject.TeamId);
+            TeamModel team = await _teamService.GetIdAsync(addObject.TeamId);
 
             addObject.TeamId = team.Id;
             addObject.TeamModel = team;

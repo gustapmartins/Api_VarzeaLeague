@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Http;
 using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaLeague.Domain.Interface.Services;
 using VarzeaLeague.Domain.Model;
@@ -12,13 +11,11 @@ public class MatchService : IMatchService
     private readonly IMatchDao _matchDao;
     private readonly ITeamService _teamService;
     private readonly INotificationService _notificationService;
-    private readonly HttpContext _httpContext;
 
-    public MatchService(IMatchDao matchDao, ITeamService teamService, IHttpContextAccessor httpContextAccessor, INotificationService notificationService)
+    public MatchService(IMatchDao matchDao, ITeamService teamService, INotificationService notificationService)
     {
         _matchDao = matchDao;
         _teamService = teamService;
-        _httpContext = httpContextAccessor.HttpContext;
         _notificationService = notificationService;
     }
 
@@ -33,9 +30,9 @@ public class MatchService : IMatchService
 
             return GetAll;
         }
-        catch (Exception ex) 
+        catch (ExceptionFilter ex) 
         {
-            throw new Exception(ex.Message);
+            throw new ExceptionFilter(ex.Message);
         }
     }
 
@@ -50,9 +47,9 @@ public class MatchService : IMatchService
 
             return GetId;
         }
-        catch (Exception ex) 
+        catch (ExceptionFilter ex) 
         {
-            throw new Exception(ex.Message);
+            throw new ExceptionFilter(ex.Message);
         }
     }
 
@@ -102,9 +99,9 @@ public class MatchService : IMatchService
 
             return match;
         }
-        catch (Exception ex)
+        catch (ExceptionFilter ex)
         {
-            throw new Exception(ex.Message);
+            throw new ExceptionFilter(ex.Message);
         }
     }
 
@@ -112,15 +109,15 @@ public class MatchService : IMatchService
     {
         try
         {
-            MatchModel findId = await _matchDao.GetIdAsync(Id);
+            MatchModel findId = await GetIdAsync(Id);
 
             await _matchDao.RemoveAsync(Id);
 
             return findId;
         }
-        catch(Exception ex)
+        catch(ExceptionFilter ex)
         {
-            throw new Exception(ex.Message);
+            throw new ExceptionFilter(ex.Message);
         }
     }
 
@@ -144,9 +141,9 @@ public class MatchService : IMatchService
 
             return matchUpdate;
         }
-        catch(Exception ex) 
+        catch(ExceptionFilter ex) 
         {
-            throw new Exception(ex.Message);
+            throw new ExceptionFilter(ex.Message);
         }
     }
 }
