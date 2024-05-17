@@ -76,7 +76,7 @@ public static class DependencyInjection
 
         services.AddScoped<IGetClientIdToken, GetClientIdToken>();
 
-        services.AddScoped<IMessagePublisher>(c => new MessagePublisher(configuration["Kafka:BootstrapServers"]));
+        services.AddScoped<IMessagePublisher>(c => new MessagePublisherService(configuration["Kafka:BootstrapServers"]));
 
         services.AddSingleton<VarzeaLeagueDatabaseSettings>();
 

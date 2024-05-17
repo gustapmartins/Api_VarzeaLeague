@@ -63,7 +63,7 @@ public class MatchService : IMatchService
             MatchModel matchExist = await _matchDao.MatchExistsAsync(addObject.HomeTeamId, addObject.VisitingTeamId);
 
             if (matchExist != null)
-                throw new ExceptionFilter("Já existe uma partida cadastrada com esses times.");
+                throw new ExceptionFilter("Já existe uma partida cadastrada com esses times");
 
             bool andressExist = await ViaCep.GetCep(addObject.Local);
 

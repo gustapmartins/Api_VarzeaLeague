@@ -1,11 +1,11 @@
-﻿using AutoFixture;
-using MongoDB.Driver;
-using Moq;
+﻿using VarzeaLeague.Domain.Interface.Services;
 using VarzeaLeague.Domain.Interface.Dao;
-using VarzeaLeague.Domain.Interface.Services;
 using VarzeaLeague.Domain.Model;
 using VarzeaLeague.Domain.Service;
 using VarzeaTeam.Domain.Exceptions;
+using MongoDB.Driver;
+using AutoFixture;
+using Moq;
 
 namespace VarzeaLeague.Test.Services;
 

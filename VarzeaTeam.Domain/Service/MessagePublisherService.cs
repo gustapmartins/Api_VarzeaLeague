@@ -4,11 +4,11 @@ using Confluent.Kafka;
 
 namespace VarzeaLeague.Domain.Service;
 
-public class MessagePublisher : IMessagePublisher
+public class MessagePublisherService : IMessagePublisher
 {
     private readonly ProducerConfig _config;
 
-    public MessagePublisher(string bootstrapServers) 
+    public MessagePublisherService(string bootstrapServers) 
     {
         _config = new ProducerConfig
         {
