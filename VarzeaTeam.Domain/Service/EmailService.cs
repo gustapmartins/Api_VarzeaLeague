@@ -14,7 +14,7 @@ public class EmailService: IEmailService
         _configuration = configuration;
     }
 
-    public void SendMail(string email, string subject, string message)
+    public async Task SendMail(string email, string subject, string message)
     {
         string mail = _configuration["EmailTrap:Email"];
 
@@ -26,6 +26,6 @@ public class EmailService: IEmailService
         };
 
 
-        client.Send(mail, email, subject, message);
+        await client.SendMailAsync(mail, email, subject, message);
     }
 }

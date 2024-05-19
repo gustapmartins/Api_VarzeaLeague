@@ -98,7 +98,7 @@ public class PlayerService : IPlayerService
     {
         try
         {
-            PlayerModel findId = await _playerDao.GetIdAsync(Id);
+            PlayerModel findId = await GetIdAsync(Id);
 
             var updateFields = new Dictionary<string, object>
             {

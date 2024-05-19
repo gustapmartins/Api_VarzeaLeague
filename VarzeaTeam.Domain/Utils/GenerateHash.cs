@@ -5,12 +5,13 @@ using System.Security.Claims;
 using System.Text;
 using VarzeaTeam.Domain.Common;
 using VarzeaLeague.Domain.Model.User;
+using VarzeaLeague.Domain.Interface.Utils;
 
 namespace VarzeaLeague.Domain.Utils;
 
-public static class GenerateHash
+public class GenerateHash : IGenerateHash
 {
-    public static string GenerateHashRandom()
+    public string GenerateHashRandom()
     {
         using (SHA256 sha256 = SHA256.Create())
         {
@@ -22,7 +23,7 @@ public static class GenerateHash
         }
     }
 
-    public static string GenerateHashParameters(string password)
+    public string GenerateHashParameters(string password)
     {
         using (SHA256 sha256 = SHA256.Create())
         {
@@ -42,7 +43,7 @@ public static class GenerateHash
         }
     }
 
-    public static bool VerifyPassword(string password, string hashedPassword)
+    public bool VerifyPassword(string password, string hashedPassword)
     {
         // Gera o hash da senha fornecida pelo usuário
         string hashInputPassword = GenerateHashParameters(password);
@@ -53,7 +54,7 @@ public static class GenerateHash
         return hashInputPassword == hashedPassword;
     }
 
-    public static string GenerateToken(UserModel userModel)
+    public string GenerateToken(UserModel userModel)
     {
         try
         {

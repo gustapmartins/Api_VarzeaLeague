@@ -203,7 +203,8 @@ public class TeamServiceTest
         _teamDaoMock.Setup(dao => dao.UpdateAsync(It.IsAny<string>(), It.IsAny<Dictionary<string, object>>()));
 
         //Act
-        var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () => await _teamService.RemoveAsync(It.IsAny<string>()));
+        var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () => 
+            await _teamService.UpdateAsync(It.IsAny<string>(), It.IsAny<TeamModel>()));
 
         //Assert
         Assert.Equal($"O Time com o id {It.IsAny<string>()}, não existe.", exception.Message);

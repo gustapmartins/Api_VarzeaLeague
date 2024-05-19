@@ -220,7 +220,8 @@ public class MatchServiceTest
         _matchDaoMock.Setup(dao => dao.UpdateAsync(It.IsAny<string>(), It.IsAny<Dictionary<string, object>>()));
 
         //Act
-        var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () => await _matchServiceMock.RemoveAsync(It.IsAny<string>()));
+        var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () => 
+            await _matchServiceMock.UpdateAsync(It.IsAny<string>(), It.IsAny<MatchModel>()));
 
         //Assert
         Assert.Equal($"A partida com o id '{It.IsAny<string>()}', não existe.", exception.Message);

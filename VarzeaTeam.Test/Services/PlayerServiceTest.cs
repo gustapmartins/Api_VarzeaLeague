@@ -195,7 +195,8 @@ public class PlayerServiceTest
         _playerDaoMock.Setup(dao => dao.UpdateAsync(It.IsAny<string>(), It.IsAny<Dictionary<string, object>>()));
 
         //Act
-        var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () => await _playerServiceMock.RemoveAsync(It.IsAny<string>()));
+        var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () => 
+            await _playerServiceMock.UpdateAsync(It.IsAny<string>(), It.IsAny<PlayerModel>()));
 
         //Assert
         Assert.Equal($"O jogador com o id '{It.IsAny<string>()}' não existe.", exception.Message);
