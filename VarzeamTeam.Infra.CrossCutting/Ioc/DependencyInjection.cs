@@ -10,10 +10,10 @@ using VarzeaLeague.Domain.Service;
 using Microsoft.OpenApi.Models;
 using VarzeaTeam.Service;
 using VarzeaLeague.Application.Extension;
-using Ticket.Configure;
-using Ticket.Service;
+using VarzeaLeague.Domain.Configure;
 using VarzeaLeague.Domain.Interface.Utils;
 using VarzeaLeague.Domain.JwtHelper;
+using VarzeaLeague.Domain.Utils;
 
 namespace VarzeamTeam.Infra.CrossCutting.Ioc;
 
@@ -75,6 +75,8 @@ public static class DependencyInjection
         services.AddScoped<ITeamService, TeamService>();
 
         services.AddScoped<IGetClientIdToken, GetClientIdToken>();
+
+        services.AddScoped<IGenerateHash, GenerateHash>();
 
         services.AddScoped<IMessagePublisher>(c => new MessagePublisherService(configuration["Kafka:BootstrapServers"]));
 

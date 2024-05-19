@@ -3,7 +3,7 @@ using VarzeaLeague.Domain.Interface.Services;
 using System.Net.Mail;
 using System.Net;
 
-namespace Ticket.Service;
+namespace VarzeaLeague.Domain.Service;
 
 public class EmailService: IEmailService
 {

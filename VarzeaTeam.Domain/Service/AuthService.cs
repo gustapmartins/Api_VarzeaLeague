@@ -15,10 +15,11 @@ public class AuthService : IAuthService
     private readonly IMemoryCacheService _memoryCacheService;
     private readonly IGenerateHash _generateHash;
 
-    public AuthService(IAuthDao authDao, IEmailService emailService, IMemoryCacheService memoryCacheService)
+    public AuthService(IAuthDao authDao, IEmailService emailService, IMemoryCacheService memoryCacheService, IGenerateHash generateHash)
     {
         _authDao = authDao;
         _emailService = emailService;
+        _generateHash = generateHash;
         _memoryCacheService = memoryCacheService;
     }
 
@@ -75,7 +76,7 @@ public class AuthService : IAuthService
                 throw new UnauthorizedAccessException("Senha incorreta");
 
             //Gera um token a partir do usuario buscado pelo E-mail
-            var token = _generateHash.GenerateToken(findUser);
+            string token = _generateHash.GenerateToken(findUser);
 
             return token;
         }

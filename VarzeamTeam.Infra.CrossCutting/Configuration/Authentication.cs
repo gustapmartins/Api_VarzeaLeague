@@ -4,7 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using VarzeaTeam.Domain.Common;
 using System.Text;
 
-namespace Ticket.Configure;
+namespace VarzeaLeague.Domain.Configure;
 
 public class Authentication
 {
