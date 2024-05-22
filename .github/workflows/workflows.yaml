@@ -23,10 +23,10 @@ jobs:
       #     restore-keys: |
       #       ${{ runner.os }}-docker-
 
-      - name: Build Docker image
-        run: docker build --tag VarzeaTeam.Application\Dockerfile:latest -f VarzeaTeam.Application/Dockerfile VarzeaTeam.Application/ 
-        env:
-          DOCKER_BUILDKIT: 1
+      # - name: Build Docker image
+      #   run: docker build --tag VarzeaTeam.Application\Dockerfile:latest -f VarzeaTeam.Application/Dockerfile VarzeaTeam.Application/ 
+      #   env:
+      #     DOCKER_BUILDKIT: 1
 
       - name: Run unit tests
         run: docker run --rm VarzeaTeam.Application\Dockerfile:latest sh -c "run-your-unit-tests-command"
