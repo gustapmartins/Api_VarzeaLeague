@@ -79,7 +79,7 @@ public class MatchServiceTest
     [Fact]
     public async Task GetIdAsync_WhenNotTeamsExist_ThrowsException()
     {
-        _matchDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>())).ReturnsAsync((MatchModel?)null);
+        _matchDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>()))!.ReturnsAsync((MatchModel?)null);
         //Act
         var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () => await _matchServiceMock.GetIdAsync(It.IsAny<string>()));
 
@@ -90,7 +90,7 @@ public class MatchServiceTest
     public async Task CreateMatch_WhenNewMatch_ReturnsMatch()
     {
         // Arrange
-        var existingMatch = (MatchModel)null;
+        var existingMatch = (MatchModel)null!;
         var matchToAdd = _fixture.Build<MatchModel>()
                                 .With(x => x.HomeTeamId, "homeTeamId")
                                 .With(x => x.VisitingTeamId, "visitingTeamId")
@@ -140,13 +140,13 @@ public class MatchServiceTest
     public async Task CreateMatch_WhenNewMatch_ThrowExceptionAndressExist()
     {
         // Arrange
-        var existingMatch = (MatchModel)null;
+        var existingMatch = (MatchModel)null!;
         var matchToAdd = _fixture.Build<MatchModel>()
                                .With(x => x.HomeTeamId, "HomeTeamId")
                                .With(x => x.VisitingTeamId, "visitingId")
                                .Create();
 
-        _matchDaoMock.Setup(dao => dao.MatchExistsAsync(matchToAdd.HomeTeamId, matchToAdd.VisitingTeamId)).ReturnsAsync(existingMatch);
+        _matchDaoMock.Setup(dao => dao.MatchExistsAsync(matchToAdd.HomeTeamId, matchToAdd.VisitingTeamId))!.ReturnsAsync(existingMatch);
 
         var resultViaCep = await ViaCep.GetCep(matchToAdd.Local);
         // Act & Assert
@@ -178,7 +178,7 @@ public class MatchServiceTest
     public async Task RemoveAsync_WhenNotTeamsExist_ThrowsException()
     {
         // Arrange
-        _matchDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>())).ReturnsAsync((MatchModel)null);
+        _matchDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>())).ReturnsAsync((MatchModel)null!);
 
         _matchDaoMock.Setup(dao => dao.RemoveAsync(It.IsAny<string>()));
 
@@ -215,7 +215,7 @@ public class MatchServiceTest
     public async Task UpdateAsync_WhenNotTeamsExist_ThrowsException()
     {
         // Arrange
-        _matchDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>())).ReturnsAsync((MatchModel)null);
+        _matchDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>())).ReturnsAsync((MatchModel)null!);
 
         _matchDaoMock.Setup(dao => dao.UpdateAsync(It.IsAny<string>(), It.IsAny<Dictionary<string, object>>()));
 
