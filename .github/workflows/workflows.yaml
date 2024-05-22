@@ -24,7 +24,7 @@ jobs:
       #       ${{ runner.os }}-docker-
 
       - name: Build Docker image
-        run: docker build --tag VarzeaTeam.Application\Dockerfile:latest -f Application/Dockerfile Application/ 
+        run: docker build --tag VarzeaTeam.Application\Dockerfile:latest -f VarzeaTeam.Application/Dockerfile VarzeaTeam.Application/ 
         env:
           DOCKER_BUILDKIT: 1
 
