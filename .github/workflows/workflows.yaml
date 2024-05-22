@@ -14,6 +14,3 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      - name: Run unit tests
-        run: docker run --rm VarzeaTeam.Application\Dockerfile:latest sh -c "run-your-unit-tests-command"
