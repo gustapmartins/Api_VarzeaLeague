@@ -14,6 +14,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+<<<<<<< HEAD
 
       - name: Cache Docker layers
         uses: actions/cache@v2
@@ -30,3 +31,5 @@ jobs:
 
       - name: Run unit tests
         run: docker run --rm VarzeaTeam.Application\Dockerfile:latest sh -c "run-your-unit-tests-command"
+=======
+>>>>>>> 7c9e8cd779fa62016cab083dc71f9fc2c4e09657
