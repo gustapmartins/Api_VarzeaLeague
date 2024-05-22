@@ -24,9 +24,9 @@ jobs:
             ${{ runner.os }}-docker-
 
       - name: Build Docker image
-        run: docker build --tag my-image:latest .
+        run: docker build --tag VarzeaTeam.Application\Dockerfile:latest -f VarzeaTeam.Application/Dockerfile VarzeaTeam.Application/ 
         env:
           DOCKER_BUILDKIT: 1
 
       - name: Run unit tests
-        run: docker run --rm my-image:latest sh -c "run-your-unit-tests-command"
+        run: docker run --rm VarzeaTeam.Application\Dockerfile:latest sh -c "run-your-unit-tests-command"

@@ -17,6 +17,7 @@ COPY ["VarzeaTeam.Application/VarzeaLeague.Application.csproj", "VarzeaTeam.Appl
 COPY ["VarzeamTeam.Infra.CrossCutting/VarzeamLeague.Infra.CrossCutting.csproj", "VarzeamTeam.Infra.CrossCutting/"]
 COPY ["VarzeaTeam.Domain/VarzeaLeague.Domain.csproj", "VarzeaTeam.Domain/"]
 COPY ["VarzeaTeam.Infra.Data/VarzeaLeague.Infra.Data.csproj", "VarzeaTeam.Infra.Data/"]
+COPY ["VarzeaTeam.Test/VarzeaLeague.Test.csproj", "VarzeaTeam.Test/"]
 RUN dotnet restore "VarzeaTeam.Application/VarzeaLeague.Application.csproj"
 COPY . .
 WORKDIR "/src/VarzeaTeam.Application"
