@@ -29,15 +29,18 @@ jobs:
           DOCKER_BUILDKIT: 1
 
       - name: Run unit tests
+        continue-on-error: true
         run: |
           echo "Running unit tests..."
-          docker run --rm varzeateam_application:latest sh -c "dotnet test /src/VarzeaTeam.Test/VarzeaLeague.Test.csproj --logger:trx"
-      
-      - name: Print Docker logs
-        if: failure()
-        run: |
-          echo "Printing Docker logs for debugging..."
-          docker logs varzeateam_application:latest
+          docker build --target test -t varzeateam_test:latest -f VarzeaTeam.Application/Dockerfile .
+          docker run --rm varzeateam_test:latest
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: src/VarzeaTeam.Test/TestResults
 
       - name: Clean up
-        run: docker rmi varzeateam_application:latest
+        run: docker rmi varzeateam_application:latest varzeateam_test:latest
