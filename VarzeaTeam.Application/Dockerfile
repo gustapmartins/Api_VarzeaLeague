@@ -26,7 +26,7 @@ RUN dotnet build "VarzeaLeague.Application.csproj" -c Release -o /app/build
 # Test Image
 FROM build AS test
 WORKDIR /src/VarzeaTeam.Tests
-RUN dotnet test "VarzeaLeague.Tests.csproj" --logger:trx
+RUN dotnet test "VarzeaLeague.Test.csproj" --logger:trx
 
 FROM build AS publish
 RUN dotnet publish "VarzeaLeague.Application.csproj" -c Release -o /app/publish /p:UseAppHost=false

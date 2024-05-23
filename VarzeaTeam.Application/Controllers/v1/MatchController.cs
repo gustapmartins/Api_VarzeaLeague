@@ -10,7 +10,6 @@ using VarzeaLeague.Domain.Model;
 
 namespace VarzeaTeam.Application.Controllers.v1;
 
-[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
 public class MatchController : ControllerBase
@@ -63,6 +62,7 @@ public class MatchController : ControllerBase
     ///     <returns>IActionResult</returns>
     /// <response code="201">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
+    [Authorize]
     [HttpPost("created-match")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<ActionResult> PostTeam([FromBody] MatchCreateDto matchCreateDto)
@@ -79,6 +79,7 @@ public class MatchController : ControllerBase
     ///     <returns>IActionResult</returns>
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
+    [Authorize]
     [HttpDelete("delete-match/{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> DeleteMatch(string id)
@@ -96,6 +97,7 @@ public class MatchController : ControllerBase
     ///     <returns>IActionResult</returns>
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
+    [Authorize]
     [HttpPatch("update-match/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
