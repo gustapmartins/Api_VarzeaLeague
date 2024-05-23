@@ -7,7 +7,6 @@ using VarzeaLeague.Domain.Interface.Services;
 using VarzeaLeague.Domain.Interface.Utils;
 using VarzeaLeague.Domain.Model.User;
 using VarzeaLeague.Domain.Service;
-using VarzeaLeague.Domain.Utils;
 using VarzeaTeam.Domain.Exceptions;
 
 namespace VarzeaLeague.Test.Services;
