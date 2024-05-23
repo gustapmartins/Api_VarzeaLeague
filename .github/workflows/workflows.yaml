@@ -29,7 +29,7 @@ jobs:
           DOCKER_BUILDKIT: 1
 
       - name: Run unit tests
-        run: docker run --rm varzeateam_application:latest sh -c "dotnet test /src/VarzeaTeam.Tests/VarzeaLeague.Tests.csproj --logger:trx"
+        run: docker run --rm varzeateam_application:latest sh -c "dotnet test /src/VarzeaTeam.Test/VarzeaLeague.Test.csproj --logger:trx"
 
       - name: Clean up
         run: docker rmi varzeateam_application:latest
