@@ -14,8 +14,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-<<<<<<< HEAD
-
+        
       - name: Cache Docker layers
         uses: actions/cache@v2
         with:
@@ -25,11 +24,13 @@ jobs:
             ${{ runner.os }}-docker-
 
       - name: Build Docker image
-        run: docker build --tag VarzeaTeam.Application\Dockerfile:latest -f VarzeaTeam.Application/Dockerfile VarzeaTeam.Application/ 
+        run: docker build --tag varzeateam_application:latest -f VarzeaTeam.Application/Dockerfile .
         env:
           DOCKER_BUILDKIT: 1
 
       - name: Run unit tests
-        run: docker run --rm VarzeaTeam.Application\Dockerfile:latest sh -c "run-your-unit-tests-command"
-=======
->>>>>>> 7c9e8cd779fa62016cab083dc71f9fc2c4e09657
+        run: docker run --rm varzeateam_application:latest sh -c "dotnet test /src/VarzeaTeam.Tests/VarzeaLeague.Tests.csproj --logger:trx"
+
+      - name: Clean up
+        run: docker rmi varzeateam_application:latest
+
