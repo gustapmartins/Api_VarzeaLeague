@@ -160,7 +160,7 @@ public class AuthServiceTest
     [Fact]
     public async Task LoginFindEmailNotExistAsync_WhenLogin_ThrowsException()
     {
-        //Arrange
+        //Arranges
         UserModel userMock = _fixture.Create<UserModel>();
         string token = _fixture.Create<string>();
 
