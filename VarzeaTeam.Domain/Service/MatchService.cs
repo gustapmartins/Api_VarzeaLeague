@@ -58,8 +58,8 @@ public class MatchService : IMatchService
         try
         {
             // Verificar se os times foram encontrados
-            TeamModel homeTeam = await _teamService.GetNameAsync(addObject.HomeTeamModel.NameTeam);
-            TeamModel visitingTeam = await _teamService.GetNameAsync(addObject.VisitingTeamModel.NameTeam);
+            TeamModel homeTeam = await _teamService.GetNameAsync(addObject.HomeTeamName);
+            TeamModel visitingTeam = await _teamService.GetNameAsync(addObject.VisitingTeamName);
             MatchModel matchExist = await _matchDao.MatchExistsAsync(homeTeam.Id, visitingTeam.Id);
 
             if (matchExist != null)
