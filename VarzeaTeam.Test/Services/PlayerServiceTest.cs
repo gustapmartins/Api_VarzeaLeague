@@ -110,7 +110,7 @@ public class PlayerServiceTest
         // Verifica se o método CreateAsync foi chamado no DAO com o objeto de time correto
         _playerDaoMock.Verify(dao => dao.CreateAsync(playerToAdd), Times.Once);
 
-        // Verifica se o clientId foi configurado corretamente no objeto de time criado
+        // Verifica se o ClientId foi configurado corretamente no objeto de time criado
         Assert.Equal(playerToAdd.NamePlayer, createdTeam.NamePlayer);
     }
 

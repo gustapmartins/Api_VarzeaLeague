@@ -2,9 +2,9 @@
 
 public class MatchUpdateDto
 {
-    public string? HomeTeamId { get; set; }
+    public string? HomeTeamName { get; set; }
 
-    public string? VisitingTeamId { get; set; }
+    public string? VisitingTeamName { get; set; }
 
     public string? Local { get; set; }
 

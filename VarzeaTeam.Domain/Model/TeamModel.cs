@@ -11,8 +11,14 @@ public class TeamModel : IEntity
     [BsonElement("NameTeam")] // Atributo que mapeia essa propriedade para o campo 'nameTeam' no MongoDB
     public string NameTeam { get; set; } = string.Empty;
 
+    [BsonElement("State")] // Atributo que mapeia essa propriedade para o campo 'nameTeam' no MongoDB
+    public string State { get; set; } = string.Empty;
+
+    [BsonElement("City")] // Atributo que mapeia essa propriedade para o campo 'nameTeam' no MongoDB
+    public string City { get; set; } = string.Empty;
+
     [BsonElement("ClientId")] // Atributo que mapeia essa propriedade para o campo 'nameTeam' no MongoDB
-    public string clientId { get; set; } = string.Empty;
+    public string ClientId { get; set; } = string.Empty;
 
     [BsonElement("Active")] // Atributo que mapeia essa propriedade para o campo 'Active' no MongoDB
     public bool Active { get; set; } = true;

@@ -58,9 +58,9 @@ public class MatchService : IMatchService
         try
         {
             // Verificar se os times foram encontrados
-            TeamModel homeTeam = await _teamService.GetIdAsync(addObject.HomeTeamId);
-            TeamModel visitingTeam = await _teamService.GetIdAsync(addObject.VisitingTeamId);
-            MatchModel matchExist = await _matchDao.MatchExistsAsync(addObject.HomeTeamId, addObject.VisitingTeamId);
+            TeamModel homeTeam = await _teamService.GetNameAsync(addObject.HomeTeamModel.NameTeam);
+            TeamModel visitingTeam = await _teamService.GetNameAsync(addObject.VisitingTeamModel.NameTeam);
+            MatchModel matchExist = await _matchDao.MatchExistsAsync(homeTeam.Id, visitingTeam.Id);
 
             if (matchExist != null)
                 throw new ExceptionFilter("Já existe uma partida cadastrada com esses times");
@@ -76,9 +76,9 @@ public class MatchService : IMatchService
             MatchModel match = new()
             {
                 HomeTeamModel = homeTeam,
-                HomeTeamId = addObject.HomeTeamId,
+                HomeTeamName = homeTeam.NameTeam,
                 VisitingTeamModel = visitingTeam,
-                VisitingTeamId = addObject.VisitingTeamId,
+                VisitingTeamName = visitingTeam.NameTeam,
                 Local = addObject.Local,
                 Date = addObject.Date,
                 DateCreated = DateTime.Now,
@@ -89,8 +89,8 @@ public class MatchService : IMatchService
 
             NotificationModel notification = new()
             {
-                UserHomeId = homeTeam.clientId,
-                UserVisitingId = visitingTeam.clientId,
+                UserHomeId = homeTeam.ClientId,
+                UserVisitingId = visitingTeam.ClientId,
                 NotificationType = "Agendamento de partida de jogo",
                 DateCreated = DateTime.Now,
             };
@@ -129,19 +129,19 @@ public class MatchService : IMatchService
 
             var updateFields = new Dictionary<string, object>
             {
-                { nameof(updateObject.HomeTeamId), updateObject.HomeTeamId },
-                { nameof(updateObject.VisitingTeamId), updateObject.VisitingTeamId },
-                { nameof(updateObject.Local), updateObject.Local },
-                { nameof(updateObject.TeamWin), updateObject.TeamWin },
-                { nameof(updateObject.Date), updateObject.Date }
-            // Adicione outros campos que deseja atualizar conforme necessário
+                 { $"{nameof(updateObject.HomeTeamModel)}.{nameof(updateObject.HomeTeamModel.NameTeam)}", updateObject.HomeTeamModel.NameTeam },
+                 { $"{nameof(updateObject.VisitingTeamModel)}.{nameof(updateObject.VisitingTeamModel.NameTeam)}", updateObject.VisitingTeamModel.NameTeam },
+                 { nameof(updateObject.Local), updateObject.Local },
+                 { nameof(updateObject.TeamWin), updateObject.TeamWin },
+                 { nameof(updateObject.Date), updateObject.Date }
+                // Adicione outros campos que deseja atualizar conforme necessário
             };
 
             MatchModel matchUpdate = await _matchDao.UpdateAsync(Id, updateFields);
 
             return matchUpdate;
         }
-        catch(ExceptionFilter ex) 
+        catch (ExceptionFilter ex)
         {
             throw new ExceptionFilter(ex.Message);
         }

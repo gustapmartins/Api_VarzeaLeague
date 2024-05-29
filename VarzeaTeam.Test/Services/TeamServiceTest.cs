@@ -101,11 +101,11 @@ public class TeamServiceTest
 
         var teamToAdd = _fixture.Build<TeamModel>()
                                .With(x => x.NameTeam, "NameTeam")
-                               .With(x => x.clientId, "clientId")
+                               .With(x => x.ClientId, "ClientId")
                                .Create();
 
-        // Configuração do método GetClientIdFromToken para retornar o clientId desejado
-        _getClientIdToken.Setup(x => x.GetClientIdFromToken(It.IsAny<HttpContext>())).Returns(teamToAdd.clientId);
+        // Configuração do método GetClientIdFromToken para retornar o ClientId desejado
+        _getClientIdToken.Setup(x => x.GetClientIdFromToken(It.IsAny<HttpContext>())).Returns(teamToAdd.ClientId);
 
         var existingTeam = (TeamModel)null; // Simulando que o time não existe
 
@@ -118,8 +118,8 @@ public class TeamServiceTest
         // Verifica se o método CreateAsync foi chamado no DAO com o objeto de time correto
         _teamDaoMock.Verify(dao => dao.CreateAsync(teamToAdd), Times.Once);
 
-        // Verifica se o clientId foi configurado corretamente no objeto de time criado
-        Assert.Equal(teamToAdd.clientId, createdTeam.clientId);
+        // Verifica se o ClientId foi configurado corretamente no objeto de time criado
+        Assert.Equal(teamToAdd.ClientId, createdTeam.ClientId);
     }
 
     [Fact]
@@ -134,7 +134,7 @@ public class TeamServiceTest
         _teamDaoMock.Setup(dao => dao.TeamExist(existingTeamName)).ReturnsAsync(teamToAdd);
 
         var HttpContext = new Mock<HttpContext>();
-        _getClientIdToken.Setup(mock => mock.GetClientIdFromToken(HttpContext.Object)).Returns("clientId");
+        _getClientIdToken.Setup(mock => mock.GetClientIdFromToken(HttpContext.Object)).Returns("ClientId");
 
         // Act & Assert
         await Assert.ThrowsAsync<ExceptionFilter>(() => _teamService.CreateAsync(teamToAdd));

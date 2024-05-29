@@ -91,49 +91,66 @@ public class MatchServiceTest
     {
         // Arrange
         var existingMatch = (MatchModel)null!;
+
+        // Create the nested objects separately
+        var homeTeam = _fixture.Build<TeamModel>().With(t => t.Id, "homeTeamId").With(t => t.NameTeam, "homeTeamName").Create();
+        var visitingTeam = _fixture.Build<TeamModel>().With(t => t.Id, "visitingTeamId").With(t => t.NameTeam, "visitingTeamName").Create();
+
+        // Customize the MatchModel
         var matchToAdd = _fixture.Build<MatchModel>()
-                                .With(x => x.HomeTeamId, "homeTeamId")
-                                .With(x => x.VisitingTeamId, "visitingTeamId")
-                                .With(x => x.Local, "01001000")
-                                .Create();
+                                 .With(m => m.HomeTeamModel, homeTeam)
+                                 .With(m => m.VisitingTeamModel, visitingTeam)
+                                 .With(m => m.Local, "01001000")
+                                 .Create();
 
-        var teamModel = _fixture.Create<TeamModel>();
+        var teamModel = _fixture.Build<TeamModel>().With(t => t.Id, "homeTeamId").With(t => t.NameTeam, "homeTeamName").Create();
+        var visitingTeamModel = _fixture.Build<TeamModel>().With(t => t.Id, "visitingTeamId").With(t => t.NameTeam, "visitingTeamName").Create();
 
-        _teamServiceMock.Setup(x => x.GetIdAsync("homeTeamId")).ReturnsAsync(teamModel);
-        _teamServiceMock.Setup(x => x.GetIdAsync("visitingTeamId")).ReturnsAsync(teamModel);
+        // Configure mocks
+        _teamServiceMock.Setup(x => x.GetNameAsync("homeTeamName")).ReturnsAsync(teamModel);
+        _teamServiceMock.Setup(x => x.GetNameAsync("visitingTeamName")).ReturnsAsync(visitingTeamModel);
 
         _matchDaoMock.Setup(x => x.MatchExistsAsync("homeTeamId", "visitingTeamId")).ReturnsAsync(existingMatch);
 
-        var resultViaCep = await ViaCep.GetCep(matchToAdd.Local);
-
+        // Mock the ViaCep call
         _matchDaoMock.Setup(x => x.CreateAsync(It.IsAny<MatchModel>())).Returns(Task.CompletedTask);
+        var resultViaCep = await ViaCep.GetCep(matchToAdd.Local);
+        Assert.True(resultViaCep);  // Assegure-se de que o resultado é verdadeiro
 
         // Act
         var createdMatch = await _matchServiceMock.CreateAsync(matchToAdd);
 
         // Assert
-        _matchDaoMock.Verify(dao => dao.CreateAsync(It.Is<MatchModel>(m => m.HomeTeamId == matchToAdd.HomeTeamId && m.VisitingTeamId == matchToAdd.VisitingTeamId)), Times.Once);
-        Assert.Equal(matchToAdd.HomeTeamId, createdMatch.HomeTeamId);
-        Assert.Equal(matchToAdd.VisitingTeamId, createdMatch.VisitingTeamId);
-        Assert.True(resultViaCep);
+        _matchDaoMock.Verify(dao => dao.CreateAsync(It.Is<MatchModel>(m => m.HomeTeamModel.Id == teamModel.Id && m.VisitingTeamModel.Id == visitingTeamModel.Id)), Times.Once);
+        Assert.Equal(matchToAdd.HomeTeamModel.Id, createdMatch.HomeTeamModel.Id);
+        Assert.Equal(matchToAdd.VisitingTeamModel.Id, createdMatch.VisitingTeamModel.Id);
     }
 
     [Fact]
     public async Task CreateMatch_WhenNewMatch_ThrowExceptionMatchExist()
     {
         // Arrange
-        var matchToAdd = _fixture.Build<MatchModel>()
-                               .With(x => x.HomeTeamId, "HomeTeamId")
-                               .With(x => x.VisitingTeamId, "visitingId")
-                               .Create();
+        var existingMatch = (MatchModel)null!;
+        var homeTeam = _fixture.Build<TeamModel>().With(t => t.Id, "homeTeamId").With(t => t.NameTeam, "homeTeamName").Create();
+        var visitingTeam = _fixture.Build<TeamModel>().With(t => t.Id, "visitingTeamId").With(t => t.NameTeam, "visitingTeamName").Create();
 
-        _matchDaoMock.Setup(dao => dao.MatchExistsAsync(matchToAdd.HomeTeamId, matchToAdd.VisitingTeamId)).ReturnsAsync(matchToAdd);
+        // Customize the MatchModel
+        _teamServiceMock.Setup(x => x.GetNameAsync("homeTeamName")).ReturnsAsync(homeTeam);
+        _teamServiceMock.Setup(x => x.GetNameAsync("visitingTeamName")).ReturnsAsync(visitingTeam);
+
+        var matchToAdd = _fixture.Build<MatchModel>()
+                                 .With(m => m.HomeTeamModel, homeTeam)
+                                 .With(m => m.VisitingTeamModel, visitingTeam)
+                                 .With(m => m.Local, "01001000")
+                                 .Create();
+
+        _matchDaoMock.Setup(dao => dao.MatchExistsAsync(matchToAdd.HomeTeamModel.Id, matchToAdd.VisitingTeamModel.Id))
+                     .ReturnsAsync(matchToAdd);
 
         // Act & Assert
-
         var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () => await _matchServiceMock.CreateAsync(matchToAdd));
 
-        Assert.Equal($"Já existe uma partida cadastrada com esses times", exception.Message);
+        Assert.Equal("Já existe uma partida cadastrada com esses times", exception.Message);
     }
 
     [Fact]
@@ -141,19 +158,29 @@ public class MatchServiceTest
     {
         // Arrange
         var existingMatch = (MatchModel)null!;
+        var homeTeam = _fixture.Build<TeamModel>().With(t => t.Id, "homeTeamId").With(t => t.NameTeam, "homeTeamName").Create();
+        var visitingTeam = _fixture.Build<TeamModel>().With(t => t.Id, "visitingTeamId").With(t => t.NameTeam, "visitingTeamName").Create();
+
+        // Customize the MatchModel
+
+        _teamServiceMock.Setup(x => x.GetNameAsync("homeTeamName")).ReturnsAsync(homeTeam);
+        _teamServiceMock.Setup(x => x.GetNameAsync("visitingTeamName")).ReturnsAsync(visitingTeam);
+
         var matchToAdd = _fixture.Build<MatchModel>()
-                               .With(x => x.HomeTeamId, "HomeTeamId")
-                               .With(x => x.VisitingTeamId, "visitingId")
-                               .Create();
+                                 .With(m => m.HomeTeamModel, homeTeam)
+                                 .With(m => m.VisitingTeamModel, visitingTeam)
+                                 .Create();
 
-        _matchDaoMock.Setup(dao => dao.MatchExistsAsync(matchToAdd.HomeTeamId, matchToAdd.VisitingTeamId))!.ReturnsAsync(existingMatch);
+        _matchDaoMock.Setup(dao => dao.MatchExistsAsync(matchToAdd.HomeTeamModel.Id, matchToAdd.VisitingTeamModel.Id))
+                     .ReturnsAsync(existingMatch);
 
+        // Mock the ViaCep call to return false indicating the address does not exist
         var resultViaCep = await ViaCep.GetCep(matchToAdd.Local);
-        // Act & Assert
 
+        // Act & Assert
         var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () => await _matchServiceMock.CreateAsync(matchToAdd));
 
-        Assert.Equal($"Esse endereço não existe", exception.Message);
+        Assert.Equal("Esse endereço não existe", exception.Message);
         Assert.False(resultViaCep);
     }
 
@@ -197,7 +224,6 @@ public class MatchServiceTest
         MatchModel upadteMatchMock = _fixture.Create<MatchModel>();
 
         _matchDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>())).ReturnsAsync(matchMock);
-
         _matchDaoMock.Setup(dao => dao.UpdateAsync(It.IsAny<string>(), It.IsAny<Dictionary<string, object>>()))
             .ReturnsAsync(matchMock);
 

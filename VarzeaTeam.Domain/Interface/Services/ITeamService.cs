@@ -8,6 +8,8 @@ public interface ITeamService
 
     Task<TeamModel> GetIdAsync(string Id);
 
+    Task<TeamModel> GetNameAsync(string NameTeam);
+
     Task<TeamModel> CreateAsync(TeamModel addObject);
 
     Task<TeamModel> RemoveAsync(string Id);

@@ -56,6 +56,23 @@ public class TeamService : ITeamService
         }
     }
 
+    public async Task<TeamModel> GetNameAsync(string NameTeam)
+    {
+        try
+        {
+            TeamModel teamModel = await _teamDao.TeamExist(NameTeam);
+
+            if (teamModel == null)
+                throw new ExceptionFilter($"O Time com esse nome: {NameTeam}, não existe.");
+
+            return teamModel;
+        }
+        catch (ExceptionFilter ex) 
+        {
+            throw new ExceptionFilter(ex.Message); // Se não, transforma em uma ExceptionFilter
+        }
+    }
+
     public async Task<TeamModel> CreateAsync(TeamModel addObject)
     {
         try
@@ -68,7 +85,7 @@ public class TeamService : ITeamService
             //Visualização através do JWT authenticado na aplicação
             string clientId = _getClientIdFromToken.GetClientIdFromToken(_httpContext);
 
-            addObject.clientId = clientId;
+            addObject.ClientId = clientId;
             await _teamDao.CreateAsync(addObject);
 
             return addObject;
