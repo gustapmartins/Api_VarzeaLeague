@@ -5,7 +5,7 @@ namespace VarzeaTeam.Application.DTO.Match;
 public class MatchCreateDto
 {
     [Required(ErrorMessage = "O time da casa é obrigatório.")]
-    public required string HomeTeam { get; set; }
+    public required string HomeTeamName { get; set; }
 
     [Required(ErrorMessage = "O time visitante é obrigatório.")]
     public required string VisitingTeamName { get; set; }
