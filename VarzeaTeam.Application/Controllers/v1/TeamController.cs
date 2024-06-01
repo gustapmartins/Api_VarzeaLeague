@@ -43,16 +43,16 @@ public class TeamController : ControllerBase
     /// <summary>
     ///     Buscar o time pelo seu identificador
     /// </summary>
-    /// <param name="id">Objeto com os campos necessários para buscar um time</param>
+    /// <param name="Id">Objeto com os campos necessários para buscar um time</param>
     /// <returns>IActionResult</returns>
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
-    [HttpGet("search-team/{id}")]
+    [HttpGet("search-team/{Id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetIdTeams([FromRoute] string id)
+    public async Task<IActionResult> GetIdTeams([FromRoute] string Id)
     {
-        TeamViewDto teamVieew = _mapper.Map<TeamViewDto>(await _teamService.GetIdAsync(id));
+        TeamViewDto teamVieew = _mapper.Map<TeamViewDto>(await _teamService.GetIdAsync(Id));
 
         return Ok(teamVieew);
     }
@@ -104,7 +104,7 @@ public class TeamController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> UpdateTeam([FromRoute] string id, [FromBody] TeamModel team)
+    public async Task<ActionResult> UpdateTeam([FromRoute] string id, [FromBody] TeamUpdateDto team)
     {
         TeamModel teamUpdate = _mapper.Map<TeamModel>(team);
 

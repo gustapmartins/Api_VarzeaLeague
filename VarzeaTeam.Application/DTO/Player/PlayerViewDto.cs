@@ -1,5 +1,4 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using VarzeaLeague.Domain.Model;
+﻿using VarzeaLeague.Domain.Model;
 
 namespace VarzeaLeague.Application.DTO.Player;
 
@@ -11,5 +10,5 @@ public class PlayerViewDto
 
     public int Age { get; set; }
 
-    public string TeamId { get; set; } = string.Empty;
+    public required TeamModel TeamModel { get; set; }
 }

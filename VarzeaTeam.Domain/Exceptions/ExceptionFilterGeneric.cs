@@ -23,6 +23,7 @@ public class ExceptionFilterGeneric : ExceptionFilterAttribute
             context.Exception.Source,
             ExceptionType = context.Exception.GetType().FullName,
             Path = context.HttpContext.Request.Path,
+
         })
         {
             StatusCode = (int)HttpStatusCode.InternalServerError

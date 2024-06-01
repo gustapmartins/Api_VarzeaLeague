@@ -8,16 +8,16 @@ public class PlayerModel : IEntity
     [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)] // Representação do tipo de dados ObjectId do MongoDBw
     public string Id { get; set; } = string.Empty;
 
-    [BsonElement("namePlayer")] // Atributo que mapeia essa propriedade para o campo 'name' no MongoDB
+    [BsonElement("NamePlayer")] // Atributo que mapeia essa propriedade para o campo 'name' no MongoDB
     public string NamePlayer { get; set; } = string.Empty;
 
-    [BsonElement("age")] // Atributo que mapeia essa propriedade para o campo 'name' no MongoDB
+    [BsonElement("Age")] // Atributo que mapeia essa propriedade para o campo 'name' no MongoDB
     public int Age { get; set; }
 
     [BsonElement("Team")]
     public TeamModel TeamModel { get; set; }
 
-    [BsonElement("teamId")]
+    [BsonElement("TeamId")]
     public string TeamId { get; set; } = string.Empty;
 
     [BsonElement("DateCreated")] // Atributo que mapeia essa propriedade para o campo 'DateCreated' no MongoDB

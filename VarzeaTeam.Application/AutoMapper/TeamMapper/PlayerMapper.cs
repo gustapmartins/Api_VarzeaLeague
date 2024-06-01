@@ -12,6 +12,6 @@ public class PlayerMapper : Profile
         CreateMap<PlayerCreateDto, PlayerModel>();
         CreateMap<PlayerViewDto, PlayerModel>();
         CreateMap<PlayerModel, PlayerViewDto>();
-        CreateMap<PlayerModel, PlayerUpdateDto>();
+        CreateMap<PlayerUpdateDto, PlayerModel>();
     }
 }

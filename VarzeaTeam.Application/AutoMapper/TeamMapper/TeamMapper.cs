@@ -12,6 +12,6 @@ public class TeamMapper: Profile
         CreateMap<TeamCreateDto, TeamModel>();
         CreateMap<TeamViewDto, TeamModel>();
         CreateMap<TeamModel, TeamViewDto>();
-        CreateMap<TeamModel, TeamUpdateDto>();
+        CreateMap<TeamUpdateDto, TeamModel>();
     }
 }

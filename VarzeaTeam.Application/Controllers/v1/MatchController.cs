@@ -43,14 +43,14 @@ public class MatchController : ControllerBase
     /// <summary>
     ///     Consultar partida a partir pelo id
     /// </summary>
-    /// <param name="id">Objeto com os campos necessários para criação de um filme</param>
+    /// <param name="Id">Objeto com os campos necessários para criação de um filme</param>
     ///     <returns>IActionResult</returns>
     /// <response code="200">Caso a busca seja feita com sucesso</response>
-    [HttpGet("search-match/{id}")]
+    [HttpGet("search-match/{Id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetIdMatch([FromRoute] string id)
+    public async Task<IActionResult> GetIdMatch([FromRoute] string Id)
     {
-        MatchViewDto matchView = _mapper.Map<MatchViewDto>(await _matchService.GetIdAsync(id));
+        MatchViewDto matchView = _mapper.Map<MatchViewDto>(await _matchService.GetIdAsync(Id));
 
         return Ok(matchView);
     }
@@ -75,16 +75,16 @@ public class MatchController : ControllerBase
     /// <summary>
     ///     Deleta uma partida a partir do id
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="Id">Campo id para buscar um objeto</param>
     ///     <returns>IActionResult</returns>
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
     [Authorize]
-    [HttpDelete("delete-match/{id}")]
+    [HttpDelete("delete-match/{Id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<ActionResult> DeleteMatch(string id)
+    public async Task<ActionResult> DeleteMatch([FromRoute] string Id)
     {
-        MatchViewDto matchView = _mapper.Map<MatchViewDto>(await _matchService.RemoveAsync(id));
+        MatchViewDto matchView = _mapper.Map<MatchViewDto>(await _matchService.RemoveAsync(Id));
 
         return Ok(matchView);
     }
@@ -92,8 +92,8 @@ public class MatchController : ControllerBase
     /// <summary>
     ///     Atualiza a partida a partir do id
     /// </summary>
-    /// <param name="id">Objeto com os campos necessários para criação de um filme</param>
-    /// <param name="team">TEAM</param>
+    /// <param name="Id">Campo id para buscar um objeto</param>
+    /// <param name="matchUpdateDto">MatchDto</param>
     ///     <returns>IActionResult</returns>
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
@@ -102,11 +102,11 @@ public class MatchController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> UpdateMatch(string id, MatchUpdateDto matchUpdateDto)
+    public async Task<ActionResult> UpdateMatch(string Id, MatchUpdateDto matchUpdateDto)
     {
         MatchModel matchModel = _mapper.Map<MatchModel>(matchUpdateDto);
 
-        MatchViewDto matchView = _mapper.Map<MatchViewDto>(await _matchService.UpdateAsync(id, matchModel));
+        MatchViewDto matchView = _mapper.Map<MatchViewDto>(await _matchService.UpdateAsync(Id, matchModel));
 
         return Ok(matchView);
     }
