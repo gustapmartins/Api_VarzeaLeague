@@ -156,15 +156,9 @@ public class AuthService : IAuthService
             if(findEmail == null)
                 throw new ExceptionFilter($"This {passwordReset.Email} is not valid");
 
-            UserModel userlUpdatePassword = new()
-            {
-                Password = passwordReset.Password,
-            };
-
             var updateFields = new Dictionary<string, object>
             {
-                { nameof(passwordReset.Password), passwordReset.Password },
-                // Adicione outros campos que deseja atualizar conforme necessário
+                { nameof(passwordReset.Password), _generateHash.GenerateHashParameters(passwordReset.Password) },
             };
 
             UserModel updatePassword = await _authDao.UpdateAsync(findEmail.Id, updateFields);
