@@ -129,8 +129,8 @@ public class MatchService : IMatchService
 
             var updateFields = new Dictionary<string, object>
             {
-                 { $"{nameof(updateObject.HomeTeamModel)}.{nameof(updateObject.HomeTeamModel.NameTeam)}", updateObject.HomeTeamModel.NameTeam },
-                 { $"{nameof(updateObject.VisitingTeamModel)}.{nameof(updateObject.VisitingTeamModel.NameTeam)}", updateObject.VisitingTeamModel.NameTeam },
+                 { nameof(updateObject.HomeTeamName), updateObject.HomeTeamName },
+                 { nameof(updateObject.VisitingTeamName), updateObject.VisitingTeamName },
                  { nameof(updateObject.Local), updateObject.Local },
                  { nameof(updateObject.TeamWin), updateObject.TeamWin },
                  { nameof(updateObject.Date), updateObject.Date }

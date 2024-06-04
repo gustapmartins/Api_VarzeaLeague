@@ -103,7 +103,7 @@ public class PlayerService : IPlayerService
             var updateFields = new Dictionary<string, object>
             {
                 { nameof(updateObject.NamePlayer), updateObject.NamePlayer },
-                { nameof(updateObject.Age), updateObject.Age },
+                { nameof(updateObject.Age), updateObject.Age == 0 ? findId.Age : updateObject.Age},
                 { nameof(updateObject.TeamId), updateObject.TeamId }
                 // Adicione outros campos que deseja atualizar conforme necessário
             };

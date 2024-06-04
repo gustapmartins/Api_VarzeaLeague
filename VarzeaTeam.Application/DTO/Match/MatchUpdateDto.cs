@@ -10,5 +10,5 @@ public class MatchUpdateDto
 
     public DateTime? Date { get; set; }
 
-    public string? TeamWinId { get; set; }
+    public string? TeamWin { get; set; }
 }

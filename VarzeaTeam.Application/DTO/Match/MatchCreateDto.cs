@@ -15,4 +15,5 @@ public class MatchCreateDto
 
     [Required(ErrorMessage = "O dia é obrigatório.")]
     public DateTime Date { get; set; }
+
 }
