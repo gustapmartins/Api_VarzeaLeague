@@ -20,7 +20,7 @@ public class MatchService : IMatchService
     }
 
     public async Task<IEnumerable<MatchModel>> GetAsync(int page, int pageSize)
-    {
+     {
         try
         {
             IEnumerable<MatchModel> GetAll = await _matchDao.GetAsync(page, pageSize);
@@ -125,16 +125,23 @@ public class MatchService : IMatchService
     {
         try
         {
-            MatchModel findId = await GetIdAsync(Id);
+            MatchModel existingMatch = await GetIdAsync(Id);
+
+            // Verificar se os nomes dos times são iguais
+            if (existingMatch.VisitingTeamName == updateObject.HomeTeamName || existingMatch.HomeTeamName == updateObject.VisitingTeamName)
+            {
+                throw new ExceptionFilter("O mesmo time não pode jogar contra si mesmo.");
+            }
 
             var updateFields = new Dictionary<string, object>
             {
+                 { nameof(updateObject.HomeTeamModel), updateObject.HomeTeamName == null ? null : await _teamService.GetNameAsync(NameTeam: updateObject.HomeTeamName) },
+                 { nameof(updateObject.VisitingTeamModel), updateObject.VisitingTeamName == null ? null : await _teamService.GetNameAsync(NameTeam: updateObject.VisitingTeamName) },
                  { nameof(updateObject.HomeTeamName), updateObject.HomeTeamName },
                  { nameof(updateObject.VisitingTeamName), updateObject.VisitingTeamName },
                  { nameof(updateObject.Local), updateObject.Local },
                  { nameof(updateObject.TeamWin), updateObject.TeamWin },
                  { nameof(updateObject.Date), updateObject.Date }
-                // Adicione outros campos que deseja atualizar conforme necessário
             };
 
             MatchModel matchUpdate = await _matchDao.UpdateAsync(Id, updateFields);

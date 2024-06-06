@@ -1,5 +1,4 @@
 ﻿using MongoDB.Driver;
-using VarzeaLeague.Domain.Model;
 
 namespace VarzeaTeam.Infra.Data.Repository.Utils;
 

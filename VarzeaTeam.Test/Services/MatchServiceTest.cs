@@ -113,7 +113,7 @@ public class MatchServiceTest
         // Mock the ViaCep call
         _matchDaoMock.Setup(x => x.CreateAsync(It.IsAny<MatchModel>())).Returns(Task.CompletedTask);
         var resultViaCep = await ViaCep.GetCep(matchToAdd.Local);
-  
+
 
         // Act
         var createdMatch = await _matchServiceMock.CreateAsync(matchToAdd);
@@ -248,10 +248,45 @@ public class MatchServiceTest
         _matchDaoMock.Setup(dao => dao.UpdateAsync(It.IsAny<string>(), It.IsAny<Dictionary<string, object>>()));
 
         //Act
-        var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () => 
+        var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () =>
             await _matchServiceMock.UpdateAsync(It.IsAny<string>(), It.IsAny<MatchModel>()));
 
         //Assert
         Assert.Equal($"A partida com o id '{It.IsAny<string>()}', não existe.", exception.Message);
     }
+
+    [Fact]
+    public async Task UpdateMatch_WhenTeamsAreNotTheSame_DoesNotThrowException()
+    {
+        // Arrange
+        var existingHomeTeamName = "existingHomeTeam";
+        var existingVisitingTeamName = "existingVisitingTeam";
+        var newHomeTeamName = "newHomeTeam";
+
+        var existingMatch = _fixture.Build<MatchModel>()
+                                    .With(m => m.HomeTeamName, existingHomeTeamName)
+                                    .With(m => m.VisitingTeamName, existingVisitingTeamName)
+                                    .Create();
+
+        var updateObject = _fixture.Build<MatchModel>()
+                                   .With(m => m.HomeTeamName, existingVisitingTeamName)
+                                   .With(m => m.VisitingTeamName, existingHomeTeamName)
+                                   .Create();
+
+        _matchDaoMock.Setup(dao => dao.GetIdAsync("id")).ReturnsAsync(updateObject);
+        _teamServiceMock.Setup(service => service.GetNameAsync(existingHomeTeamName)).ReturnsAsync(new TeamModel { NameTeam = existingHomeTeamName });
+        _teamServiceMock.Setup(service => service.GetNameAsync(existingVisitingTeamName)).ReturnsAsync(new TeamModel { NameTeam = existingVisitingTeamName });
+
+ 
+
+
+        var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () =>
+            await _matchServiceMock.UpdateAsync("id", existingMatch));
+
+        //Assert
+        Assert.Equal($"O mesmo time não pode jogar contra si mesmo.", exception.Message);
+        Assert.Equal(existingVisitingTeamName, updateObject.HomeTeamName);
+        Assert.Equal(existingHomeTeamName, updateObject.VisitingTeamName);
+    }
+
 }

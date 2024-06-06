@@ -21,7 +21,7 @@ public class PlayerService : IPlayerService
     {
         try
         {
-            TeamModel teamModel = await _teamService.GetIdAsync(teamId);
+            TeamModel? teamModel = teamId == null ? null : await _teamService.GetIdAsync(teamId);
 
             IEnumerable<PlayerModel> playerAll = await _playerDao.GetAsync(page, pageSize, 
                 filter: teamModel != null ? Builders<PlayerModel>.Filter.Where(x => x.TeamId == teamModel.Id) : null);
@@ -104,7 +104,7 @@ public class PlayerService : IPlayerService
             {
                 { nameof(updateObject.NamePlayer), updateObject.NamePlayer },
                 { nameof(updateObject.Age), updateObject.Age == 0 ? findId.Age : updateObject.Age},
-                { nameof(updateObject.TeamId), updateObject.TeamId }
+                { nameof(updateObject.TeamModel), updateObject.TeamId == null ? null : await _teamService.GetIdAsync(Id: updateObject.TeamId) }
                 // Adicione outros campos que deseja atualizar conforme necessário
             };
 

@@ -51,6 +51,7 @@ public abstract class BaseContext<T> where T : IEntity
     {
         await Collection.DeleteOneAsync(x => x.Id == Id);
     }
+
     public async Task<T> UpdateAsync(string id, IDictionary<string, object> updateFields)
     {
         var filter = Builders<T>.Filter.Eq(x => x.Id, id);
