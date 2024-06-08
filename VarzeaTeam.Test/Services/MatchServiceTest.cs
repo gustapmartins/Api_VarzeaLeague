@@ -261,7 +261,6 @@ public class MatchServiceTest
         // Arrange
         var existingHomeTeamName = "existingHomeTeam";
         var existingVisitingTeamName = "existingVisitingTeam";
-        var newHomeTeamName = "newHomeTeam";
 
         var existingMatch = _fixture.Build<MatchModel>()
                                     .With(m => m.HomeTeamName, existingHomeTeamName)

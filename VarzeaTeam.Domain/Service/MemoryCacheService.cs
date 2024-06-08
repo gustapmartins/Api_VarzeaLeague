@@ -31,7 +31,7 @@ public class MemoryCacheService : IMemoryCacheService
         {
             _memoryCache.TryGetValue(keyMemoryCache, out Output returnCache);
 
-            return returnCache;
+            return returnCache!;
         }catch (Exception ex) 
         {
             throw new Exception(ex.Message, ex);
@@ -48,7 +48,7 @@ public class MemoryCacheService : IMemoryCacheService
         try
         {
             if (_memoryCache.TryGetValue(key, out Output cachedItem))
-               return cachedItem;
+               return cachedItem!;
 
             MemoryCacheEntryOptions options = new()
             {

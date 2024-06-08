@@ -80,7 +80,7 @@ public class PlayerServiceTest
     [Fact]
     public async Task GetIdAsync_WhenNotPlayerExist_ThrowsException()
     {
-        _playerDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>())).ReturnsAsync((PlayerModel?)null);
+        _playerDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>())).ReturnsAsync(null as PlayerModel);
         //Act
         var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () => await _playerServiceMock.GetIdAsync(It.IsAny<string>()));
 
@@ -92,7 +92,7 @@ public class PlayerServiceTest
     {
         // Arrange
         // Simulação do HttpContext para simular a presença de um token JWT na solicitação
-        var existingTeam = (PlayerModel)null;
+        var existingTeam = null as PlayerModel;
         var playerToAdd = _fixture.Build<PlayerModel>()
                                .With(x => x.NamePlayer, "NameTeam")
                                .Create();
@@ -153,7 +153,7 @@ public class PlayerServiceTest
     public async Task RemoveAsync_WhenNotPlayersExist_ThrowsException()
     {
         // Arrange
-        _playerDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>())).ReturnsAsync((PlayerModel)null);
+        _playerDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>())).ReturnsAsync(null as PlayerModel);
 
         _playerDaoMock.Setup(dao => dao.RemoveAsync(It.IsAny<string>()));
 
@@ -190,7 +190,7 @@ public class PlayerServiceTest
     public async Task UpdateAsync_WhenNotPlayersExist_ThrowsException()
     {
         // Arrange
-        _playerDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>())).ReturnsAsync((PlayerModel)null);
+        _playerDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>())).ReturnsAsync(null as PlayerModel);
 
         _playerDaoMock.Setup(dao => dao.UpdateAsync(It.IsAny<string>(), It.IsAny<Dictionary<string, object>>()));
 

@@ -135,13 +135,13 @@ public class MatchService : IMatchService
 
             var updateFields = new Dictionary<string, object>
             {
-                 { nameof(updateObject.HomeTeamModel), updateObject.HomeTeamName == null ? null : await _teamService.GetNameAsync(NameTeam: updateObject.HomeTeamName) },
-                 { nameof(updateObject.VisitingTeamModel), updateObject.VisitingTeamName == null ? null : await _teamService.GetNameAsync(NameTeam: updateObject.VisitingTeamName) },
-                 { nameof(updateObject.HomeTeamName), updateObject.HomeTeamName },
-                 { nameof(updateObject.VisitingTeamName), updateObject.VisitingTeamName },
-                 { nameof(updateObject.Local), updateObject.Local },
-                 { nameof(updateObject.TeamWin), updateObject.TeamWin },
-                 { nameof(updateObject.Date), updateObject.Date }
+                { nameof(updateObject.HomeTeamName), updateObject.HomeTeamName ?? existingMatch.HomeTeamName },
+                { nameof(updateObject.VisitingTeamName), updateObject.VisitingTeamName ?? existingMatch.VisitingTeamName },
+                { nameof(updateObject.HomeTeamModel), updateObject.HomeTeamName == null ? existingMatch.HomeTeamModel : await _teamService.GetNameAsync(NameTeam: updateObject.HomeTeamName) },
+                { nameof(updateObject.VisitingTeamModel), updateObject.VisitingTeamName == null ? existingMatch.VisitingTeamModel : await _teamService.GetNameAsync(NameTeam: updateObject.VisitingTeamName) },
+                { nameof(updateObject.Local), updateObject.Local ?? existingMatch.Local },
+                { nameof(updateObject.TeamWin), updateObject.TeamWin ?? existingMatch.TeamWin },
+                { nameof(updateObject.Date), updateObject.Date != default ? updateObject.Date : existingMatch.Date }
             };
 
             MatchModel matchUpdate = await _matchDao.UpdateAsync(Id, updateFields);

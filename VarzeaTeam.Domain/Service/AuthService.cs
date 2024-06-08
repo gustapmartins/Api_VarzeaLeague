@@ -126,7 +126,7 @@ public class AuthService : IAuthService
                 Email = email,   
             };
 
-            _emailService.SendMail(
+            await _emailService.SendMail(
                       email,
                       "Redefinição da sua senha",
                       $"Verifique sua conta, com essa token: {token}"

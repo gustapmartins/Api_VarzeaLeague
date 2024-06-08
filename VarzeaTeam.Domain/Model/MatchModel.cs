@@ -9,13 +9,13 @@ public class MatchModel : IEntity
     public string Id { get; set; } = string.Empty;
 
     [BsonElement("HomeTeam")] // Atributo que mapeia essa propriedade para o campo 'homeTeam' no MongoDB
-    public TeamModel HomeTeamModel { get; set; }
+    public TeamModel? HomeTeamModel { get; set; }
 
     [BsonElement("HomeTeamName")] // Atributo que mapeia essa propriedade para o campo 'HomeTeamName' no MongoDB
     public string HomeTeamName { get; set; } = string.Empty;
 
     [BsonElement("VisitingTeam")] // Atributo que mapeia essa propriedade para o campo 'visitingTeam' no MongoDB
-    public TeamModel VisitingTeamModel { get; set; }
+    public TeamModel? VisitingTeamModel { get; set; }
 
     [BsonElement("VisitingTeamName")] // Atributo que mapeia essa propriedade para o campo 'VisitingTeamName' no MongoDB
     public string VisitingTeamName { get; set; } = string.Empty;

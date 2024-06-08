@@ -1,8 +1,8 @@
-﻿using MongoDB.Driver;
-using VarzeaLeague.Domain.Interface.Dao;
+﻿using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaLeague.Domain.Interface.Services;
-using VarzeaLeague.Domain.Model;
 using VarzeaTeam.Domain.Exceptions;
+using VarzeaLeague.Domain.Model;
+using MongoDB.Driver;
 
 namespace VarzeaLeague.Domain.Service;
 
@@ -104,7 +104,7 @@ public class PlayerService : IPlayerService
             {
                 { nameof(updateObject.NamePlayer), updateObject.NamePlayer },
                 { nameof(updateObject.Age), updateObject.Age == 0 ? findId.Age : updateObject.Age},
-                { nameof(updateObject.TeamModel), updateObject.TeamId == null ? null : await _teamService.GetIdAsync(Id: updateObject.TeamId) }
+                { nameof(updateObject.TeamModel), updateObject.TeamId == null ? findId.TeamModel : await _teamService.GetIdAsync(Id: updateObject.TeamId) }
                 // Adicione outros campos que deseja atualizar conforme necessário
             };
 

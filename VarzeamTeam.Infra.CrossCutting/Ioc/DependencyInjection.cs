@@ -78,7 +78,7 @@ public static class DependencyInjection
 
         services.AddScoped<IGenerateHash, GenerateHash>();
 
-        services.AddScoped<IMessagePublisher>(c => new MessagePublisherService(configuration["Kafka:BootstrapServers"]));
+        services.AddScoped<IMessagePublisher>(c => new MessagePublisherService(configuration["Kafka:BootstrapServers"]!));
 
         services.AddSingleton<VarzeaLeagueDatabaseSettings>();
 
