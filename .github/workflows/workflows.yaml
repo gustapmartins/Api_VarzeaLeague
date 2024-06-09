@@ -26,7 +26,6 @@ jobs:
           name: test-results
           path: src/VarzeaTeam.Test/TestResults
 
-    steps:
       - name: Checkout repository
         uses: actions/checkout@v3
         
