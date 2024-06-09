@@ -12,6 +12,21 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Run unit tests
+        continue-on-error: false
+        run: |
+          echo "Running unit tests..."
+          docker build --target test -t varzeateam_test:latest -f VarzeaTeam.Application/Dockerfile .
+          docker run --rm varzeateam_test:latest
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: src/VarzeaTeam.Test/TestResults
+
+    steps:
       - name: Checkout repository
         uses: actions/checkout@v3
         
@@ -27,20 +42,6 @@ jobs:
         run: docker build --tag varzeateam_application:latest -f VarzeaTeam.Application/Dockerfile .
         env:
           DOCKER_BUILDKIT: 1
-
-      - name: Run unit tests
-        continue-on-error: false
-        run: |
-          echo "Running unit tests..."
-          docker build --target test -t varzeateam_test:latest -f VarzeaTeam.Application/Dockerfile .
-          docker run --rm varzeateam_test:latest
-
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: test-results
-          path: src/VarzeaTeam.Test/TestResults
 
       - name: Clean up
         run: docker rmi varzeateam_application:latest varzeateam_test:latest
