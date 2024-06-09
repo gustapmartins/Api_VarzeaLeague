@@ -82,7 +82,7 @@ public class TeamServiceTest
 
         string Id = It.IsAny<string>();
 
-        _teamDaoMock.Setup(dao => dao.GetIdAsync(Id)).ReturnsAsync((TeamModel?)null);
+        _teamDaoMock.Setup(dao => dao.GetIdAsync(Id))!.ReturnsAsync((TeamModel?)null);
         //Act
         var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () => await _teamService.GetIdAsync(Id));
 
@@ -109,7 +109,7 @@ public class TeamServiceTest
 
         var existingTeam = null as TeamModel; // Simulando que o time não existe
 
-        _teamDaoMock.Setup(dao => dao.TeamExist(teamToAdd.NameTeam)).ReturnsAsync(existingTeam);
+        _teamDaoMock.Setup(dao => dao.TeamExist(teamToAdd.NameTeam))!.ReturnsAsync(existingTeam);
 
         // Act
         var createdTeam = await _teamService.CreateAsync(teamToAdd);
@@ -161,7 +161,7 @@ public class TeamServiceTest
     public async Task RemoveAsync_WhenNotTeamsExist_ThrowsException()
     {
         // Arrange
-        _teamDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>())).ReturnsAsync(null as TeamModel);
+        _teamDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>()))!.ReturnsAsync(null as TeamModel);
 
         _teamDaoMock.Setup(dao => dao.RemoveAsync(It.IsAny<string>()));
 
@@ -198,7 +198,7 @@ public class TeamServiceTest
     public async Task UpdateAsync_WhenNotTeamsExist_ThrowsException()
     {
         // Arrange
-        _teamDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>())).ReturnsAsync(null as TeamModel);
+        _teamDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>()))!.ReturnsAsync(null as TeamModel);
 
         _teamDaoMock.Setup(dao => dao.UpdateAsync(It.IsAny<string>(), It.IsAny<Dictionary<string, object>>()));
 

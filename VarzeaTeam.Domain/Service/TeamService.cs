@@ -17,7 +17,7 @@ public class TeamService : ITeamService
     public TeamService(ITeamDao teamDao, IHttpContextAccessor httpContextAccessor, IGetClientIdToken getClientIdFromToken)
     {
         _teamDao = teamDao;
-        _httpContext = httpContextAccessor.HttpContext;
+        _httpContext = httpContextAccessor.HttpContext!;
         _getClientIdFromToken = getClientIdFromToken;
     }
 

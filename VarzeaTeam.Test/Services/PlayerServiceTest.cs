@@ -80,7 +80,7 @@ public class PlayerServiceTest
     [Fact]
     public async Task GetIdAsync_WhenNotPlayerExist_ThrowsException()
     {
-        _playerDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>())).ReturnsAsync(null as PlayerModel);
+        _playerDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>()))!.ReturnsAsync(null as PlayerModel);
         //Act
         var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () => await _playerServiceMock.GetIdAsync(It.IsAny<string>()));
 
@@ -101,7 +101,7 @@ public class PlayerServiceTest
 
         _teamServiceMock.Setup(x => x.GetIdAsync(It.IsAny<string>())).ReturnsAsync(teamModel);
 
-        _playerDaoMock.Setup(dao => dao.PlayerExist(playerToAdd.NamePlayer)).ReturnsAsync(existingTeam);
+        _playerDaoMock.Setup(dao => dao.PlayerExist(playerToAdd.NamePlayer))!.ReturnsAsync(existingTeam);
 
         // Act
         var createdTeam = await _playerServiceMock.CreateAsync(playerToAdd);
@@ -153,7 +153,7 @@ public class PlayerServiceTest
     public async Task RemoveAsync_WhenNotPlayersExist_ThrowsException()
     {
         // Arrange
-        _playerDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>())).ReturnsAsync(null as PlayerModel);
+        _playerDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>()))!.ReturnsAsync(null as PlayerModel);
 
         _playerDaoMock.Setup(dao => dao.RemoveAsync(It.IsAny<string>()));
 
@@ -190,7 +190,7 @@ public class PlayerServiceTest
     public async Task UpdateAsync_WhenNotPlayersExist_ThrowsException()
     {
         // Arrange
-        _playerDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>())).ReturnsAsync(null as PlayerModel);
+        _playerDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>()))!.ReturnsAsync(null as PlayerModel);
 
         _playerDaoMock.Setup(dao => dao.UpdateAsync(It.IsAny<string>(), It.IsAny<Dictionary<string, object>>()));
 

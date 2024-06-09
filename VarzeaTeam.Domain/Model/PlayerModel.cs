@@ -15,7 +15,7 @@ public class PlayerModel : IEntity
     public int Age { get; set; }
 
     [BsonElement("Team")]
-    public TeamModel TeamModel { get; set; }
+    public TeamModel? TeamModel { get; set; }
 
     [BsonElement("TeamId")]
     public string TeamId { get; set; } = string.Empty;

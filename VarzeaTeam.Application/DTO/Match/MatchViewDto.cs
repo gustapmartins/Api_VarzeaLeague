@@ -6,11 +6,11 @@ public class MatchViewDto
 {
     public string Id { get; set; } = string.Empty;
 
-    public TeamModel HomeTeamModel { get; set; }
+    public TeamModel? HomeTeamModel { get; set; }
 
     public string HomeTeamName { get; set; } = string.Empty;
 
-    public TeamModel VisitingTeamModel { get; set; }
+    public TeamModel? VisitingTeamModel { get; set; }
 
     public string VisitingTeamName { get; set; } = string.Empty;
 
