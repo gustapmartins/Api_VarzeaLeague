@@ -29,7 +29,7 @@ jobs:
           DOCKER_BUILDKIT: 1
 
       - name: Clean up
-        run: docker rmi varzeateam_application:latest varzeateam_test:latest
+        run: docker rmi varzeateam_application:latest
 
   test:
     runs-on: ubuntu-latest
