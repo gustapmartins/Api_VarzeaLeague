@@ -27,8 +27,13 @@ jobs:
         run: docker build --tag varzeateam_application:latest -f VarzeaTeam.Application/Dockerfile .
         env:
           DOCKER_BUILDKIT: 1
-
-      - name: Run unit tests
+      - name: Clean up
+        run: docker rmi varzeateam_application:latest varzeateam_test:latest
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps: 
+    - name: Run unit tests
         continue-on-error: false
         run: |
           echo "Running unit tests..."
@@ -42,5 +47,3 @@ jobs:
           name: test-results
           path: src/VarzeaTeam.Test/TestResults
 
-      - name: Clean up
-        run: docker rmi varzeateam_application:latest varzeateam_test:latest
