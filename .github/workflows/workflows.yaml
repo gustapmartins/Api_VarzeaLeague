@@ -48,8 +48,8 @@ jobs:
       - name: Restore Dependencies
         run: dotnet restore VarzeaTeam.Application/VarzeaLeague.Application.csproj
 
-      # - name: Run Code Analysis
-      #   run: dotnet build VarzeaTeam.Application/VarzeaTeam.Application.sln /p:EnableCodeAnalysis=true /p:RunAnalyzersDuringBuild=true
+      - name: Run Code Analysis
+        run: dotnet build VarzeaTeam.Application/VarzeaLeague.Application.csproj /p:EnableCodeAnalysis=true /p:RunAnalyzersDuringBuild=true
 
       - name: Upload Validator Results
         if: always()
