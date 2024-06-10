@@ -59,7 +59,7 @@ jobs:
           path: bin/Debug/validator-results
   Test:
     runs-on: ubuntu-latest
-    needs: build
+    needs: Validator
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
