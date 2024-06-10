@@ -82,7 +82,7 @@ jobs:
           dotnet-version: "7.0.x"
 
       - name: Restore Dependencies
-        run: dotnet restore VarzeaTeam.Application/VarzeaLeague.Application.sln
+        run: dotnet restore VarzeaTeam.Application/VarzeaLeague.Application.csproj
 
       # - name: Run Code Analysis
       #   run: dotnet build VarzeaTeam.Application/VarzeaTeam.Application.sln /p:EnableCodeAnalysis=true /p:RunAnalyzersDuringBuild=true
