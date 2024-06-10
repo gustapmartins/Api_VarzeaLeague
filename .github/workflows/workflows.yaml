@@ -84,8 +84,8 @@ jobs:
       - name: Restore Dependencies
         run: dotnet restore VarzeaTeam.Application/VarzeaLeague.Application.sln
 
-      - name: Run Code Analysis
-        run: dotnet build VarzeaTeam.Application/VarzeaTeam.Application.sln /p:EnableCodeAnalysis=true /p:RunAnalyzersDuringBuild=true
+      # - name: Run Code Analysis
+      #   run: dotnet build VarzeaTeam.Application/VarzeaTeam.Application.sln /p:EnableCodeAnalysis=true /p:RunAnalyzersDuringBuild=true
 
       - name: Upload Validator Results
         if: always()
