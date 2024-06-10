@@ -70,7 +70,7 @@ jobs:
         with:
           name: build-logs
           path: /tmp/.docker-cache
-  lint:
+  validator:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -79,19 +79,17 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: "7.0.x"
+          dotnet-version: '7.0.x'
 
-      - name: Install .NET tools
-        run: dotnet tool install -g dotnet-format
+      - name: Restore Dependencies
+        run: dotnet restore VarzeaTeam.Application/VarzeaTeam.Application.sln
 
-      - name: Run Linter
-        run: dotnet format VarzeaTeam.Application/VarzeaTeam.Application.sln --check
-        env:
-          PATH: $PATH:~/.dotnet/tools
+      - name: Run Code Analysis
+        run: dotnet build VarzeaTeam.Application/VarzeaTeam.Application.sln /p:EnableCodeAnalysis=true /p:RunAnalyzersDuringBuild=true
 
-      - name: Upload Lint Results
+      - name: Upload Validator Results
         if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: lint-results
-          path: lint-results
+          name: validator-results
+          path: bin/Debug/validator-results
