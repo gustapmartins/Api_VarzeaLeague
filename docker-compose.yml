@@ -2,25 +2,29 @@ version: '3.8'
 
 services:
   varzealeague.application:
-    image: ${DOCKER_REGISTRY-}varzealeagueapplication
     build:
       context: .
-      dockerfile: VarzeaTeam.Application\Dockerfile
+      dockerfile: VarzeaTeam.Application/Dockerfile
     container_name: varzeaLeague_api_container
     networks:
       - elastic
     restart: always
-    depends_on: 
+    depends_on:
       - mongodb
       - elasticsearch
       - kafka
-    ports:
-      - "8080:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - VarzeaLeagueDatabase__ConnectionString=mongodb://mongodb_container:27017
       - ElasticSearchSettings__Url=http://elasticsearch:9200
       - Kafka__BootstrapServers=kafka-server:29092
+    command: ["dotnet", "watch", "run", "--project", "/src/VarzeaTeam.Application/VarzeaLeague.Application.csproj", "--urls", "http://+:443;http://*:80"]
+    ports:
+      - "8080:80"
+    volumes: 
+      - .:/src
+      - ~/.aspnet/https:/https:ro
+      - /path/to/persistent/storage:/root/.aspnet/DataProtection-Keys
 
   mongodb:
     image: mongo:latest
@@ -38,14 +42,14 @@ services:
       - "9200:9200"
     environment:
       - discovery.type=single-node
-    ulimits: 
+    ulimits:
       memlock:
         soft: -1
         hard: -1
     networks:
       - elastic
 
-  kibana: 
+  kibana:
     image: kibana:7.17.9
     container_name: kibana_container
     ports:
@@ -62,11 +66,11 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-    ports: 
+    ports:
       - "2181:2181"
       - "2888:2888"
       - "3888:3888"
-    networks: 
+    networks:
       - elastic
 
   kafka:
@@ -84,7 +88,7 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    networks: 
+    networks:
       - elastic
 
   kafdrop:
@@ -97,7 +101,7 @@ services:
     restart: always
     environment:
       KAFKA_BROKERCONNECT: kafka:29092
-    networks: 
+    networks:
       - elastic
 
 networks:

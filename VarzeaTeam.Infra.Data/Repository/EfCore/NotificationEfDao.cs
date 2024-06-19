@@ -16,9 +16,4 @@ public class NotificationEfDao : BaseContext<NotificationModel>, INotificationDa
     {
         _NotificationCollection = Collection;
     }
-
-    public Task<NotificationModel> UpdateAsync(string Id, NotificationModel updateObject)
-    {
-        throw new NotImplementedException();
-    }
 }

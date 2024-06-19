@@ -89,7 +89,7 @@ public class TeamController : ControllerBase
     {
         TeamViewDto teamView = _mapper.Map<TeamViewDto>(await _teamService.RemoveAsync(id));
 
-        return Ok(teamView); 
+        return Ok(teamView);
     }
 
     /// <summary>
