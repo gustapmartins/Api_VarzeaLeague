@@ -29,5 +29,11 @@ FROM build AS test
 WORKDIR /src
 RUN dotnet test "VarzeaTeam.Test/VarzeaLeague.Test.csproj" --logger:trx || true
 
+# Final Image com live reload habilitado
+FROM build AS final
+WORKDIR /app
+COPY --from=build /app/build .
+EXPOSE 80
+
 # Comando para rodar com live reload
 CMD ["dotnet", "watch", "run", "--project", "VarzeaLeague.Application.csproj", "--urls", "http://+:443;http://*:80"]
