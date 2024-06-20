@@ -36,4 +36,4 @@ COPY --from=build /app/build .
 EXPOSE 80
 
 # Comando para rodar com live reload
-CMD ["dotnet", "watch", "run", "--project", "VarzeaLeague.Application.csproj", "--urls", "http://+:80"]
+CMD ["dotnet", "watch", "run", "--project", "VarzeaLeague.Application.csproj", "--urls", "http://+:443;http://*:80"]
