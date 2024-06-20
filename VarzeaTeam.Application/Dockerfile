@@ -18,6 +18,12 @@ RUN dotnet restore "VarzeaTeam.Application/VarzeaLeague.Application.csproj"
 COPY . .
 WORKDIR "/src/VarzeaTeam.Application"
 
+# Build Image
+RUN dotnet restore "VarzeaTeam.Application/VarzeaLeague.Application.csproj"
+COPY . .
+WORKDIR "/src/VarzeaTeam.Application"
+RUN dotnet build "VarzeaLeague.Application.csproj" -c Release -o /app/build
+
 # Test Image
 FROM build AS test
 WORKDIR /src
