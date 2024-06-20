@@ -4,7 +4,7 @@ services:
   varzealeague.application:
     build:
       context: .
-      dockerfile: VarzeaTeam.Application/Dockerfile
+      dockerfile: Dockerfile # Adjust the path if needed
     container_name: varzeaLeague_api_container
     networks:
       - elastic
@@ -18,10 +18,9 @@ services:
       - VarzeaLeagueDatabase__ConnectionString=mongodb://mongodb_container:27017
       - ElasticSearchSettings__Url=http://elasticsearch:9200
       - Kafka__BootstrapServers=kafka-server:29092
-    command: ["dotnet", "watch", "run", "--project", "/src/VarzeaTeam.Application/VarzeaLeague.Application.csproj", "--urls", "http://+:443;http://*:80"]
     ports:
       - "8080:80"
-    volumes: 
+    volumes:
       - .:/src
       - ~/.aspnet/https:/https:ro
       - /path/to/persistent/storage:/root/.aspnet/DataProtection-Keys
