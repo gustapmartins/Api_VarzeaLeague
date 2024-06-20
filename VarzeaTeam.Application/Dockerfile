@@ -1,4 +1,4 @@
-# Base Image
+	# Base Image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 80
@@ -17,6 +17,12 @@ COPY ["VarzeaTeam.Test/VarzeaLeague.Test.csproj", "VarzeaTeam.Test/"]
 RUN dotnet restore "VarzeaTeam.Application/VarzeaLeague.Application.csproj"
 COPY . .
 WORKDIR "/src/VarzeaTeam.Application"
+
+# Test Image
+FROM build AS test
+WORKDIR /src
+COPY . .
+RUN dotnet test "VarzeaTeam.Test/VarzeaLeague.Test.csproj" --logger:trx || true
 
 # Defina o comando de execução padrão
 CMD ["dotnet", "watch", "run", "--project", "/src/VarzeaTeam.Application/VarzeaLeague.Application.csproj", "--urls", "http://+:443;http://*:80"]
