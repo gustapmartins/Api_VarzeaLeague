@@ -6,6 +6,7 @@ using VarzeaLeague.Domain.Utils;
 using VarzeaTeam.Domain.Exceptions;
 using AutoFixture;
 using Moq;
+using MongoDB.Driver;
 
 namespace VarzeaLeague.Test.Services;
 
@@ -31,14 +32,14 @@ public class MatchServiceTest
     {
         // Arrange
         var matchList = _fixture.CreateMany<MatchModel>(2).ToList();
-        var matchModel = _fixture.Create<MatchModel>();
+        var filter = Builders<MatchModel>.Filter.Empty;
 
-        _matchDaoMock.Setup(dao => dao.GetAsync(It.IsAny<int>(), It.IsAny<int>(), null)).ReturnsAsync(matchList);
+        _matchDaoMock.Setup(dao => dao.GetAsync(It.IsAny<int>(), It.IsAny<int>(), filter)).ReturnsAsync(matchList);
 
         //Act
         var result = await _matchServiceMock.GetAsync(1, 10);
 
-        //Assert
+        // Assert
         Assert.NotNull(result);
         Assert.Equal(2, result.Count());
         Assert.Collection(result,

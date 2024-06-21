@@ -31,4 +31,8 @@
     <ProjectReference Include="..\VarzeaTeam.Infra.Data\VarzeaLeague.Infra.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
 </Project>

@@ -18,8 +18,8 @@ public class MathDaoEfCore : BaseContext<MatchModel>, IMatchDao
 
     public async Task<MatchModel> MatchExistsAsync(string homeTeamId, string visitingTeamId)
     {
-        MatchModel existingMatch = await _MatchCollection.Find(m => (m.HomeTeamModel.Id == homeTeamId && m.VisitingTeamModel.Id == visitingTeamId) ||
-                                   (m.HomeTeamModel.Id == visitingTeamId && m.VisitingTeamModel.Id == homeTeamId)).FirstOrDefaultAsync();
+        MatchModel existingMatch = await _MatchCollection.Find(m => m.TeamWin == string.Empty && (m.HomeTeamModel.Id == homeTeamId && m.VisitingTeamModel.Id == visitingTeamId) ||
+                                   m.TeamWin == string.Empty && (m.HomeTeamModel.Id == visitingTeamId && m.VisitingTeamModel.Id == homeTeamId)).FirstOrDefaultAsync();
 
         return existingMatch;
     }

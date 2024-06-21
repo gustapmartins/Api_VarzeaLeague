@@ -7,6 +7,7 @@ using VarzeaLeague.Application.DTO.Match;
 using Swashbuckle.AspNetCore.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using VarzeaLeague.Domain.Model;
+using VarzeaLeague.Domain.Enum;
 
 namespace VarzeaTeam.Application.Controllers.v1;
 
@@ -33,9 +34,9 @@ public class MatchController : ControllerBase
     [HttpGet("search-matchs")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [SwaggerOperation(Summary = "Get matches with optional pagination parameters")]
-    public async Task<ActionResult> GetMatch([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    public async Task<ActionResult> GetMatch([FromQuery] int Page = 1, [FromQuery] int PageSize = 10, [FromQuery] FilterTypeEnum? FilterType = null, [FromQuery] DateTime? Date = null, [FromQuery] string? NameTeam = null)
     {
-        List<MatchViewDto> matchView = _mapper.Map<List<MatchViewDto>>(await _matchService.GetAsync(page, pageSize));
+        List<MatchViewDto> matchView = _mapper.Map<List<MatchViewDto>>(await _matchService.GetAsync(Page, PageSize, FilterType, NameTeam, Date));
 
         return Ok(matchView);
     }
@@ -102,7 +103,7 @@ public class MatchController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> UpdateMatch(string Id, MatchUpdateDto matchUpdateDto)
+    public async Task<ActionResult> UpdateMatch([FromRoute] string Id, [FromBody] MatchUpdateDto matchUpdateDto)
     {
         MatchModel matchModel = _mapper.Map<MatchModel>(matchUpdateDto);
 

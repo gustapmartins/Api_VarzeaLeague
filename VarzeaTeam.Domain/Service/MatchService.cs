@@ -1,3 +1,5 @@
+using MongoDB.Driver;
+using VarzeaLeague.Domain.Enum;
 using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaLeague.Domain.Interface.Services;
 using VarzeaLeague.Domain.Model;
@@ -19,16 +21,52 @@ public class MatchService : IMatchService
         _notificationService = notificationService;
     }
 
-    public async Task<IEnumerable<MatchModel>> GetAsync(int page, int pageSize)
+    public async Task<IEnumerable<MatchModel>> GetAsync(int page, int pageSize, FilterTypeEnum? FilterType = null, string? NameTeam = null, DateTime? Date = null)
      {
         try
         {
-            IEnumerable<MatchModel> GetAll = await _matchDao.GetAsync(page, pageSize);
+            FilterDefinition<MatchModel> filter;
 
-            if (GetAll.Count() == 0)
+             switch (FilterType)
+            {
+                case FilterTypeEnum.Ongoing:
+                    filter = Builders<MatchModel>.Filter.And(
+                        Builders<MatchModel>.Filter.Eq(m => m.TeamWin, string.Empty),
+                        NameTeam == null ? Builders<MatchModel>.Filter.Empty : Builders<MatchModel>.Filter.Or(
+                            Builders<MatchModel>.Filter.Eq(m => m.HomeTeamName, NameTeam),
+                            Builders<MatchModel>.Filter.Eq(m => m.VisitingTeamName, NameTeam)
+                        )
+                    );
+                    break;
+                case FilterTypeEnum.Completed:
+                    filter = Builders<MatchModel>.Filter.And(
+                        Builders<MatchModel>.Filter.Ne(m => m.TeamWin, string.Empty),
+                        NameTeam == null ? Builders<MatchModel>.Filter.Empty : Builders<MatchModel>.Filter.Or(
+                            Builders<MatchModel>.Filter.Eq(m => m.HomeTeamName, NameTeam),
+                            Builders<MatchModel>.Filter.Eq(m => m.VisitingTeamName, NameTeam)
+                        )
+                    );
+                    break;
+                case FilterTypeEnum.ByDate:
+                    if (!Date.HasValue)
+                    {
+                        throw new ExceptionFilter("Data não fornecida para o filtro por data");
+                    }
+
+                    filter = Builders<MatchModel>.Filter.Gte(m => m.Date, Date.Value.Date) &
+                                   Builders<MatchModel>.Filter.Lt(m => m.Date, Date.Value.Date.AddDays(1));
+                    break;
+                default:
+                    filter = Builders<MatchModel>.Filter.Empty;
+                    break;
+            }
+
+            IEnumerable<MatchModel> ReturnMatchAll = await _matchDao.GetAsync(page, pageSize, filter);
+
+            if (!ReturnMatchAll.Any())
                 throw new ExceptionFilter($"Não existe nenhuma partida cadastrada");
 
-            return GetAll;
+            return ReturnMatchAll;
         }
         catch (ExceptionFilter ex) 
         {

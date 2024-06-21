@@ -87,7 +87,7 @@ public class AuthServiceTest
     [Fact]
     public async Task GetIdAsync_WhenNotAuthExist_ThrowsException()
     {
-        _authDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>())).ReturnsAsync((UserModel?)null);
+        _authDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>()))!.ReturnsAsync(null as UserModel);
         //Act
         var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () => await _authServiceMock.GetIdAsync(It.IsAny<string>()));
 
@@ -104,7 +104,7 @@ public class AuthServiceTest
                                .With(x => x.AccountStatus, AccountStatus.active)
                                .Create();
 
-        _authDaoMock.Setup(dao => dao.FindEmail(It.IsAny<string>())).ReturnsAsync((UserModel)null);
+        _authDaoMock.Setup(dao => dao.FindEmail(It.IsAny<string>()))!.ReturnsAsync(null as UserModel);
 
         _authDaoMock.Setup(dao => dao.CreateAsync(It.IsAny<UserModel>()));
 
@@ -163,7 +163,7 @@ public class AuthServiceTest
         UserModel userMock = _fixture.Create<UserModel>();
         string token = _fixture.Create<string>();
 
-        _authDaoMock.Setup(dao => dao.FindEmail(It.IsAny<string>())).ReturnsAsync((UserModel)null);
+        _authDaoMock.Setup(dao => dao.FindEmail(It.IsAny<string>()))!.ReturnsAsync((UserModel)null);
 
         //Act
         var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () => await _authServiceMock.Login(userMock));
@@ -218,7 +218,7 @@ public class AuthServiceTest
     {
         // Arrange
         string email = "invalid@example.com";
-        _authDaoMock.Setup(dao => dao.FindEmail(email)).ReturnsAsync((UserModel)null);
+        _authDaoMock.Setup(dao => dao.FindEmail(email))!.ReturnsAsync((UserModel)null);
 
         // Act and Assert
         var exception = await Assert.ThrowsAsync<ExceptionFilter>(() => _authServiceMock.ForgetPassword(email));
@@ -253,7 +253,7 @@ public class AuthServiceTest
     {
         // Arrange
         string token = "invalidToken";
-        _memoryCacheServiceMock.Setup(cache => cache.GetCache<PasswordReset>(token)).Returns((PasswordReset)null);
+        _memoryCacheServiceMock.Setup(cache => cache.GetCache<PasswordReset>(token)).Returns(null as PasswordReset);
 
         // Act and Assert
         var exception = await Assert.ThrowsAsync<ExceptionFilter>(() => _authServiceMock.ResetPassword(new PasswordReset { Token = token }));
@@ -283,7 +283,7 @@ public class AuthServiceTest
     public async Task RemoveAsync_WhenNotAuthExist_ThrowsException()
     {
         // Arrange
-        _authDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>())).ReturnsAsync((UserModel)null);
+        _authDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>()))!.ReturnsAsync((UserModel)null);
 
         //Act
         var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () => await _authServiceMock.RemoveAsync(It.IsAny<string>()));
@@ -322,7 +322,7 @@ public class AuthServiceTest
     public async Task UpdateAsync_WhenNotAuthExist_ThrowsException()
     {
         // Arrange
-        _authDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>())).ReturnsAsync((UserModel)null);
+        _authDaoMock.Setup(dao => dao.GetIdAsync(It.IsAny<string>()))!.ReturnsAsync((UserModel)null);
 
         _authDaoMock.Setup(dao => dao.UpdateAsync(It.IsAny<string>(), It.IsAny<Dictionary<string, object>>()));
 
