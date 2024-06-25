@@ -3,10 +3,13 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using Newtonsoft.Json.Linq;
 using VarzeaLeague.Application.Controllers.v1;
 using VarzeaLeague.Application.DTO.User;
+using VarzeaLeague.Domain.Enum;
 using VarzeaLeague.Domain.Interface.Services;
 using VarzeaLeague.Domain.Model.User;
+using VarzeaTeam.Domain.Enum;
 
 namespace VarzeaLeague.Test.Controllers;
 
@@ -91,22 +94,39 @@ public class AuthControllerTest
         // Assert
         Assert.NotNull(result);
         Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
-        var returnValue = Assert.IsType<dynamic>(result.Value);
-        Assert.Equal(token, returnValue.token);
+        // Converta result.Value para JObject para acessar a propriedade 'token'
+        var json = Newtonsoft.Json.JsonConvert.SerializeObject(result.Value);
+        var resultValue = JObject.Parse(json);
+
+        // Acesse a propriedade 'token' diretamente
+        var tokenValue = resultValue["token"].ToString();
+        Assert.Equal(token, tokenValue);
     }
 
     [Fact]
     public async Task PostTeam_WhenCalled_ReturnsCreatedAtActionResult()
     {
         // Arrange
-        var registerDto = _fixture.Create<RegisterDto>();
-        var userModel = _fixture.Create<UserModel>();
+        var fixture = new Fixture();
+
+        // Configure the fixture to create valid instances of RegisterDto
+        fixture.Customize<RegisterDto>(composer => composer
+            .With(r => r.Username, "ValidUsername")
+            .With(r => r.Email, "valid@example.com")
+            .With(r => r.Password, "Valid1234")
+            .With(r => r.ConfirmPassword, "Valid1234")
+            .With(r => r.Cpf, "123.456.789-09")
+            .With(r => r.Role, Role.Admin)); // Adjust Role to a valid enum value
+
+        var registerDto = fixture.Create<RegisterDto>();
+        var userModel = fixture.Create<UserModel>();
 
         _mapperMock.Setup(mapper => mapper.Map<UserModel>(It.IsAny<RegisterDto>()))
             .Returns(userModel);
 
+        // Configure the mock to return a Task<UserModel>
         _authServiceMock.Setup(service => service.CreateAsync(It.IsAny<UserModel>()))
-            .Returns((Task<UserModel>)Task.CompletedTask);
+            .ReturnsAsync(userModel);
 
         // Act
         var result = await _authController.PostTeam(registerDto) as CreatedAtActionResult;
@@ -132,8 +152,14 @@ public class AuthControllerTest
         // Assert
         Assert.NotNull(result);
         Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
-        var returnValue = Assert.IsType<dynamic>(result.Value);
-        Assert.Equal(token, returnValue.token);
+
+        // Converta result.Value para JObject para acessar a propriedade 'token'
+        var json = Newtonsoft.Json.JsonConvert.SerializeObject(result.Value);
+        var resultValue = JObject.Parse(json);
+
+        // Acesse a propriedade 'token' diretamente
+        var tokenValue = resultValue["token"].ToString();
+        Assert.Equal(token, tokenValue);
     }
 
     [Fact]
@@ -146,8 +172,9 @@ public class AuthControllerTest
         _mapperMock.Setup(mapper => mapper.Map<PasswordReset>(It.IsAny<PasswordResetDto>()))
             .Returns(passwordReset);
 
+        // Ajuste na configuração do mock para o método ResetPassword
         _authServiceMock.Setup(service => service.ResetPassword(It.IsAny<PasswordReset>()))
-            .Returns((Task<string>)Task.CompletedTask);
+            .ReturnsAsync("Senha redefinida"); // Exemplo de retorno do método ResetPassword
 
         // Act
         var result = await _authController.ResetPassword(passwordResetDto) as OkObjectResult;
@@ -155,19 +182,22 @@ public class AuthControllerTest
         // Assert
         Assert.NotNull(result);
         Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+        Assert.Equal("Senha redefinida", result.Value); // Verifica se o valor retornado é o esperado
     }
 
     [Fact]
     public async Task RemoveUser_WhenCalled_ReturnsOkResult()
     {
         // Arrange
-        var userId = _fixture.Create<string>();
+        UserModel userMock = _fixture.Build<UserModel>()
+                               .With(x => x.AccountStatus, AccountStatus.active)
+                               .Create();
 
         _authServiceMock.Setup(service => service.RemoveAsync(It.IsAny<string>()))
-            .Returns((Task<UserModel>)Task.CompletedTask);
+            .ReturnsAsync(userMock);
 
         // Act
-        var result = await _authController.RemoveUser(userId) as OkObjectResult;
+        var result = await _authController.RemoveUser(It.IsAny<string>()) as OkObjectResult;
 
         // Assert
         Assert.NotNull(result);
