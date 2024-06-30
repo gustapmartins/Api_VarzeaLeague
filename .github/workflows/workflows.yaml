@@ -32,6 +32,18 @@ jobs:
           echo "Running unit tests..."
           docker build --target test -t varzeateam/test:latest -f VarzeaTeam.Application/Dockerfile .
           docker run --rm -v ${{ github.workspace }}/src/VarzeaTeam.Test/TestResults:/app/TestResults varzeateam/test:latest
+      
+      - name: Generate Coverage Report
+        run: |
+          docker run --rm -v ${{ github.workspace }}/src/VarzeaTeam.Test/TestResults:/app/TestResults varzeateam/test:latest reportgenerator -reports:/app/TestResults/coverage/coverage.info -targetdir:/app/TestResults/coverage-report -reporttypes:Html
+
+      - name: Check Coverage Threshold
+        run: |
+          COVERAGE=$(grep -oP '^\s*line-rate="0.\K[0-9]+' TestResults/coverage-report/index.html)
+          if [ $COVERAGE -lt 85 ]; then
+            echo "Code coverage is below 85%. Failing the build."
+            exit 1
+          fi
 
       - name: Upload Test Results
         if: always()
