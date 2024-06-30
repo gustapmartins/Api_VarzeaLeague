@@ -28,7 +28,7 @@ jobs:
             ${{ runner.os }}-docker-
 
       - name: Run Unit Tests
-         run: |
+        run: |
           echo "Running unit tests with coverage..."
           docker build --target test -t varzeateam/test:latest -f VarzeaTeam.Application/Dockerfile .
           docker run --rm -v ${{ github.workspace }}/src/VarzeaTeam.Test/TestResults:/app/TestResults varzeateam/test:latest dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=/app/TestResults/coverage/
@@ -51,6 +51,13 @@ jobs:
         with:
           name: test-results
           path: src/VarzeaTeam.Test/TestResults
+
+      - name: Upload Coverage Report
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: src/VarzeaTeam.Test/TestResults/coverage-report
 
       - name: Upload Build Logs
         if: failure()
