@@ -60,6 +60,38 @@ public class TeamServiceTest
         Assert.Equal($"Não existe nenhum time cadastrado", exception.Message);
     }
 
+
+    [Fact]
+    public async Task GetNameAsync_WhenTeamsNameExist_ShouldReturnValid()
+    {
+        // Arrange
+        TeamModel teamMock = _fixture.Build<TeamModel>()
+                               .With(x => x.NameTeam, "NameValid")
+                               .Create();
+
+        _teamDaoMock.Setup(dao => dao.TeamExist(It.IsAny<string>()))
+                   .ReturnsAsync(teamMock);
+
+        // Act and Assert
+        var result = await _teamService.GetNameAsync(It.IsAny<string>());
+
+        Assert.NotNull(result);
+        Assert.Equal(teamMock, result);
+        _teamDaoMock.Verify(dao => dao.TeamExist(It.IsAny<string>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetNameAsync_WhenNoTeamsExist_ThrowsException()
+    {
+        // Arrange
+        _teamDaoMock.Setup(dao => dao.TeamExist(It.IsAny<string>()))!.ReturnsAsync(null as TeamModel);
+
+        // Act and Assert
+        var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () => await _teamService.GetNameAsync(It.IsAny<string>()));
+
+        Assert.Equal($"O Time com esse nome: {It.IsAny<string>()}, não existe.", exception.Message);
+    }
+
     [Fact]
     public async Task GetIdAsync_WhenTeamsExist_ReturnsTeam()
     {

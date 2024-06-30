@@ -27,7 +27,7 @@ public class MatchService : IMatchService
         {
             FilterDefinition<MatchModel> filter;
 
-             switch (FilterType)
+            switch (FilterType)
             {
                 case FilterTypeEnum.Ongoing:
                     filter = Builders<MatchModel>.Filter.And(
@@ -171,7 +171,7 @@ public class MatchService : IMatchService
                 throw new ExceptionFilter("O mesmo time não pode jogar contra si mesmo.");
             }
 
-            var updateFields = new Dictionary<string, object>
+            Dictionary<string, object> updateFields = new()
             {
                 { nameof(updateObject.HomeTeamName), updateObject.HomeTeamName ?? existingMatch.HomeTeamName },
                 { nameof(updateObject.VisitingTeamName), updateObject.VisitingTeamName ?? existingMatch.VisitingTeamName },

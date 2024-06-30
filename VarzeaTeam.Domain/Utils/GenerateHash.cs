@@ -56,31 +56,25 @@ public class GenerateHash : IGenerateHash
 
     public string GenerateToken(UserModel userModel)
     {
-        try
-        {
-            Claim[] claims = new Claim[]
-            {
-                new Claim("username", userModel.UserName),
-                new Claim("email", userModel.Email),
-                new Claim("id", userModel.Id),
-            };
+        Claim[] claims =
+        [
+          new Claim("username", userModel.UserName),
+          new Claim("email", userModel.Email),
+          new Claim("id", userModel.Id),
+        ];
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Constants.Key));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Constants.Key));
 
-            var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var token = new JwtSecurityToken
-                (
-                    expires: DateTime.Now.AddMinutes(10),
-                    claims: claims,
-                    signingCredentials: signingCredentials
-                );
+        var token = new JwtSecurityToken
+            (
+                expires: DateTime.Now.AddMinutes(10),
+                claims: claims,
+                signingCredentials: signingCredentials
+            );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message, ex);
-        }
+        return new JwtSecurityTokenHandler().WriteToken(token);
+
     }
 }

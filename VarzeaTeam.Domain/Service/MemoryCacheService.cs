@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using VarzeaLeague.Domain.Interface.Services;
+using VarzeaTeam.Domain.Exceptions;
 
 namespace VarzeaLeague.Domain.Service;
 
@@ -32,9 +33,10 @@ public class MemoryCacheService : IMemoryCacheService
             _memoryCache.TryGetValue(keyMemoryCache, out Output returnCache);
 
             return returnCache!;
-        }catch (Exception ex) 
+
+        }catch (ExceptionFilter ex) 
         {
-            throw new Exception(ex.Message, ex);
+            throw new ExceptionFilter(ex.Message, ex);
         }
     }
 
@@ -62,9 +64,9 @@ public class MemoryCacheService : IMemoryCacheService
 
             return registerCache;
 
-        }catch(Exception ex) 
+        }catch(ExceptionFilter ex) 
         {
-            throw new Exception(ex.Message, ex);
+            throw new ExceptionFilter(ex.Message, ex);
         }
     }
 }

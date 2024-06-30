@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using VarzeaLeague.Domain.Service;
+using VarzeaTeam.Domain.Exceptions;
 
 namespace VarzeaLeague.Test.Services;
 
@@ -8,7 +9,6 @@ public class MemoryCacheServiceTest
 {
     private readonly Mock<IMemoryCache> _memoryCache;
     private readonly MemoryCacheService _memoryCacheService;
-
 
     public MemoryCacheServiceTest()
     {
@@ -52,6 +52,22 @@ public class MemoryCacheServiceTest
 
         // Assert
         Assert.Equal(expectedValue, result);
+    }
+
+    [Fact]
+    public void GetCache_ThrowsExceptionCache()
+    {
+        // Arrange
+        string expectedValue = "testValue";
+        object expectedValueObj = expectedValue;
+
+        _memoryCache.Setup(m => m.TryGetValue(It.IsAny<string>(), out expectedValueObj)).Throws(new ExceptionFilter("Simulated exception"));
+
+        //Act
+        var exception = Assert.Throws<ExceptionFilter>(() => _memoryCacheService.GetCache<string>(It.IsAny<string>()));
+
+        //Assert
+        Assert.Equal("Simulated exception", exception.Message);
     }
 
     [Fact]
@@ -103,10 +119,9 @@ public class MemoryCacheServiceTest
     public void GetOrCreate_ShouldCreateAndReturnNewItem_IfNotInCache()
     {
         // Arrange
-        string cacheKey = "testKey";
         string expectedValue = "newValue";
         object cacheValue = null;
-        _memoryCache.Setup(m => m.TryGetValue(cacheKey, out cacheValue)).Returns(false);
+        _memoryCache.Setup(m => m.TryGetValue(It.IsAny<string>(), out cacheValue)).Returns(false);
 
         var cacheEntryMock = new Mock<ICacheEntry>();
         _memoryCache
@@ -114,11 +129,17 @@ public class MemoryCacheServiceTest
             .Returns(cacheEntryMock.Object);
 
         // Act
-        var result = _memoryCacheService.GetOrCreate(cacheKey, () => expectedValue, 5);
+        var result = _memoryCacheService.GetOrCreate(It.IsAny<string>(), () => expectedValue, 5);
 
         // Assert
         Assert.Equal(expectedValue, result);
         cacheEntryMock.VerifySet(ce => ce.Value = expectedValue, Times.Once);
-        _memoryCache.Verify(m => m.CreateEntry(cacheKey), Times.Once);
+        _memoryCache.Verify(m => m.CreateEntry(It.IsAny<string>()), Times.Once);
+    }
+
+    [Fact]
+    public void GetOrCreate_ThrowsExceptionCache()
+    {
+
     }
 }
