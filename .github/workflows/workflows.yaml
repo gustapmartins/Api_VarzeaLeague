@@ -40,7 +40,10 @@ jobs:
           name: test-results
           path: src/VarzeaTeam.Test/TestResults
 
-      - name: List Files for Debugging
+      - name: Debug - List all files
+        run: find . -type f
+
+      - name: Debug - List TestResults directory
         run: ls -R src/VarzeaTeam.Test/TestResults
 
       - name: Code Coverage Report
