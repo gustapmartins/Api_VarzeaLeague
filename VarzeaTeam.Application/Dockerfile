@@ -10,16 +10,16 @@ ENV ASPNETCORE_ENVIRONMENT=Development
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copy project files and restore dependencies
+# Copiando arquivos de projeto e restaurando dependências
 COPY ["VarzeaTeam.Application/VarzeaLeague.Application.csproj", "VarzeaTeam.Application/"]
-COPY ["VarzeaTeam.Infra.CrossCutting/VarzeaLeague.Infra.CrossCutting.csproj", "VarzeaTeam.Infra.CrossCutting/"]
+COPY ["VarzeamTeam.Infra.CrossCutting/VarzeamLeague.Infra.CrossCutting.csproj", "VarzeamTeam.Infra.CrossCutting/"]
 COPY ["VarzeaTeam.Domain/VarzeaLeague.Domain.csproj", "VarzeaTeam.Domain/"]
 COPY ["VarzeaTeam.Infra.Data/VarzeaLeague.Infra.Data.csproj", "VarzeaTeam.Infra.Data/"]
 COPY ["VarzeaTeam.Test/VarzeaLeague.Test.csproj", "VarzeaTeam.Test/"]
 
 RUN dotnet restore "VarzeaTeam.Application/VarzeaLeague.Application.csproj"
 
-# Copy all files and build the project
+# Copiando todos os arquivos e construindo o projeto
 COPY . .
 WORKDIR "/src/VarzeaTeam.Application"
 RUN dotnet build "VarzeaLeague.Application.csproj" -c Release -o /app/build
@@ -27,13 +27,13 @@ RUN dotnet build "VarzeaLeague.Application.csproj" -c Release -o /app/build
 # Test Image
 FROM build AS test
 WORKDIR /src
-RUN dotnet test "VarzeaTeam.Test/VarzeaLeague.Test.csproj" --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory /app/TestResults || true
+RUN dotnet test "VarzeaTeam.Test/VarzeaLeague.Test.csproj" --logger:trx || true
 
-# Final Image with live reload enabled
-FROM base AS final
+# Final Image com live reload habilitado
+FROM build AS final
 WORKDIR /app
 COPY --from=build /app/build .
 EXPOSE 80
 
-# Command to run with live reload
+# Comando para rodar com live reload
 CMD ["dotnet", "watch", "run", "--project", "VarzeaLeague.Application.csproj", "--urls", "http://+:443;http://*:80"]
