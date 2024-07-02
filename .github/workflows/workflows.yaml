@@ -31,7 +31,7 @@ jobs:
         run: |
           echo "Running unit tests and collecting code coverage..."
           docker build --target test -t varzeateam/test:latest -f VarzeaTeam.Application/Dockerfile .
-          docker run --rm -v ${{ github.workspace }}:/workspace varzeateam/test:latest
+          docker run --rm -v ${{ github.workspace }}/src/VarzeaTeam.Test/TestResults:/src/VarzeaTeam.Test/TestResults varzeateam/test:latest
 
       - name: Upload Test Results
         if: always()
@@ -106,11 +106,4 @@ jobs:
         run: dotnet restore VarzeaTeam.Application/VarzeaLeague.Application.csproj
 
       - name: Run Code Analysis
-        run: dotnet build VarzeaTeam.Application/VarzeaLeague.Application.csproj /p:EnableCodeAnalysis=true /p:RunAnalyzersDuringBuild=true
-
-      - name: Upload Validator Results
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: validator-results
-          path: bin/Debug/validator-results
+        run
