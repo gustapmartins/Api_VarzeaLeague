@@ -12,7 +12,7 @@ WORKDIR /src
 
 # Copy project files and restore dependencies
 COPY ["VarzeaTeam.Application/VarzeaLeague.Application.csproj", "VarzeaTeam.Application/"]
-COPY ["VarzeamTeam.Infra.CrossCutting/VarzeamLeague.Infra.CrossCutting.csproj", "VarzeamTeam.Infra.CrossCutting/"]
+COPY ["VarzeaTeam.Infra.CrossCutting/VarzeaLeague.Infra.CrossCutting.csproj", "VarzeaTeam.Infra.CrossCutting/"]
 COPY ["VarzeaTeam.Domain/VarzeaLeague.Domain.csproj", "VarzeaTeam.Domain/"]
 COPY ["VarzeaTeam.Infra.Data/VarzeaLeague.Infra.Data.csproj", "VarzeaTeam.Infra.Data/"]
 COPY ["VarzeaTeam.Test/VarzeaLeague.Test.csproj", "VarzeaTeam.Test/"]
