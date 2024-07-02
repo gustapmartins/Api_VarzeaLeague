@@ -27,6 +27,7 @@ RUN dotnet build "VarzeaLeague.Application.csproj" -c Release -o /app/build
 # Test Image
 FROM build AS test
 WORKDIR /src
+RUN mkdir -p /app/TestResults
 RUN dotnet test "VarzeaTeam.Test/VarzeaLeague.Test.csproj" --collect:"Xplat Code Coverage" --results-directory /app/TestResults || true
 
 # Final Image com live reload habilitado

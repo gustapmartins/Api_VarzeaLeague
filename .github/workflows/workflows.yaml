@@ -27,10 +27,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-docker-
 
-      - name: Run Unit Tests
+      - name: Run Unit Tests and Collect Coverage
         run: |
-          echo "Running unit tests..."
+          echo "Running unit tests and collecting code coverage..."
           docker build --target test -t varzeateam/test:latest -f VarzeaTeam.Application/Dockerfile .
+          docker run --rm -v ${{ github.workspace }}:/workspace varzeateam/test:latest
 
       - name: Upload Test Results
         if: always()
@@ -38,6 +39,23 @@ jobs:
         with:
           name: test-results
           path: src/VarzeaTeam.Test/TestResults
+
+      - name: Check Code Coverage
+        run: |
+          echo "Checking code coverage..."
+          coverage_file=$(find src/VarzeaTeam.Test/TestResults -name 'coverage.cobertura.xml' | head -n 1)
+          if [ -z "$coverage_file" ]; then
+            echo "Coverage report not found!"
+            exit 1
+          fi
+          coverage_percentage=$(grep -o 'line-rate="[0-9.]*"' "$coverage_file" | head -1 | cut -d'"' -f2)
+          coverage_percentage=$(echo "$coverage_percentage * 100" | bc)
+          if (( $(echo "$coverage_percentage < 85" | bc -l) )); then
+            echo "Code coverage is below 85%: ${coverage_percentage}%"
+            exit 1
+          else
+            echo "Code coverage is sufficient: ${coverage_percentage}%"
+          fi
 
       - name: Upload Build Logs
         if: failure()
