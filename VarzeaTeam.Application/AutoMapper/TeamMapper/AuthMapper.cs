@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using System.Diagnostics.CodeAnalysis;
 using VarzeaLeague.Application.DTO.User;
 using VarzeaLeague.Domain.Model.User;
 
 namespace VarzeaLeague.Application.AutoMapper.TeamMapper;
 
+[ExcludeFromCodeCoverage]
 public class AuthMapper : Profile
 {
     public AuthMapper()

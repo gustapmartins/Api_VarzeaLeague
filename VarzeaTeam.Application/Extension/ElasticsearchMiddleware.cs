@@ -1,7 +1,9 @@
 ﻿using Nest;
+using System.Diagnostics.CodeAnalysis;
 
 namespace VarzeaLeague.Application.Extension;
 
+[ExcludeFromCodeCoverage]
 public class ElasticsearchMiddleware
 {
     private readonly RequestDelegate _next;

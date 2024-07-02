@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
+using System.Diagnostics.CodeAnalysis;
 using VarzeaLeague.Application.DTO.Match;
 using VarzeaLeague.Domain.Model;
 using VarzeaTeam.Application.DTO.Match;
-using VarzeaTeam.Application.DTO.Player;
 
 namespace VarzeaLeague.Application.AutoMapper.TeamMapper;
 
+[ExcludeFromCodeCoverage]
 public class MatchMapper: Profile
 {
    public MatchMapper() 

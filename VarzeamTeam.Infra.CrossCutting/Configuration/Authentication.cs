@@ -3,9 +3,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using VarzeaTeam.Domain.Common;
 using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 namespace VarzeaLeague.Domain.Configure;
 
+[ExcludeFromCodeCoverage]
 public class Authentication
 {
     public static void ConfigureAuth(IServiceCollection services)

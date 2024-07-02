@@ -14,9 +14,11 @@ using VarzeaLeague.Domain.Configure;
 using VarzeaLeague.Domain.Interface.Utils;
 using VarzeaLeague.Domain.JwtHelper;
 using VarzeaLeague.Domain.Utils;
+using System.Diagnostics.CodeAnalysis;
 
 namespace VarzeamTeam.Infra.CrossCutting.Ioc;
 
+[ExcludeFromCodeCoverage]
 public static class DependencyInjection
 {
     public static void ConfigureService(this IServiceCollection services, IConfiguration configuration)

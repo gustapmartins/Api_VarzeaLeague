@@ -2,9 +2,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using Nest;
 using VarzeaLeague.Domain.Model;
+using System.Diagnostics.CodeAnalysis;
 
 namespace VarzeaLeague.Application.Extension;
 
+[ExcludeFromCodeCoverage]
 public static class ElasticsearchExtension
 {
     public static void AddElasticSearch(this IServiceCollection services, IConfiguration configuration)

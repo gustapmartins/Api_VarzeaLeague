@@ -2,9 +2,11 @@
 using VarzeaLeague.Domain.Interface.Services;
 using System.Net.Mail;
 using System.Net;
+using System.Diagnostics.CodeAnalysis;
 
 namespace VarzeaLeague.Domain.Service;
 
+[ExcludeFromCodeCoverage]
 public class EmailService: IEmailService
 {
     private readonly IConfiguration _configuration;

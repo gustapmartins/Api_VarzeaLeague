@@ -1,5 +1,8 @@
-﻿namespace VarzeaLeague.Domain.Model.DatabaseSettings;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace VarzeaLeague.Domain.Model.DatabaseSettings;
+
+[ExcludeFromCodeCoverage]
 public class VarzeaLeagueDatabaseSettings
 {
     public string ConnectionString { get; set; } = string.Empty;
