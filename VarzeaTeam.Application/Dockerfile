@@ -27,7 +27,7 @@ RUN dotnet build "VarzeaLeague.Application.csproj" -c Release -o /app/build
 # Test Image
 FROM build AS test
 WORKDIR /src
-RUN dotnet test "VarzeaTeam.Test/VarzeaLeague.Test.csproj" --logger:trx || true
+RUN dotnet test "VarzeaTeam.Test/VarzeaLeague.Test.csproj" --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory /app/TestResults || true
 
 # Final Image com live reload habilitado
 FROM build AS final
