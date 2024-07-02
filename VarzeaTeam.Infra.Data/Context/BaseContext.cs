@@ -36,7 +36,6 @@ public abstract class BaseContext<T> where T : IEntity
             return await Collection.FindSync(filter, options).ToListAsync();
     }
 
-
     public async Task CreateAsync(T addObject)
     {
         await Collection.InsertOneAsync(addObject);
