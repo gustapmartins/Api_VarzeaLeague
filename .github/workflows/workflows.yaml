@@ -35,7 +35,8 @@ jobs:
       - name: Run Unit Tests
         run: |
           echo "Running unit tests..."
-          docker run --name varzeaLeague_api_container -d VarzeaTeam/test:latest
+          CONTAINER_ID=$(docker run --name varzeaLeague_api_container -d VarzeaTeam/test:latest)
+          docker exec $CONTAINER_ID dotnet test --logger:"trx;LogFileName=/app/TestResults/test_results.trx" --results-directory /app/TestResults
 
       - name: Upload Test Results
         if: always()
