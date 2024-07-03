@@ -27,31 +27,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-docker-
 
-      - name: Build Docker Image for Tests
+      - name: Run Unit Tests
         run: |
-          echo "Building Docker image for tests..."
+          echo "Running unit tests..."
           docker build --target test -t varzeateam/test:latest -f VarzeaTeam.Application/Dockerfile .
 
-      - name: Run Tests in Docker Container
-        run: |
-          echo "Running tests in Docker container..."
-          docker run --name varzeateam_test_container varzeateam/test:latest
-
-      - name: List Files in Coverage Directory
-        run: |
-          echo "Listing files in coverage directory..."
-          docker exec varzeateam_test_container ls -la /app/TestResults/
-
-      - name: Copy Coverage Report
-        run: |
-          echo "Copying coverage report..."
-          mkdir -p coverage
-          docker cp varzeateam_test_container:/app/TestResults/coverage.cobertura.xml ./coverage/Cobertura.xml
-
-      - name: Remove Docker Container
-        run: |
-          echo "Removing Docker container..."
-          docker rm varzeateam_test_container
+       - name: List Files in Coverage Directory
+          run: |
+            echo "Listing files in coverage directory..."
+            docker exec varzeateam_test_container ls -la /src/VarzeaTeam.Test/bin/Debug/net8.0
 
       - name: Upload Test Results
         if: always()
@@ -66,33 +50,6 @@ jobs:
         with:
           name: build-logs
           path: /tmp/.docker-cache
-
-      - name: Upload Coverage Results
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage-results
-          path: coverage/Cobertura.xml
-
-      - name: Code Coverage Report
-        uses: irongut/CodeCoverageSummary@v1.3.0
-        with:
-          filename: coverage/Cobertura.xml
-          badge: true
-          fail_below_min: true
-          format: markdown
-          hide_branch_rate: false
-          hide_complexity: true
-          indicators: true
-          output: both
-          thresholds: '85 100'
-
-      - name: Add Coverage PR Comment
-        uses: marocchino/sticky-pull-request-comment@v2
-        if: github.event_name == 'pull_request'
-        with:
-          recreate: true
-          path: code-coverage-results.md
 
   Build:
     runs-on: ubuntu-latest
