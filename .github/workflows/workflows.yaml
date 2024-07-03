@@ -28,23 +28,20 @@ jobs:
             ${{ runner.os }}-docker-
 
       - name: Run Unit Tests
-        id: run_tests
         run: |
           echo "Running unit tests..."
-          docker build --target test -t varzeateam/test:latest -f VarzeaTeam.Application/Dockerfile .
-          CONTAINER_ID=$(docker create varzeateam/test:latest)
-          echo "CONTAINER_ID=$CONTAINER_ID" >> $GITHUB_ENV
-          docker start -a $CONTAINER_ID
-
-      - name: List Files in Container
-        run: |
-          echo "Listing files in container..."
-          docker ps -a
-          docker exec $CONTAINER_ID ls -la /app/TestResults
+          docker run --name varzeaLeague_api_container -d varzeateam/test:latest
+          docker exec varzeaLeague_api_container dotnet test --logger:"trx;LogFileName=/app/TestResults/test_results.trx" --results-directory /app/TestResults
 
       - name: Copy Test Results
         run: |
-          docker cp $CONTAINER_ID:/app/TestResults ./TestResults
+          echo "Copying test results..."
+          docker cp varzeaLeague_api_container:/app/TestResults ./TestResults
+
+      - name: List Test Results
+        run: |
+          echo "Listing test results..."
+          ls -la ./TestResults
 
       - name: Upload Test Results
         if: always()
