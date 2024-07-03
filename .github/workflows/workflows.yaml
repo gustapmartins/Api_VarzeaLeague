@@ -32,6 +32,11 @@ jobs:
           echo "Running unit tests..."
           docker build --target test -t varzeateam/test:latest -f VarzeaTeam.Application/Dockerfile .
 
+      - name: Copy Coverage Report
+        run: |
+          echo "Copying coverage report..."
+          docker cp varzeateam/test:latest:/path/to/fine-code-coverage/coverage-tool-output/Cobertura.xml ./coverage/Cobertura.xml
+
       - name: Upload Test Results
         if: always()
         uses: actions/upload-artifact@v2
