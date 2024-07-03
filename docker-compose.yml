@@ -18,7 +18,7 @@ services:
       - VarzeaLeagueDatabase__ConnectionString=mongodb://mongodb_container:27017
       - ElasticSearchSettings__Url=http://elasticsearch:9200
       - Kafka__BootstrapServers=kafka-server:29092
-    command: ["dotnet", "VarzeaLeague.Application.dll"]
+    command: ["dotnet", "watch", "run", "--project", "/src/VarzeaTeam.Application/VarzeaLeague.Application.csproj", "--urls", "http://+:443;http://*:80"]
     ports:
       - "8080:80"
     volumes: 
