@@ -27,19 +27,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-docker-
       
-      - name: Change Directory
-        run: cd VarzeaTeam.Application
-
       - name: Build and Start Services
         run: |
           echo "Building and starting services..."
-          docker-compose -f docker-compose.yml up -d --build
+          docker-compose -f VarzeaTeam.Application/docker-compose.yml up -d --build
 
       - name: Run Unit Tests
         run: |
           echo "Running unit tests..."
           CONTAINER_ID=$(docker ps -qf "name=varzeaLeague_api_container")
-          docker exec $CONTAINER_ID dotnet test --logger:"trx;LogFileName=/app/TestResults/test_results.trx" --results-directory /app/TestResults
+          docker exec $CONTAINER_ID sh -c "cd /src/VarzeaTeam.Application && dotnet test VarzeaTeam.Test/VarzeaLeague.Test.csproj --logger:\"trx;LogFileName=/app/TestResults/test_results.trx\" --results-directory /app/TestResults"
 
       - name: Copy Test Results
         run: |
@@ -53,6 +50,11 @@ jobs:
         with:
           name: test-results
           path: ./TestResults
+
+      - name: Clean Up
+        run: |
+          echo "Cleaning up..."
+          docker-compose -f VarzeaTeam.Application/docker-compose.yml down
 
   Build:
     runs-on: ubuntu-latest
