@@ -26,11 +26,14 @@ jobs:
           key: ${{ runner.os }}-docker-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-docker-
+      
+      - name: Change Directory
+        run: cd VarzeaTeam.Application
 
       - name: Build and Start Services
         run: |
           echo "Building and starting services..."
-          docker-compose -f VarzeaTeam.Application/docker-compose.yml up -d --build
+          docker-compose -f docker-compose.yml up -d --build
 
       - name: Run Unit Tests
         run: |
@@ -43,7 +46,6 @@ jobs:
           echo "Copying test results..."
           CONTAINER_ID=$(docker ps -qf "name=varzeaLeague_api_container")
           docker cp $CONTAINER_ID:/app/TestResults ./TestResults
-
 
       - name: Upload Test Results
         if: always()
