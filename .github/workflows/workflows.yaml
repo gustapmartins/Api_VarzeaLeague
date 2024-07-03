@@ -35,7 +35,8 @@ jobs:
       - name: Copy Coverage Report
         run: |
           echo "Copying coverage report..."
-          docker cp varzeateam/test:latest:/path/to/fine-code-coverage/coverage-tool-output/Cobertura.xml ./coverage/Cobertura.xml
+          mkdir -p coverage
+          docker cp varzeateam/test:latest:/src/VarzeaTeam.Test/bin/Debug/net8.0/fine-code-coverage/coverage-tool-output/Cobertura.xml ./coverage/Cobertura.xml
 
       - name: Upload Test Results
         if: always()
