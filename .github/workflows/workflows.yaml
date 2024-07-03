@@ -27,21 +27,21 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-docker-
 
+      - name: Build Test Image
+        run: |
+          echo "Building test image..."
+          docker build --target test -t varzeateam/test:latest -f VarzeaTeam.Application/Dockerfile .
+
       - name: Run Unit Tests
         run: |
           echo "Running unit tests..."
-          docker run --name varzeaLeague_api_container -d varzeateam/test:latest
+          docker run --name varzeaLeague_api_container -d api_varzealeague-varzealeague.application:latest
           docker exec varzeaLeague_api_container dotnet test --logger:"trx;LogFileName=/app/TestResults/test_results.trx" --results-directory /app/TestResults
 
       - name: Copy Test Results
         run: |
-          echo "Copying test results..."
-          docker cp varzeaLeague_api_container:/app/TestResults ./TestResults
-
-      - name: List Test Results
-        run: |
-          echo "Listing test results..."
-          ls -la ./TestResults
+          echo "Copy Results..."
+          docker cp $CONTAINER_ID:/app/TestResults ./TestResults
 
       - name: Upload Test Results
         if: always()
