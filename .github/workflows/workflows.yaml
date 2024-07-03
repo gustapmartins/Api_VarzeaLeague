@@ -30,12 +30,12 @@ jobs:
       - name: Build Test Image
         run: |
           echo "Building test image..."
-          docker build --target test -t varzeateam/test:latest -f VarzeaTeam.Application/Dockerfile .
+          docker build --target test -t VarzeaTeam/test:latest -f VarzeaTeam.Application/Dockerfile .
 
       - name: Run Unit Tests
         run: |
           echo "Running unit tests..."
-          docker run --name varzeaLeague_api_container -d varzeateam/test:latest
+          docker run --name varzeaLeague_api_container -d VarzeaTeam/test:latest
 
       - name: Upload Test Results
         if: always()
@@ -63,12 +63,12 @@ jobs:
             ${{ runner.os }}-docker-
 
       - name: Build Docker Image
-        run: docker build --tag varzeateam/application:latest -f VarzeaTeam.Application/Dockerfile .
+        run: docker build --tag VarzeaTeam/application:latest -f VarzeaTeam.Application/Dockerfile .
         env:
           DOCKER_BUILDKIT: 1
 
       - name: Clean Up Docker Images
-        run: docker rmi varzeateam/application:latest
+        run: docker rmi VarzeaTeam/application:latest
 
   Validator:
     runs-on: ubuntu-latest
