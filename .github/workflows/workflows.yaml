@@ -35,13 +35,7 @@ jobs:
       - name: Run Unit Tests
         run: |
           echo "Running unit tests..."
-          docker run --name varzeaLeague_api_container -d api_varzealeague-varzealeague.application:latest
-          docker exec varzeaLeague_api_container dotnet test --logger:"trx;LogFileName=/app/TestResults/test_results.trx" --results-directory /app/TestResults
-
-      - name: Copy Test Results
-        run: |
-          echo "Copy Results..."
-          docker cp $CONTAINER_ID:/app/TestResults ./TestResults
+          docker run --name varzeaLeague_api_container -d varzeateam/test:latest
 
       - name: Upload Test Results
         if: always()
