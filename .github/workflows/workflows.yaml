@@ -35,7 +35,7 @@ jobs:
       - name: List Files in Coverage Directory
         run: |
           echo "Listing files in coverage directory..."
-          docker exec varzeateam_test_container ls -la /src/VarzeaTeam.Test/bin/Debug/net8.0  
+          docker exec varzeaLeague_api_container ls -la /src/VarzeaTeam.Test/bin/Debug/net8.0  
 
       - name: Upload Test Results
         if: always()
