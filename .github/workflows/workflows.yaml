@@ -32,13 +32,12 @@ jobs:
           echo "Running unit tests..."
           docker build --target test -t varzeateam/test:latest -f VarzeaTeam.Application/Dockerfile .
 
-      - name: Copy Test Results from Container
-        run: |
-          docker cp varzeaLeague_api_container:/app/TestResults ./TestResults
-
-      - name: List Copied Test Results
-        run: |
-          ls -l ./TestResults
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: /app/TestResults  # Ajuste o caminho conforme necessário
 
       - name: Upload Test Results
         if: always()
