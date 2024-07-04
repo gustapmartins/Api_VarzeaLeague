@@ -22,7 +22,7 @@ jobs:
           
       - run: dotnet restore VarzeaLeague.sln
 
-      - run: dotnet build VarzeaLeague.sln -c Release -o /app/build
+      - run: dotnet build VarzeaLeague.sln -c Release -o ./app/build
 
       - run: dotnet test VarzeaLeague.sln --collect:"Xplat Code Coverage" --results-directory ./TestResults
 
