@@ -27,10 +27,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-docker-
 
-      - name: Change Directory
-        run: cd VarzeaTeam.Application
-
-      - name: Build and Start Services
+      - name: Build Docker Image for Tests
         run: |
           echo "Building and starting services..."
           cd VarzeaTeam.Application
