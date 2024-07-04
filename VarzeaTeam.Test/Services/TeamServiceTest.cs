@@ -57,7 +57,7 @@ public class TeamServiceTest
         // Act and Assert
         var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () => await _teamService.GetAsync(1, 10));
 
-        Assert.Equal($"Não existe nenhum time cadastrado", exception.Message);
+        Assert.Equal($"Nï¿½o existe nenhum time cadastrado", exception.Message);
     }
 
 
@@ -89,7 +89,7 @@ public class TeamServiceTest
         // Act and Assert
         var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () => await _teamService.GetNameAsync(It.IsAny<string>()));
 
-        Assert.Equal($"O Time com esse nome: {It.IsAny<string>()}, não existe.", exception.Message);
+        Assert.Equal($"O Time com esse nome: {It.IsAny<string>()}, nï¿½o existe.", exception.Message);
     }
 
     [Fact]
@@ -118,14 +118,14 @@ public class TeamServiceTest
         //Act
         var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () => await _teamService.GetIdAsync(Id));
 
-        Assert.Equal($"O Time com o id {Id}, não existe.", exception.Message);
+        Assert.Equal($"O Time com o id {Id}, nï¿½o existe.", exception.Message);
     }
 
     [Fact]
     public async Task CreateTeam_WhenNewTeam_ReturnsTeam()
     {
         // Arrange
-        // Simulação do HttpContext para simular a presença de um token JWT na solicitação
+        // Simulaï¿½ï¿½o do HttpContext para simular a presenï¿½a de um token JWT na solicitaï¿½ï¿½o
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Headers["Authorization"] = "Bearer valid_jwt_token_here";
         var httpContextAccessorMock = new Mock<IHttpContextAccessor>();
@@ -136,10 +136,10 @@ public class TeamServiceTest
                                .With(x => x.ClientId, "ClientId")
                                .Create();
 
-        // Configuração do método GetClientIdFromToken para retornar o ClientId desejado
+        // Configuraï¿½ï¿½o do mï¿½todo GetClientIdFromToken para retornar o ClientId desejado
         _getClientIdToken.Setup(x => x.GetClientIdFromToken(It.IsAny<HttpContext>())).Returns(teamToAdd.ClientId);
 
-        var existingTeam = null as TeamModel; // Simulando que o time não existe
+        var existingTeam = null as TeamModel; // Simulando que o time nï¿½o existe
 
         _teamDaoMock.Setup(dao => dao.TeamExist(teamToAdd.NameTeam))!.ReturnsAsync(existingTeam);
 
@@ -147,7 +147,7 @@ public class TeamServiceTest
         var createdTeam = await _teamService.CreateAsync(teamToAdd);
 
         // Assert
-        // Verifica se o método CreateAsync foi chamado no DAO com o objeto de time correto
+        // Verifica se o mï¿½todo CreateAsync foi chamado no DAO com o objeto de time correto
         _teamDaoMock.Verify(dao => dao.CreateAsync(teamToAdd), Times.Once);
 
         // Verifica se o ClientId foi configurado corretamente no objeto de time criado
@@ -201,7 +201,7 @@ public class TeamServiceTest
         var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () => await _teamService.RemoveAsync(It.IsAny<string>()));
 
         //Assert
-        Assert.Equal($"O Time com o id {It.IsAny<string>()}, não existe.", exception.Message);
+        Assert.Equal($"O Time com o id {It.IsAny<string>()}, nï¿½o existe.", exception.Message);
     }
 
     [Fact]
@@ -239,7 +239,7 @@ public class TeamServiceTest
             await _teamService.UpdateAsync(It.IsAny<string>(), It.IsAny<TeamModel>()));
 
         //Assert
-        Assert.Equal($"O Time com o id {It.IsAny<string>()}, não existe.", exception.Message);
+        Assert.Equal($"O Time com o id {It.IsAny<string>()}, nï¿½o existe.", exception.Message);
 
     }
 }
