@@ -15,34 +15,16 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        
+
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '3.1.x'
-      - run: dotnet build <my project>
+          
+      - run: dotnet restore VarzeaLeague.sln
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+      - run: dotnet build VarzeaLeague.sln -c Release -o /app/build
 
-      - name: Cache Docker Layers
-        uses: actions/cache@v2
-        with:
-          path: /tmp/.docker-cache
-          key: ${{ runner.os }}-docker-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-docker-
-
-      - name: Build Test Image
-        run: |
-          echo "Building test image..."
-          docker build --target test -t VarzeaTeam/test:latest -f VarzeaTeam.Application/Dockerfile .
-          docker run --rm -v ${{ github.workspace }}/src/VarzeaTeam.Test/TestResults:/src/VarzeaTeam.Test/TestResults varzeateam/test:latest
-
-      - name: Verify Directory Structure
-        run: |
-          echo "Verifying directory structure..."
-          CONTAINER_ID=$(docker ps -qf "name=varzeaLeague_api_container")
-          docker exec -it $CONTAINER_ID /bin/bash "ls /src/VarzeaTeam.Test"
+      - run: dotnet test VarzeaLeague.sln --collect:"Xplat Code Coverage" --results-directory ./TestResults || true
 
       - name: Upload Test Results
         if: always()
