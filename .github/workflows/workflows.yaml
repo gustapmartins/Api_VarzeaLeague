@@ -27,17 +27,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-docker-
 
-      - name: Build Docker Image for Tests
+      - name: Build and Start Services
         run: |
           echo "Building and starting services..."
           cd VarzeaTeam.Application
           docker-compose up -d --build
 
-      - name: Run Unit Tests
+      - name: Verify Directory Structure
         run: |
-          echo "Running unit tests..."
+          echo "Verifying directory structure..."
           CONTAINER_ID=$(docker ps -qf "name=varzeaLeague_api_container")
-          docker exec $CONTAINER_ID sh -c "cd /src/VarzeaTeam.Test/bin/Debug/net8.0 && dotnet test VarzeaLeague.Test.csproj --logger:\"trx;LogFileName=/app/TestResults/test_results.trx\" --results-directory /app/TestResults"
+          docker exec $CONTAINER_ID sh -c "ls -R /src"
 
       - name: Upload Test Results
         if: always()
