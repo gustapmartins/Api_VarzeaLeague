@@ -32,7 +32,7 @@ jobs:
           echo "Building test image..."
           docker build --target test -t VarzeaTeam/test:latest -f VarzeaTeam.Application/Dockerfile .
 
-     - name: Run Test Image
+      - name: Run Test Image
         run: |
           echo "Running test image..."
           docker run VarzeaTeam/test:latest
