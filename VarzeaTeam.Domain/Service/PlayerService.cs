@@ -1,4 +1,4 @@
-﻿using VarzeaLeague.Domain.Interface.Dao;
+using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaLeague.Domain.Interface.Services;
 using VarzeaTeam.Domain.Exceptions;
 using VarzeaLeague.Domain.Model;
