@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
-    <Threshold>40</Threshold> 
+    <Threshold>80</Threshold> 
     <ThresholdType>line, branch</ThresholdType>
     <ThresholdStat>Total</ThresholdStat>
 
