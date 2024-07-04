@@ -37,7 +37,7 @@ jobs:
         run: |
           echo "Verifying directory structure..."
           CONTAINER_ID=$(docker ps -qf "name=varzeaLeague_api_container")
-          docker exec $CONTAINER_ID sh -c "ls -R /src/VarzeaTeam.Test/bin"
+          docker exec $CONTAINER_ID /bin/bash -c "ls -R /src/VarzeaTeam.Test"
 
       - name: Upload Test Results
         if: always()
