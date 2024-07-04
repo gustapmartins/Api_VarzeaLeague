@@ -32,11 +32,16 @@ jobs:
           echo "Building test image..."
           docker build --target test -t VarzeaTeam/test:latest -f VarzeaTeam.Application/Dockerfile .
 
+    - name: Run Test Image
+        run: |
+          echo "Running test image..."
+          docker run VarzeaTeam/test:latest
+
       - name: Verify Directory Structure
         run: |
           echo "Verifying directory structure..."
-          CONTAINER_ID=$(docker ps -qf "name=varzeaLeague_api_container")
-          docker exec -d $CONTAINER_ID ls /src/VarzeaTeam.Test
+          # CONTAINER_ID=$(docker ps -qf "name=varzeaLeague_api_container")
+          docker exec -d $(docker ps -q) ls /src/VarzeaTeam.Test
 
       - name: Upload Test Results
         if: always()
