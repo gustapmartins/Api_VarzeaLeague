@@ -24,7 +24,7 @@ jobs:
 
       - run: dotnet build VarzeaLeague.sln -c Release -o ./app/build
 
-      - run: dotnet test VarzeaLeague.sln --collect:"Xplat Code Coverage" --results-directory ./TestResults || true
+      - run: dotnet test VarzeaLeague.sln --collect:"Xplat Code Coverage" --results-directory ./TestResults
 
       - name: Upload Test Results
         if: always()

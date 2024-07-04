@@ -57,7 +57,7 @@ public class TeamServiceTest
         // Act and Assert
         var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () => await _teamService.GetAsync(1, 10));
 
-        Assert.Equal($"N�o existe nenhum time cadastrado", exception.Message);
+        Assert.Equal($"Não existe nenhum time cadastrado", exception.Message);
     }
 
 
@@ -89,7 +89,7 @@ public class TeamServiceTest
         // Act and Assert
         var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () => await _teamService.GetNameAsync(It.IsAny<string>()));
 
-        Assert.Equal($"O Time com esse nome: {It.IsAny<string>()}, n�o existe.", exception.Message);
+        Assert.Equal($"O Time com esse nome: {It.IsAny<string>()}, não existe.", exception.Message);
     }
 
     [Fact]
@@ -118,7 +118,7 @@ public class TeamServiceTest
         //Act
         var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () => await _teamService.GetIdAsync(Id));
 
-        Assert.Equal($"O Time com o id {Id}, n�o existe.", exception.Message);
+        Assert.Equal($"O Time com o id {Id}, não existe.", exception.Message);
     }
 
     [Fact]
@@ -201,7 +201,7 @@ public class TeamServiceTest
         var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () => await _teamService.RemoveAsync(It.IsAny<string>()));
 
         //Assert
-        Assert.Equal($"O Time com o id {It.IsAny<string>()}, n�o existe.", exception.Message);
+        Assert.Equal($"O Time com o id {It.IsAny<string>()}, não existe.", exception.Message);
     }
 
     [Fact]
@@ -239,7 +239,7 @@ public class TeamServiceTest
             await _teamService.UpdateAsync(It.IsAny<string>(), It.IsAny<TeamModel>()));
 
         //Assert
-        Assert.Equal($"O Time com o id {It.IsAny<string>()}, n�o existe.", exception.Message);
+        Assert.Equal($"O Time com o id {It.IsAny<string>()}, não existe.", exception.Message);
 
     }
 }
