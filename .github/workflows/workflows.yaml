@@ -24,14 +24,11 @@ jobs:
 
       - run: dotnet build VarzeaLeague.sln -c Release -o ./app/build
 
-      - run: dotnet test VarzeaLeague.sln --collect:"Xplat Code Coverage" --results-directory ./TestResults
+      - run: dotnet test VarzeaLeague.sln --p:CollectCoverage=true 
 
-      - name: Upload Test Results
-        if: always()
-        uses: actions/upload-artifact@v2
+      - uses: irongut/CodeCoverageSummary@v1.3.0
         with:
-          name: test-results
-          path: ./TestResults
+          filename: coverage.cobertura.xml
 
   Build:
     runs-on: ubuntu-latest
