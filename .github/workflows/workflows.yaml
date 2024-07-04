@@ -14,7 +14,12 @@ jobs:
     continue-on-error: false
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '3.1.x'
+      - run: dotnet build <my project>
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -31,17 +36,13 @@ jobs:
         run: |
           echo "Building test image..."
           docker build --target test -t VarzeaTeam/test:latest -f VarzeaTeam.Application/Dockerfile .
-
-      - name: Run Test Image
-        run: |
-          echo "Running test image..."
-          docker run VarzeaTeam/test:latest
+          docker run --rm -v ${{ github.workspace }}/src/VarzeaTeam.Test/TestResults:/src/VarzeaTeam.Test/TestResults varzeateam/test:latest
 
       - name: Verify Directory Structure
         run: |
           echo "Verifying directory structure..."
-          # CONTAINER_ID=$(docker ps -qf "name=varzeaLeague_api_container")
-          docker exec -d $(docker ps -q) ls /src/VarzeaTeam.Test
+          CONTAINER_ID=$(docker ps -qf "name=varzeaLeague_api_container")
+          docker exec -it $CONTAINER_ID /bin/bash "ls /src/VarzeaTeam.Test"
 
       - name: Upload Test Results
         if: always()
