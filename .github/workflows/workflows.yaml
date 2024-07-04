@@ -40,13 +40,7 @@ jobs:
         run: |
           echo "Running unit tests..."
           CONTAINER_ID=$(docker ps -qf "name=varzeaLeague_api_container")
-          docker exec $CONTAINER_ID sh -c "cd /src/VarzeaTeam.Application && dotnet test VarzeaTeam.Test/VarzeaLeague.Test.csproj --logger:\"trx;LogFileName=/app/TestResults/test_results.trx\" --results-directory /app/TestResults"
-
-      - name: Copy Test Results
-        run: |
-          echo "Copying test results..."
-          CONTAINER_ID=$(docker ps -qf "name=varzeaLeague_api_container")
-          docker cp $CONTAINER_ID:/app/TestResults ./TestResults
+          docker exec $CONTAINER_ID sh -c "cd /src/VarzeaTeam.Test/bin/Debug/net8.0 && dotnet test VarzeaLeague.Test.csproj --logger:\"trx;LogFileName=/app/TestResults/test_results.trx\" --results-directory /app/TestResults"
 
       - name: Upload Test Results
         if: always()

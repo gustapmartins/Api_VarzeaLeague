@@ -29,7 +29,6 @@ FROM build AS test
 WORKDIR /src
 RUN mkdir -p /app/TestResults
 RUN dotnet test "VarzeaTeam.Test/VarzeaLeague.Test.csproj" --collect:"Xplat Code Coverage" --results-directory /app/TestResults || true
-CMD ["tail", "-f", "/dev/null"]  # Comando para manter o container ativo
 
 # Final Image com live reload habilitado
 FROM build AS final
