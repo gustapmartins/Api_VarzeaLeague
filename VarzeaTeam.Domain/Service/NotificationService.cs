@@ -28,7 +28,7 @@ public class NotificationService : INotificationService
             string clientId = _getClientIdFromToken.GetClientIdFromToken(_httpContext);
 
             IEnumerable<NotificationModel> notificationAll = await _notificationDao.GetAsync(page, pageSize, 
-                filter: Builders<NotificationModel>.Filter.Where(x => x.UserVisitingId == clientId));
+                filter: Builders<NotificationModel>.Filter.Where(x => x.UserVisitingTeamModel.ClientId == clientId));
 
             if (notificationAll.Count() == 0)
                 throw new ExceptionFilter($"Não existe nenhuma notificação cadastrada");

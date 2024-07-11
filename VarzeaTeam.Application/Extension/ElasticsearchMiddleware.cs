@@ -43,11 +43,13 @@ public class ElasticsearchMiddleware
 
     private async Task SendToElasticsearchAsync(string message)
     {
+        string indexPattern = _configuration["ElasticSearchSettings:defaultIndex"];
+
         var indexResponse = await _elasticClient.IndexAsync(new
         {
             Timestamp = DateTime.UtcNow,
             Message = message
-        }, idx => idx.Index(_configuration["ElasticSearchSettings:defaultIndex"]));
+        }, idx => idx.Index(indexPattern));
 
         if (!indexResponse.IsValid)
         {

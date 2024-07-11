@@ -9,13 +9,14 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Confluent.Kafka" Version="2.4.0" />
-    <PackageReference Include="Elasticsearch.Net" Version="7.17.5" />
-    <PackageReference Include="MongoDB.Bson" Version="2.24.0" />
-    <PackageReference Include="MongoDB.Driver" Version="2.24.0" />
-    <PackageReference Include="MongoDB.Driver.Core" Version="2.24.0" />
-    <PackageReference Include="NEST" Version="7.17.5" />
+    <PackageReference Include="Elastic.Apm.AspNetCore" Version="1.28.0" />
+    <PackageReference Include="Elastic.Clients.Elasticsearch" Version="8.14.4" />
+    <PackageReference Include="MongoDB.Bson" Version="2.27.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.27.0" />
+    <PackageReference Include="MongoDB.Driver.Core" Version="2.27.0" />
+    <PackageReference Include="NEST" Version="7.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>

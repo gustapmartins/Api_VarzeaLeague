@@ -127,8 +127,8 @@ public class MatchService : IMatchService
 
             NotificationModel notification = new()
             {
-                UserHomeId = homeTeam.ClientId,
-                UserVisitingId = visitingTeam.ClientId,
+                UserHomeTeamModel = homeTeam,
+                UserVisitingTeamModel = visitingTeam,
                 NotificationType = "Agendamento de partida de jogo",
                 DateCreated = DateTime.Now,
             };

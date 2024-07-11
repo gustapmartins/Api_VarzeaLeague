@@ -1,8 +1,10 @@
-﻿using System.Net;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using VarzeaTeam.Domain.Exceptions;
 
 namespace VarzeaLeague.Domain.Utils;
 
+[ExcludeFromCodeCoverage]
 public static class ViaCep
 {
     public static async Task<bool> GetCep(string cep)

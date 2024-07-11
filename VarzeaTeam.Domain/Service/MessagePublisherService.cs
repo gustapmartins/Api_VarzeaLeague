@@ -24,7 +24,7 @@ public class MessagePublisherService : IMessagePublisher
     {        
         try
         {
-            var key = "chave-para-a-mensagem";
+            var key = "varzeaLeague";
             
             var deliveryResult = await _producer.ProduceAsync(Constants.KAFKA_TOPICO_VARZEALEAGUE, new Message<string, string> { Key = key, Value = message });
 

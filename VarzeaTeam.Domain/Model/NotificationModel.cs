@@ -8,13 +8,12 @@ public class NotificationModel : IEntity
     [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)] // Representação do tipo de dados ObjectId do MongoDB
     public string Id { get; set; } = string.Empty;
 
-    [BsonElement("UserHomeId")] // Atributo que mapeia essa propriedade para o campo 'homeTeam' no MongoDB
-    public string UserHomeId { get; set; } = string.Empty;
+    [BsonElement("UserHomeTeamModel")] // Atributo que mapeia essa propriedade para o campo 'visitingTeam' no MongoDB
+    public TeamModel? UserHomeTeamModel { get; set; }
 
-    [BsonElement("UserVisitingId")] // Atributo que mapeia essa propriedade para o campo 'visitingTeam' no MongoDB
-    public string UserVisitingId { get; set; } = string.Empty;
+    [BsonElement("UserVisitingTeamModel")] // Atributo que mapeia essa propriedade para o campo 'visitingTeam' no MongoDB
+    public TeamModel? UserVisitingTeamModel { get; set; }
 
-    // Tipo de notificação (por exemplo, criação de partida, atualização de partida, etc.)
     [BsonElement("NotificationType")]
     public string NotificationType { get; set; } = string.Empty;
 
