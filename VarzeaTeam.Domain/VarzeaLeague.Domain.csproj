@@ -24,6 +24,10 @@
 	  <PackageReference Include="MongoDB.Driver" Version="2.27.0" />
 	  <PackageReference Include="MongoDB.Driver.Core" Version="2.27.0" />
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	  <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
 	  <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="8.0.2" />
 	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.6.2" />
   </ItemGroup>
