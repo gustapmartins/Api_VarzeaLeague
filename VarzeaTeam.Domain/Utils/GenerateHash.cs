@@ -60,6 +60,9 @@ public class GenerateHash : IGenerateHash
         [
           new Claim("username", userModel.UserName),
           new Claim("email", userModel.Email),
+          new Claim("cpf", userModel.Cpf),
+          new Claim("role", userModel.Role.ToString()),
+          new Claim("dataCreated", userModel.DateCreated.ToString()),
           new Claim("id", userModel.Id),
         ];
 

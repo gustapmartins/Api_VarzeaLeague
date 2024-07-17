@@ -29,7 +29,7 @@ public class NotificationController : ControllerBase
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     [HttpGet("search-notifications")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> GetPlayer([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    public async Task<ActionResult> GetNotification([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
         List<NotificationViewDto> notificationView = _mapper.Map<List<NotificationViewDto>>(await _notificationService.GetNotificationAsync(page, pageSize));
 

@@ -39,7 +39,7 @@ public class NotificationControllerTest
             .Returns(notificationViewDtos);
 
         // Act
-        var result = await _notificationController.GetPlayer(1, 10) as OkObjectResult;
+        var result = await _notificationController.GetNotification(1, 10) as OkObjectResult;
 
         // Assert
         Assert.NotNull(result);

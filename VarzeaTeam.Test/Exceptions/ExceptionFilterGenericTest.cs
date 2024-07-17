@@ -3,11 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System;
-using System.Collections.Generic;
 using System.Net;
 using VarzeaLeague.Domain.Exceptions;
-using Xunit;
 
 namespace VarzeaLeague.Test.Exceptions
 {
@@ -47,7 +44,7 @@ namespace VarzeaLeague.Test.Exceptions
             Assert.Equal((int)HttpStatusCode.InternalServerError, objectResult.StatusCode);
             Assert.Equal("Test exception", objectResult.Value.GetType().GetProperty("Message").GetValue(objectResult.Value, null));
             Assert.Equal("System.Exception", objectResult.Value.GetType().GetProperty("ExceptionType").GetValue(objectResult.Value, null));
-            Assert.Equal("/test-path", ((Microsoft.AspNetCore.Http.PathString)objectResult.Value.GetType().GetProperty("Path").GetValue(objectResult.Value, null)).ToString());
+            Assert.Equal("/test-path", ((PathString)objectResult.Value.GetType().GetProperty("Path").GetValue(objectResult.Value, null)).ToString());
             _loggerMock.Verify(
                 x => x.Log(
                     It.Is<LogLevel>(l => l == LogLevel.Error),

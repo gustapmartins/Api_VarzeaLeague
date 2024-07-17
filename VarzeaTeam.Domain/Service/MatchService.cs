@@ -25,7 +25,15 @@ public class MatchService : IMatchService
      {
         try
         {
-            FilterDefinition<MatchModel> filter;
+            FilterDefinition<MatchModel> filter = Builders<MatchModel>.Filter.Empty;
+
+            if (!string.IsNullOrEmpty(NameTeam))
+            {
+                filter = Builders<MatchModel>.Filter.Or(
+                    Builders<MatchModel>.Filter.Eq(m => m.HomeTeamName, NameTeam),
+                    Builders<MatchModel>.Filter.Eq(m => m.VisitingTeamName, NameTeam)
+                );
+            }
 
             switch (FilterType)
             {

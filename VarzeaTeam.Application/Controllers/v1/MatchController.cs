@@ -1,13 +1,12 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using VarzeaTeam.Application.DTO.Team;
-using VarzeaLeague.Domain.Interface.Services;
-using VarzeaTeam.Application.DTO.Match;
-using VarzeaLeague.Application.DTO.Match;
-using Swashbuckle.AspNetCore.Annotations;
 using Microsoft.AspNetCore.Authorization;
-using VarzeaLeague.Domain.Model;
+using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+using VarzeaLeague.Application.DTO.Match;
 using VarzeaLeague.Domain.Enum;
+using VarzeaLeague.Domain.Interface.Services;
+using VarzeaLeague.Domain.Model;
+using VarzeaTeam.Application.DTO.Match;
 
 namespace VarzeaTeam.Application.Controllers.v1;
 
@@ -27,8 +26,11 @@ public class MatchController : ControllerBase
     /// <summary>
     ///     Consultar todas as partidas criadas
     /// </summary>
-    /// <param name="page">Objeto com os campos necessários para definir as paginas</param> 
-    /// <param name="pageSize">Objeto com os campos necessários para os limites das paginas</param> 
+    /// <param name="Page">Objeto com os campos necessários para definir as paginas </param>
+    /// <param name="PageSize">Objeto com os campos necessários para os limites das paginas </param>
+    /// <param name="FilterType">Objeto com os campos necessários para os filtros da pesquisa </param>
+    /// <param name="Date">Objeto com os campos necessários para os filtros da Data da partida </param>
+    /// <param name="NameTeam">Objeto com os campos necessários para os buscar o nome do time </param>
     ///     <returns>IActionResult</returns>
     /// <response code="200">Caso a busca seja feita com sucesso</response>
     [HttpGet("search-matchs")]
