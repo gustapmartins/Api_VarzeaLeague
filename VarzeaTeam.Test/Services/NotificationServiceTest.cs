@@ -89,6 +89,6 @@ public class NotificationServiceTest
         // Act & Assert
         var exception = await Assert.ThrowsAsync<ExceptionFilter>(async () => await _notificationServiceMock.SendNotificationAsync(notificationModel));
 
-        Assert.Equal($"notificationModel O objeto de notificação não pode ser nulo.", exception.Message);
+        Assert.Equal($"createNotification O objeto de notificação não pode ser nulo.", exception.Message);
     }
 }
