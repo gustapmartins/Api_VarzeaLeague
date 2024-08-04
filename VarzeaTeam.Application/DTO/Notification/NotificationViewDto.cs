@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System.Text.Json.Serialization;
 using VarzeaLeague.Domain.Model;
 
 namespace VarzeaLeague.Application.DTO.Notification;
@@ -18,6 +19,9 @@ public class NotificationViewDto
     [JsonPropertyName("NotificationType")]
 
     public string NotificationType { get; set; } = string.Empty;
+
+    [JsonPropertyName("ReadNotification")]
+    public bool ReadNotification { get; set; }
 
     [JsonPropertyName("DateCreated")]
     public DateTime DateCreated { get; set; } = DateTime.Now;

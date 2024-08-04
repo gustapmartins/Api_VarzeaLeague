@@ -93,7 +93,7 @@ public class MatchService : IMatchService
 
             return GetId;
         }
-        catch (ExceptionFilter ex) 
+        catch (ExceptionFilter ex)
         {
             throw new ExceptionFilter(ex.Message);
         }

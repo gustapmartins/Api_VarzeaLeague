@@ -11,5 +11,6 @@ public class NotificationMapper : Profile
     public NotificationMapper()
     {
         CreateMap<NotificationViewDto, NotificationModel>().ReverseMap();
+        CreateMap<NotificationUpdateDto, NotificationModel>().ReverseMap();
     }
 }
