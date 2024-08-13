@@ -5,8 +5,6 @@ using VarzeaLeague.Domain.Interface.Utils;
 using VarzeaLeague.Domain.Model;
 using VarzeaTeam.Domain.Exceptions;
 using MongoDB.Driver;
-using System;
-using VarzeaTeam.Service;
 
 namespace VarzeaLeague.Domain.Service;
 
@@ -30,10 +28,12 @@ public class NotificationService : INotificationService
             string clientId = _getClientIdFromToken.GetClientIdFromToken(_httpContext);
 
             IEnumerable<NotificationModel> notificationAll = await _notificationDao.GetAsync(page, pageSize,
-                filter: Builders<NotificationModel>.Filter.Where(x => x.UserVisitingTeamModel.ClientId == clientId));
+                filter: Builders<NotificationModel>.Filter.Where(x => x.UserVisitingTeamModel.ClientId == clientId)) ?? Enumerable.Empty<NotificationModel>();
 
             if (notificationAll.Count() == 0)
+            {
                 throw new ExceptionFilter($"Não existe nenhuma notificação cadastrada");
+            }
 
             return notificationAll;
         }
@@ -47,12 +47,12 @@ public class NotificationService : INotificationService
     {
         try
         {
-            NotificationModel GetId = await _notificationDao.GetIdAsync(Id);
+            NotificationModel getId = await _notificationDao.GetIdAsync(Id);
 
-            if (GetId == null)
+            if (getId == null)
                 throw new ExceptionFilter($"A notificação com o id '{Id}', não existe.");
 
-            return GetId;
+            return getId;
         }
         catch (ExceptionFilter ex)
         {
@@ -84,6 +84,11 @@ public class NotificationService : INotificationService
         try
         {
             NotificationModel existingNotification = await GetIdNotificationAsync(Id);
+
+            if(updateObject.ReadNotification == existingNotification.ReadNotification)
+            {
+                return existingNotification;
+            }
 
             if (updateObject == null)
             {

@@ -70,7 +70,7 @@ public class AuthService : IAuthService
                 throw new ExceptionFilter($"Este email: {userLogin.Email} não existe.");
 
             //Faz uma validação para verificar se a senha que o usuariop está passando corresponde a senha salva no banco, em formato hash
-            bool isPasswordCorrect = _generateHash.VerifyPassword(userLogin.Password, findUser.Password); // Implemente esta função
+            bool isPasswordCorrect = _generateHash.VerifyPassword(userLogin.Password, findUser.Password);
 
             if (!isPasswordCorrect)
                 throw new UnauthorizedAccessException("Senha incorreta");

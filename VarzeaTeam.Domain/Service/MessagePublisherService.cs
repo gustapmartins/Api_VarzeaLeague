@@ -21,11 +21,11 @@ public class MessagePublisherService : IMessagePublisher
     }
 
     public async Task ProduceAsync(string message)
-    {        
+    {
         try
         {
             var key = "varzeaLeague";
-            
+
             var deliveryResult = await _producer.ProduceAsync(Constants.KAFKA_TOPICO_VARZEALEAGUE, new Message<string, string> { Key = key, Value = message });
 
             Console.WriteLine($"Mensagem produzida: '{message}', Offset: {deliveryResult.Offset}");
