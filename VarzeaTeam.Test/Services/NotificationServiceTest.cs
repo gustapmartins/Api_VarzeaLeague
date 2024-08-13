@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Http;
 using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaLeague.Domain.Interface.Utils;
 using VarzeaLeague.Domain.Service;
-using Moq;
 using VarzeaLeague.Domain.Model;
 using MongoDB.Driver;
 using VarzeaTeam.Domain.Exceptions;
+using Moq;
 
 namespace VarzeaLeague.Test.Services;
 
