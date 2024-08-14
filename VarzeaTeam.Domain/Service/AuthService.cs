@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using Microsoft.AspNetCore.Http;
+using MongoDB.Driver;
 using VarzeaLeague.Domain.Enum;
 using VarzeaLeague.Domain.Interface.Dao;
 using VarzeaLeague.Domain.Interface.Services;
@@ -11,16 +12,26 @@ namespace VarzeaLeague.Domain.Service;
 public class AuthService : IAuthService
 {
     private readonly IAuthDao _authDao;
+    private readonly IGetClientIdToken _getClientIdToken;
+    private readonly HttpContext _httpContext;
     private readonly IEmailService _emailService;
     private readonly IMemoryCacheService _memoryCacheService;
     private readonly IGenerateHash _generateHash;
 
-    public AuthService(IAuthDao authDao, IEmailService emailService, IMemoryCacheService memoryCacheService, IGenerateHash generateHash)
+    public AuthService(
+        IAuthDao authDao,
+        IEmailService emailService,
+        IMemoryCacheService memoryCacheService,
+        IGenerateHash generateHash,
+        IGetClientIdToken getClientIdToken,
+        IHttpContextAccessor httpContextAccessor)
     {
         _authDao = authDao;
         _emailService = emailService;
         _generateHash = generateHash;
         _memoryCacheService = memoryCacheService;
+        _getClientIdToken = getClientIdToken;
+        _httpContext = httpContextAccessor.HttpContext!;
     }
 
     public async Task<IEnumerable<UserModel>> GetAsync(int page, int pageSize)
@@ -30,7 +41,9 @@ public class AuthService : IAuthService
             IEnumerable<UserModel> GetAll = await _authDao.GetAsync(page, pageSize, filter: Builders<UserModel>.Filter.Where(x => x.AccountStatus == AccountStatus.active));
 
             if (GetAll.Count() == 0)
+            {
                 throw new ExceptionFilter($"Não existe nenhum usuário cadastrada");
+            }
 
             return GetAll;
         }
@@ -47,10 +60,14 @@ public class AuthService : IAuthService
             UserModel GetId = await _authDao.GetIdAsync(Id);
 
             if (GetId == null)
+            {
                 throw new ExceptionFilter($"O usuário com o id '{Id}', não existe.");
+            }
 
-            if(GetId.AccountStatus == 0)
+            if (GetId.AccountStatus == 0)
+            {
                 throw new ExceptionFilter($"Esse usuário '{Id}' está bloqueado.");
+            }
 
             return GetId;
         }
@@ -67,13 +84,17 @@ public class AuthService : IAuthService
             UserModel findUser = await _authDao.FindEmail(userLogin.Email);
 
             if (findUser == null)
+            {
                 throw new ExceptionFilter($"Este email: {userLogin.Email} não existe.");
+            }
 
             //Faz uma validação para verificar se a senha que o usuariop está passando corresponde a senha salva no banco, em formato hash
             bool isPasswordCorrect = _generateHash.VerifyPassword(userLogin.Password, findUser.Password);
 
             if (!isPasswordCorrect)
+            {
                 throw new UnauthorizedAccessException("Senha incorreta");
+            }
 
             //Gera um token a partir do usuario buscado pelo E-mail
             string token = _generateHash.GenerateToken(findUser);
@@ -93,17 +114,19 @@ public class AuthService : IAuthService
             UserModel findEmail = await _authDao.FindEmail(addObject.Email);
 
             if (findEmail != null)
+            {
                 throw new ExceptionFilter($"usuário com esse email: '{addObject.Email}', já existe.");
+            }
 
             addObject.Password = _generateHash.GenerateHashParameters(addObject.Password);
             addObject.AccountStatus = AccountStatus.active;
-            addObject.DateCreated = DateTime.UtcNow;  // Ensure DateCreated is set to the current time
+            addObject.DateCreated = DateTime.UtcNow;
 
             await _authDao.CreateAsync(addObject);
 
             return addObject;
         }
-        catch(ExceptionFilter ex) 
+        catch(ExceptionFilter ex)
         {
            throw new ExceptionFilter(ex.Message, ex);
         }
@@ -116,15 +139,11 @@ public class AuthService : IAuthService
             UserModel findEmail = await _authDao.FindEmail(email);
 
             if (findEmail == null)
-                throw new ExceptionFilter($"This {email} is not valid");
-
-            var token = _generateHash.GenerateHashRandom();
-
-            var PasswordReset = new PasswordReset
             {
-                Token = token,
-                Email = email,   
-            };
+                throw new ExceptionFilter($"This {email} is not valid");
+            }
+
+            string token = _generateHash.GenerateHashRandom();
 
             await _emailService.SendMail(
                       email,
@@ -132,7 +151,7 @@ public class AuthService : IAuthService
                       $"Verifique sua conta, com essa token: {token}"
                    );
 
-            _memoryCacheService.AddToCache(token, PasswordReset, 5); //5 minutos de cache
+            _memoryCacheService.AddToCache(token, findEmail, 5);
 
             return token;
         }
@@ -142,30 +161,51 @@ public class AuthService : IAuthService
         }
     }
 
+    public async Task<string> VerificationPasswordOTP(string token)
+    {
+        try
+        {
+            UserModel passwordResetCache = _memoryCacheService.GetCache<UserModel>(token);
+
+            if (passwordResetCache == null)
+            {
+                throw new ExceptionFilter($"This token has expired");
+            }
+
+            var generateToken = _generateHash.GenerateToken(passwordResetCache);
+
+            _memoryCacheService.RemoveFromCache<PasswordReset>(token);
+
+            return generateToken;
+        }
+        catch(ExceptionFilter ex)
+        {
+            throw new ExceptionFilter(ex.Message, ex);
+        }
+    }
+
     public async Task<string> ResetPassword(PasswordReset passwordReset)
     {
         try
         {
-            PasswordReset passwordResetCache = _memoryCacheService.GetCache<PasswordReset>(passwordReset.Token);
+            string clientId = _getClientIdToken.GetClientIdFromToken(_httpContext);
 
-            if(passwordResetCache == null)
-                throw new ExceptionFilter($"This token has expired");
+            UserModel user = await _authDao.GetIdAsync(clientId);
 
-            UserModel findEmail = await _authDao.FindEmail(passwordResetCache.Email);
-
-            if(findEmail == null)
-                throw new ExceptionFilter($"This {passwordReset.Email} is not valid");
+            if (user == null)
+            {
+                // If user is null, throw an ExceptionFilter with the appropriate message
+                throw new ExceptionFilter($"This {clientId} is not valid");
+            }
 
             var updateFields = new Dictionary<string, object>
             {
                 { nameof(passwordReset.Password), _generateHash.GenerateHashParameters(passwordReset.Password) },
             };
 
-            UserModel updatePassword = await _authDao.UpdateAsync(findEmail.Id, updateFields);
+            UserModel updatePassword = await _authDao.UpdateAsync(user.Id, updateFields);
 
-            _memoryCacheService.RemoveFromCache<PasswordReset>(passwordReset.Token);
-
-            return "Senha redefinida";
+            return "Senha Redefinida";
         }
         catch (ExceptionFilter ex)
         {
@@ -182,7 +222,6 @@ public class AuthService : IAuthService
             var updateFields = new Dictionary<string, object>
             {
                 { nameof(AccountStatus), AccountStatus.blocked },
-                // Adicione outros campos que deseja atualizar conforme necessário
             };
 
             UserModel updateUser = await _authDao.UpdateAsync(Id, updateFields);
@@ -206,7 +245,6 @@ public class AuthService : IAuthService
                 { nameof(updateObject.UserName), updateObject.UserName },
                 { nameof(updateObject.Password), updateObject.Password },
                 { nameof(updateObject.AccountStatus), updateObject.AccountStatus }
-                // Adicione outros campos que deseja atualizar conforme necessário
             };
 
             UserModel userUpdate = await _authDao.UpdateAsync(Id, updateFields);
@@ -219,4 +257,3 @@ public class AuthService : IAuthService
         }
     }
 }
-    

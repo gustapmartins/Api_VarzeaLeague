@@ -97,7 +97,7 @@ public class MatchController : ControllerBase
     /// </summary>
     /// <param name="Id">Campo id para buscar um objeto</param>
     /// <param name="matchUpdateDto">MatchDto</param>
-    ///     <returns>IActionResult</returns>
+    /// <returns>IActionResult</returns>
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
     [Authorize]

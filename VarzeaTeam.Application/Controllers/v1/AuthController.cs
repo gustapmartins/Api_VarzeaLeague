@@ -4,6 +4,7 @@ using VarzeaLeague.Application.DTO.User;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using VarzeaLeague.Domain.Model.User;
+using Microsoft.AspNetCore.Authorization;
 
 namespace VarzeaLeague.Application.Controllers.v1;
 
@@ -25,7 +26,7 @@ public class AuthController : ControllerBase
     /// </summary>
     /// <param name="page">Objeto com os campos necessários para definir as paginas</param> 
     /// <param name="pageSize">Objeto com os campos necessários para os limites das paginas</param> 
-    ///     <returns>IActionResult</returns>
+    /// <returns>IActionResult</returns>
     /// <response code="200">Caso a busca seja feita com sucesso</response>
     [HttpGet("search-users")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -42,7 +43,7 @@ public class AuthController : ControllerBase
     ///     Consultar todas as partidas criadas
     /// </summary>
     /// <param name="Id">Objeto com os campos necessários para definir as paginas</param>
-    ///     <returns>IActionResult</returns>
+    /// <returns>IActionResult</returns>
     /// <response code="200">Caso a busca seja feita com sucesso</response>
     [HttpGet("search-user/{Id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -59,7 +60,7 @@ public class AuthController : ControllerBase
     ///     faz o login e retorna um token de acesso
     /// </summary>
     /// <param name="loginDto">Objeto com os campos necessários para logar um usuário</param>
-    ///     <returns>IActionResult</returns>
+    /// <returns>IActionResult</returns>
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     [HttpPost("login")]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -68,6 +69,7 @@ public class AuthController : ControllerBase
         UserModel loginUser = _mapper.Map<UserModel>(loginDto);
 
         var token = await _authService.Login(loginUser);
+
         return Ok(new { token });
     }
 
@@ -75,7 +77,7 @@ public class AuthController : ControllerBase
     ///     Cria um novo usuario no banco de dados
     /// </summary>
     /// <param name="userCreateDto">Objeto com os campos necessários para criação de um usuário</param>
-    ///     <returns>IActionResult</returns>
+    /// <returns>IActionResult</returns>
     /// <response code="201">Caso inserção seja feita com sucesso</response>
     /// <response code="400">Caso a requisição esteja errada</response>
     [HttpPost("created-user")]
@@ -92,8 +94,8 @@ public class AuthController : ControllerBase
     ///     Redefinir a senha de um usuario no banco de dados
     /// </summary>
     /// <param name="email">Objeto com os campos necessários para mudar a senha de um usuário</param>
-    ///     <returns>IActionResult</returns>
-    /// <response code="201">Caso inserção seja feita com sucesso</response>
+    /// <returns>IActionResult</returns>
+    /// <response code="200">Caso inserção seja feita com sucesso</response>
     /// <response code="400">Caso a requisição esteja errada</response>
     [HttpPost("forget-password")]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -108,10 +110,28 @@ public class AuthController : ControllerBase
     /// <summary>
     ///     Redefinir a senha de um usuario no banco de dados
     /// </summary>
+    /// <param name="token">Objeto com os campos necessários para mudar a senha de um usuário</param>
+    /// <returns>IActionResult</returns>
+    /// <response code="200">Caso inserção seja feita com sucesso</response>
+    /// <response code="400">Caso a requisição esteja errada</response>
+    [HttpPost("verification-password-OTP")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> VerificationPasswordOTP([FromHeader] string token)
+    {
+        string hashToken = await _authService.VerificationPasswordOTP(token);
+
+        return Ok(new { token = hashToken });
+    }
+
+    /// <summary>
+    ///     Redefinir a senha de um usuario no banco de dados
+    /// </summary>
     /// <param name="passwordResetDto">Objeto com os campos necessários para mudar a senha de um usuário</param>
-    ///     <returns>IActionResult</returns>
+    /// <returns>IActionResult</returns>
     /// <response code="201">Caso inserção seja feita com sucesso</response>
     /// <response code="400">Caso a requisição esteja errada</response>
+    [Authorize]
     [HttpPost("reset-password")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -126,7 +146,7 @@ public class AuthController : ControllerBase
     ///     Apagar um usuario no banco de dados
     /// </summary>
     /// <param name="Id">Objeto com os campos necessários para delete um     usuário</param>
-    ///     <returns>IActionResult</returns>
+    /// <returns>IActionResult</returns>
     /// <response code="201">Caso inserção seja feita com sucesso</response>
     /// <response code="400">Caso a requisição esteja errada</response>
     [HttpDelete("delete-user/{Id}")]
@@ -142,7 +162,7 @@ public class AuthController : ControllerBase
     /// </summary>
     /// <param name="Id">Objeto com os campos necessários para criação de um filme</param>
     /// <param name="userDto">TEAM</param>
-    ///     <returns>IActionResult</returns>
+    /// <returns>IActionResult</returns>
     /// <response code="200">Caso inserção seja feita com sucesso</response>
     /// <response code="404">Caso inserção não seja feita com sucesso</response>
     [HttpPatch("update-user/{Id}")]

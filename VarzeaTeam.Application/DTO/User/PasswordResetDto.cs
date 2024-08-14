@@ -10,7 +10,4 @@ public class PasswordResetDto
     [Required(ErrorMessage = "Confirm your password")]
     [Compare("Password")]
     public required string? ConfirmPassword { get; set; }
-
-    [Required(ErrorMessage = "token is required")]
-    public required string Token { get; set; }
 }

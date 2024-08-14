@@ -12,11 +12,13 @@ public interface IAuthService
 
     Task<UserModel> RemoveAsync(string Id);
 
-    Task<UserModel> UpdateAsync(string Id, UserModel updateObject); 
+    Task<UserModel> UpdateAsync(string Id, UserModel updateObject);
 
     Task<string> Login(UserModel userLogin);
 
     Task<string> ForgetPassword(string email);
+
+    Task<string> VerificationPasswordOTP(string token);
 
     Task<string> ResetPassword(PasswordReset passwordReset);
 }

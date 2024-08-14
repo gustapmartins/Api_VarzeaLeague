@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
 using Moq;
 using VarzeaLeague.Domain.Enum;
@@ -16,6 +17,8 @@ public class AuthServiceTest
     private readonly Fixture _fixture;
     private readonly Mock<IAuthDao> _authDaoMock;
     private readonly Mock<IEmailService> _emailServiceMock;
+    private readonly Mock<IHttpContextAccessor> _httpContext;
+    private readonly Mock<IGetClientIdToken> _getClientIdToken;
     private readonly Mock<IMemoryCacheService> _memoryCacheServiceMock;
     private readonly Mock<IGenerateHash> _generateHashMock;
     private readonly IAuthService _authServiceMock;
@@ -27,7 +30,17 @@ public class AuthServiceTest
         _emailServiceMock = new Mock<IEmailService>();
         _memoryCacheServiceMock = new Mock<IMemoryCacheService>();
         _generateHashMock = new Mock<IGenerateHash>();
-        _authServiceMock = new AuthService(_authDaoMock.Object, _emailServiceMock.Object, _memoryCacheServiceMock.Object, _generateHashMock.Object);
+        _getClientIdToken = new Mock<IGetClientIdToken>(); // Initialize the mock
+        _httpContext = new Mock<IHttpContextAccessor>(); // Initialize the mock
+
+        _authServiceMock = new AuthService(
+            _authDaoMock.Object,
+            _emailServiceMock.Object,
+            _memoryCacheServiceMock.Object,
+            _generateHashMock.Object,
+            _getClientIdToken.Object, // Pass the initialized mock
+            _httpContext.Object // Pass the initialized mock
+        );
     }
 
     [Fact]
@@ -210,7 +223,7 @@ public class AuthServiceTest
         // Assert
         Assert.Equal(token, result);
         _emailServiceMock.Verify(service => service.SendMail(email, It.IsAny<string>(), It.Is<string>(msg => msg.Contains(token))), Times.Once);
-        _memoryCacheServiceMock.Verify(cache => cache.AddToCache(token, It.IsAny<PasswordReset>(), 5), Times.Once);
+        _memoryCacheServiceMock.Verify(cache => cache.AddToCache(token, It.IsAny<UserModel>(), 5), Times.Once);
     }
 
     [Fact]
@@ -229,35 +242,38 @@ public class AuthServiceTest
     public async Task ResetPassword_WhenTokenIsValid_UpdatesPasswordAndRemovesTokenFromCache()
     {
         // Arrange
-        string token = "validToken";
-        string email = "test@example.com";
+        string clientId = "validClientId";
         string newPassword = "newPassword";
-        var passwordReset = new PasswordReset { Token = token, Email = email };
+        var passwordReset = new PasswordReset { Password = newPassword };
         var user = _fixture.Create<UserModel>();
 
-        _memoryCacheServiceMock.Setup(cache => cache.GetCache<PasswordReset>(token)).Returns(passwordReset);
-        _authDaoMock.Setup(dao => dao.FindEmail(email)).ReturnsAsync(user);
+        _getClientIdToken.Setup(token => token.GetClientIdFromToken(It.IsAny<HttpContext>())).Returns(clientId);
+        _authDaoMock.Setup(dao => dao.GetIdAsync(clientId)).ReturnsAsync(user);
+        _generateHashMock.Setup(hash => hash.GenerateHashParameters(newPassword)).Returns("hashedPassword");
         _authDaoMock.Setup(dao => dao.UpdateAsync(It.IsAny<string>(), It.IsAny<Dictionary<string, object>>())).ReturnsAsync(user);
 
         // Act
-        var result = await _authServiceMock.ResetPassword(new PasswordReset { Token = token, Password = newPassword });
+        var result = await _authServiceMock.ResetPassword(passwordReset);
 
         // Assert
-        Assert.Equal("Senha redefinida", result);
-        _memoryCacheServiceMock.Verify(cache => cache.RemoveFromCache<PasswordReset>(token), Times.Once);
-        _authDaoMock.Verify(dao => dao.UpdateAsync(user.Id, It.IsAny<Dictionary<string, object>>()), Times.Once);
+        Assert.Equal("Senha Redefinida", result);
+        _authDaoMock.Verify(dao => dao.UpdateAsync(user.Id, It.Is<Dictionary<string, object>>(dict => dict[nameof(passwordReset.Password)].Equals("hashedPassword"))), Times.Once);
     }
 
     [Fact]
     public async Task ResetPassword_WhenTokenIsInvalid_ThrowsException()
     {
         // Arrange
-        string token = "invalidToken";
-        _memoryCacheServiceMock.Setup(cache => cache.GetCache<PasswordReset>(token)).Returns(null as PasswordReset);
+        string clientId = "invalidClientId";
+        string newPassword = "newPassword";
+        var passwordReset = new PasswordReset { Password = newPassword };
+
+        _getClientIdToken.Setup(token => token.GetClientIdFromToken(It.IsAny<HttpContext>())).Returns(clientId);
+        _authDaoMock.Setup(dao => dao.GetIdAsync(clientId)).ReturnsAsync((UserModel)null);
 
         // Act and Assert
-        var exception = await Assert.ThrowsAsync<ExceptionFilter>(() => _authServiceMock.ResetPassword(new PasswordReset { Token = token }));
-        Assert.Equal("This token has expired", exception.Message);
+        var exception = await Assert.ThrowsAsync<ExceptionFilter>(() => _authServiceMock.ResetPassword(passwordReset));
+        Assert.Equal("This invalidClientId is not valid", exception.Message);
     }
 
     [Fact]

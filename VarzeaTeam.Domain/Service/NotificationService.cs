@@ -14,7 +14,10 @@ public class NotificationService : INotificationService
     private readonly HttpContext _httpContext;
     private readonly IGetClientIdToken _getClientIdFromToken;
 
-    public NotificationService(INotificationDao notificationDao, IHttpContextAccessor httpContextAccessor, IGetClientIdToken getClientIdFromToken)
+    public NotificationService(
+        INotificationDao notificationDao,
+        IHttpContextAccessor httpContextAccessor,
+        IGetClientIdToken getClientIdFromToken)
     {
         _notificationDao = notificationDao;
         _httpContext = httpContextAccessor.HttpContext!;
