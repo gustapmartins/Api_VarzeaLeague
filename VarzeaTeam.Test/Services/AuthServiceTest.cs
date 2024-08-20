@@ -212,19 +212,19 @@ public class AuthServiceTest
     {
         // Arrange
         string email = "test@example.com";
-        string token = "generatedToken";
+        int token = 879684;
         var user = _fixture.Create<UserModel>();
 
         _authDaoMock.Setup(dao => dao.FindEmail(email)).ReturnsAsync(user);
-        _generateHashMock.Setup(hash => hash.GenerateHashRandom()).Returns(token);
+        _generateHashMock.Setup(hash => hash.GenerateRandomNumber()).Returns(token);
 
         // Act
         var result = await _authServiceMock.ForgetPassword(email);
 
         // Assert
-        Assert.Equal(token, result);
-        _emailServiceMock.Verify(service => service.SendMail(email, It.IsAny<string>(), It.Is<string>(msg => msg.Contains(token))), Times.Once);
-        _memoryCacheServiceMock.Verify(cache => cache.AddToCache(token, It.IsAny<UserModel>(), 5), Times.Once);
+        Assert.Equal(token.ToString(), result);
+        _emailServiceMock.Verify(service => service.SendMail(It.IsAny<string>(), email, It.IsAny<string>(), It.Is<string>(msg => msg.Contains(token.ToString()))), Times.Once);
+        _memoryCacheServiceMock.Verify(cache => cache.AddToCache(token.ToString(), It.IsAny<UserModel>(), 5), Times.Once);
     }
 
     [Fact]

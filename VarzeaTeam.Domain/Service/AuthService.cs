@@ -143,7 +143,7 @@ public class AuthService : IAuthService
                 throw new ExceptionFilter($"This {email} is not valid");
             }
 
-            string token = _generateHash.GenerateHashRandom();
+            string token = _generateHash.GenerateRandomNumber().ToString();
 
             string emailBody = $@"
                 <div style='font-family: Arial, sans-serif; color: #333;'>
@@ -159,10 +159,11 @@ public class AuthService : IAuthService
                 </div>";
 
             await _emailService.SendMail(
-                      email,
-                      "Redefinição da sua senha",
-                      emailBody
-                   );
+                  "no-reply@yourdomain.com", // Use a valid email address here
+                  email,
+                  "Redefinição da sua senha",
+                  emailBody
+               );
 
             _memoryCacheService.AddToCache(token, findEmail, 5);
 

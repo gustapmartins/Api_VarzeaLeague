@@ -3,6 +3,7 @@ using VarzeaLeague.Domain.Interface.Services;
 using System.Net.Mail;
 using System.Net;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 
 namespace VarzeaLeague.Domain.Service;
 
@@ -16,7 +17,7 @@ public class EmailService: IEmailService
         _configuration = configuration;
     }
 
-    public async Task SendMail(string email, string subject, string message)
+    public async Task SendMail(string from, string email, string subject, string message)
     {
         string mail = _configuration["EmailTrap:Email"];
 
@@ -24,10 +25,26 @@ public class EmailService: IEmailService
         {
             Credentials = new NetworkCredential(mail, _configuration["EmailTrap:Password"]),
             EnableSsl = true,
-            UseDefaultCredentials = false,
+            UseDefaultCredentials = false
         };
 
+        try
+        {
+            MailMessage mailMessage = new(from, email, subject, message)
+            {
+                IsBodyHtml = true // Ensure that the email is sent as HTML
+            };
 
-        await client.SendMailAsync(mail, email, subject, message);
+            await client.SendMailAsync(mailMessage);
+        }
+        catch (OperationCanceledException)
+        {
+            // Handle the cancellation exception if the operation was canceled.
+            Console.WriteLine("Email sending was canceled.");
+        }
+        finally
+        {
+            client.Dispose();
+        }
     }
 }
