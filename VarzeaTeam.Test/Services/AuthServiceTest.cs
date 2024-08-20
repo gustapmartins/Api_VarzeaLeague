@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using Elastic.Apm.Api;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
 using Moq;
@@ -236,6 +237,35 @@ public class AuthServiceTest
         // Act and Assert
         var exception = await Assert.ThrowsAsync<ExceptionFilter>(() => _authServiceMock.ForgetPassword(email));
         Assert.Equal($"This {email} is not valid", exception.Message);
+    }
+
+    [Fact]
+    public async Task VerificationPasswordOTP_WhenTokenEmail_TokenConfirmationSentemail()
+    {
+        UserModel user = _fixture.Create<UserModel>();
+        string code = "123456789codeGenerate";
+        string tokenEmail = "8623405";
+
+        _memoryCacheServiceMock.Setup(cache => cache.GetCache<UserModel>(code)).Returns(user);
+        _generateHashMock.Setup(hash => hash.GenerateToken(It.IsAny<UserModel>())).Returns(tokenEmail);
+        _memoryCacheServiceMock.Setup(hash => hash.RemoveFromCache<UserModel>(code));
+
+        var result = await _authServiceMock.VerificationPasswordOTP(code);
+
+        Assert.Equal(tokenEmail, result);
+        _memoryCacheServiceMock.Verify(cache => cache.GetCache<UserModel>(code), Times.Once);
+        _generateHashMock.Verify(hash => hash.GenerateToken(It.IsAny<UserModel>()), Times.Once);
+        _memoryCacheServiceMock.Verify(cache => cache.RemoveFromCache<UserModel>(code), Times.Never);
+    }
+
+    [Fact]
+    public async Task VerificationPasswordOTP_WhenTokenEmail_ThrowsException()
+    {
+        _memoryCacheServiceMock.Setup(cache => cache.GetCache<UserModel>(It.IsAny<string>())).Returns((UserModel)null);
+
+        // Act and Assert
+        var exception = await Assert.ThrowsAsync<ExceptionFilter>(() => _authServiceMock.VerificationPasswordOTP(It.IsAny<string>()));
+        Assert.Equal($"This token has expired", exception.Message);
     }
 
     [Fact]

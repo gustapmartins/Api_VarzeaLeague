@@ -4,6 +4,8 @@ namespace VarzeaLeague.Domain.Interface.Utils;
 
 public interface IGenerateHash
 {
+    int GenerateRandomNumber();
+
     string GenerateHashRandom();
 
     string GenerateHashParameters(string password);

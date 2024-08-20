@@ -11,6 +11,12 @@ namespace VarzeaLeague.Domain.Utils;
 
 public class GenerateHash : IGenerateHash
 {
+    public int GenerateRandomNumber()
+    {
+        Random random = new Random();
+        return random.Next(100000, 1000000);
+    }
+
     public string GenerateHashRandom()
     {
         using (SHA256 sha256 = SHA256.Create())

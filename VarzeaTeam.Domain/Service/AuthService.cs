@@ -145,10 +145,23 @@ public class AuthService : IAuthService
 
             string token = _generateHash.GenerateHashRandom();
 
+            string emailBody = $@"
+                <div style='font-family: Arial, sans-serif; color: #333;'>
+                    <h2 style='color: #0056b3;'>Redefinição da sua senha</h2>
+                    <p>Olá,</p>
+                    <p>Recebemos uma solicitação para redefinir sua senha. Use o código abaixo para verificar sua conta:</p>
+                    <div style='text-align: center; margin: 20px 0;'>
+                        <span style='font-size: 24px; font-weight: bold; color: #0056b3;'>{token}</span>
+                    </div>
+                    <p style='color: #777;'>Se você não solicitou essa redefinição, ignore este email.</p>
+                    <p>Atenciosamente,</p>
+                    <p>Equipe de Suporte</p>
+                </div>";
+
             await _emailService.SendMail(
                       email,
                       "Redefinição da sua senha",
-                      $"Verifique sua conta, com essa token: {token}"
+                      emailBody
                    );
 
             _memoryCacheService.AddToCache(token, findEmail, 5);
@@ -172,7 +185,7 @@ public class AuthService : IAuthService
                 throw new ExceptionFilter($"This token has expired");
             }
 
-            var generateToken = _generateHash.GenerateToken(passwordResetCache);
+            string generateToken = _generateHash.GenerateToken(passwordResetCache);
 
             _memoryCacheService.RemoveFromCache<PasswordReset>(token);
 
@@ -194,7 +207,6 @@ public class AuthService : IAuthService
 
             if (user == null)
             {
-                // If user is null, throw an ExceptionFilter with the appropriate message
                 throw new ExceptionFilter($"This {clientId} is not valid");
             }
 
