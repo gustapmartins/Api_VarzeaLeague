@@ -10,14 +10,13 @@ namespace VarzeaLeague.Domain.Service;
 public class EmailService: IEmailService
 {
     private readonly IConfiguration _configuration;
-    
 
     public EmailService(IConfiguration configuration)
     {
         _configuration = configuration;
     }
 
-    public async Task SendMail(string from, string email, string subject, string message)
+    public async Task SendMail(string email, string subject, string message)
     {
         string mail = _configuration["EmailTrap:Email"];
 
@@ -29,6 +28,6 @@ public class EmailService: IEmailService
         };
 
 
-        await client.SendMailAsync(from, mail, email, subject, message);
+        await client.SendMailAsync(mail, email, subject, message);
     }
 }
