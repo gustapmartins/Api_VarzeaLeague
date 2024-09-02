@@ -32,7 +32,7 @@ public class EmailService: IEmailService
         {
             MailMessage mailMessage = new(from, email, subject, message)
             {
-                IsBodyHtml = true // Ensure that the email is sent as HTML
+                IsBodyHtml = true
             };
 
             await client.SendMailAsync(mailMessage);

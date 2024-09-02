@@ -31,7 +31,7 @@ public class MatchController : ControllerBase
     /// <param name="FilterType">Objeto com os campos necessários para os filtros da pesquisa </param>
     /// <param name="Date">Objeto com os campos necessários para os filtros da Data da partida </param>
     /// <param name="NameTeam">Objeto com os campos necessários para os buscar o nome do time </param>
-    ///     <returns>IActionResult</returns>
+    /// <returns>IActionResult</returns>
     /// <response code="200">Caso a busca seja feita com sucesso</response>
     [HttpGet("search-matchs")]
     [ProducesResponseType(StatusCodes.Status200OK)]

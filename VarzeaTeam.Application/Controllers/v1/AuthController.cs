@@ -62,6 +62,7 @@ public class AuthController : ControllerBase
     /// <param name="loginDto">Objeto com os campos necessários para logar um usuário</param>
     /// <returns>IActionResult</returns>
     /// <response code="200">Caso inserção seja feita com sucesso</response>
+    [AllowAnonymous]
     [HttpPost("login")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> LoginAsync(LoginDto loginDto)
@@ -77,6 +78,7 @@ public class AuthController : ControllerBase
     ///     Cria um novo usuario no banco de dados
     /// </summary>
     /// <param name="userCreateDto">Objeto com os campos necessários para criação de um usuário</param>
+    /// <remarks> Create User </remarks>
     /// <returns>IActionResult</returns>
     /// <response code="201">Caso inserção seja feita com sucesso</response>
     /// <response code="400">Caso a requisição esteja errada</response>

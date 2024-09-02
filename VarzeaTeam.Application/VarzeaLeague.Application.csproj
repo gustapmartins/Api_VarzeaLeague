@@ -7,6 +7,8 @@
     <UserSecretsId>a1f076fc-b4b2-44fa-ad10-d70c359126ee</UserSecretsId>
     <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<NoWarn>${NoWarn};1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

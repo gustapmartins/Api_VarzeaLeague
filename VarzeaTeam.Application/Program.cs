@@ -1,15 +1,20 @@
+using System.Reflection;
 using VarzeaLeague.Application.Extension;
 using VarzeamTeam.Infra.CrossCutting.Ioc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-DependencyInjection.ConfigureService(builder.Services, builder.Configuration);
+
+if (builder.Environment.IsDevelopment())
+{
+    string xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    DependencyInjection.ConfigureService(builder.Services, builder.Configuration, xmlFilename);
+}
 
 var app = builder.Build();
 
 app.UseMiddleware<ElasticsearchMiddleware>();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
